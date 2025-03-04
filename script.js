@@ -2,7 +2,7 @@ async function fetchData() {
     try {
         console.log("Fetching data from APIs...");
 
-        // Using a CORS proxy to bypass CORS restrictions
+        // Use a CORS proxy to bypass CORS restrictions
         const PROXY = "https://corsproxy.io/?";
         const AGENCY_API = PROXY + "https://www.ecfr.gov/api/admin/v1/agencies.json";
         const CORRECTIONS_API = PROXY + "https://www.ecfr.gov/api/admin/v1/corrections.json";
