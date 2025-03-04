@@ -1,14 +1,20 @@
 async function fetchData() {
     try {
+        const PROXY = "https://corsproxy.io/?";
+        const AGENCY_API = PROXY + "https://www.ecfr.gov/api/admin/v1/agencies.json";
+        const CORRECTIONS_API = PROXY + "https://www.ecfr.gov/api/admin/v1/corrections.json";
+
         const [agencyResponse, correctionsResponse] = await Promise.all([
-            fetch('/api/admin/v1/agencies.json'),
-            fetch('/api/admin/v1/corrections.json')
+            fetch(AGENCY_API),
+            fetch(CORRECTIONS_API)
         ]);
 
-        const PROXY = "https://corsproxy.io/?";
-const AGENCY_API = PROXY + "https://www.ecfr.gov/api/admin/v1/agencies.json";
-const CORRECTIONS_API = PROXY + "https://www.ecfr.gov/api/admin/v1/corrections.json";
+        if (!agencyResponse.ok || !correctionsResponse.ok) {
+            throw new Error("API request failed");
+        }
 
+        const agenciesData = await agencyResponse.json();
+        const correctionsData = await correctionsResponse.json();
 
         displayData(agenciesData.agencies, correctionsData.ecfr_corrections);
     } catch (error) {
@@ -26,8 +32,11 @@ function displayData(agencies, corrections) {
         const row = document.createElement("tr");
         const childrenNames = agency.children.map(child => child.name).join(", ") || "N/A";
 
+        // Find latest correction related to this agency
         const latestCorrection = corrections
-            .filter(corr => corr.cfr_references.some(ref => agency.cfr_references.some(agRef => agRef.title == ref.hierarchy.title)))
+            .filter(corr => corr.cfr_references.some(ref => 
+                agency.cfr_references.some(agRef => agRef.title == ref.hierarchy.title)
+            ))
             .sort((a, b) => new Date(b.error_corrected) - new Date(a.error_corrected))[0];
 
         const currentAsOf = latestCorrection?.error_corrected || "Unknown";
@@ -46,4 +55,5 @@ function displayData(agencies, corrections) {
     });
 }
 
+// Run fetchData on page load
 window.onload = fetchData;
