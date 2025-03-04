@@ -1,3 +1,46 @@
+async function fetchData() {
+    try {
+        console.log("✅ Fetching data from backend...");
+
+        const BACKEND_URL = "https://ecfr-backend-sk8g.onrender.com";
+        const AGENCY_API = BACKEND_URL + "/api/agencies";
+        const CORRECTIONS_API = BACKEND_URL + "/api/corrections";
+        const TITLES_API = BACKEND_URL + "/api/titles";
+
+        console.log(`🔍 Fetching: ${AGENCY_API}`);
+        console.log(`🔍 Fetching: ${CORRECTIONS_API}`);
+        console.log(`🔍 Fetching: ${TITLES_API}`);
+
+        const [agencyResponse, correctionsResponse, titlesResponse] = await Promise.all([
+            fetch(AGENCY_API),
+            fetch(CORRECTIONS_API),
+            fetch(TITLES_API)
+        ]);
+
+        console.log("📌 API responses received.");
+
+        if (!agencyResponse.ok || !correctionsResponse.ok || !titlesResponse.ok) {
+            throw new Error(`🚨 API Error: One or more requests failed.`);
+        }
+
+        const agenciesData = await agencyResponse.json();
+        const correctionsData = await correctionsResponse.json();
+        const titlesData = await titlesResponse.json();
+
+        console.log("✅ Successfully fetched data.");
+        console.log("📌 Agencies Data:", agenciesData);
+        console.log("📌 Corrections Data:", correctionsData);
+        console.log("📌 Titles Data:", titlesData);
+
+        // ✅ Check if `displayData()` is even running
+        console.log("🚀 Calling displayData now...");
+        displayData(agenciesData.agencies, correctionsData.ecfr_corrections, titlesData.titles);
+        console.log("✅ displayData has been called!");
+    } catch (error) {
+        console.error("🚨 Error fetching data:", error);
+    }
+}
+
 function displayData(agencies, corrections, titles) {
     console.log("✅ Organizing and displaying data...");
 
@@ -50,3 +93,5 @@ function displayData(agencies, corrections, titles) {
 
     console.log("✅ Data displayed successfully.");
 }
+
+window.onload = fetchData;
