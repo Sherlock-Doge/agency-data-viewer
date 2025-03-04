@@ -41,32 +41,40 @@ async function displayData(titles) {
     console.log("✅ Organizing and displaying data...");
 
     const tableBody = document.getElementById("agencyTableBody");
+    if (!tableBody) {
+        console.error("🚨 Table body not found!");
+        return;
+    }
     tableBody.innerHTML = ""; // Clear the table before adding new data
 
     for (const title of titles) {
-        const titleName = `Title ${title.number} - ${title.name}`;
+        console.log(`🔹 Processing Title: ${title.number} - ${title.name}`);
+
+        if (!title.children || title.children.length === 0) {
+            console.warn(`⚠️ No chapters found for ${title.number}`);
+            continue; // Skip if no chapters exist
+        }
+
         let firstRow = true;
 
         for (const chapter of title.children || []) {
-            const chapterName = chapter.label || "N/A";
+            console.log(`   📌 Chapter: ${chapter.label}`);
 
             for (const subchapter of chapter.children || []) {
-                const subchapterName = subchapter.label || "N/A";
+                console.log(`      📌 Subchapter: ${subchapter.label}`);
 
                 for (const part of subchapter.children || []) {
-                    const partName = part.label || "N/A";
-                    const partNumber = part.identifier || "N/A";
+                    console.log(`         📌 Part: ${part.label}`);
 
-                    // Fetch the word count for this part
+                    const partNumber = part.identifier || "N/A";
                     const wordCount = await fetchWordCount(title.number, partNumber);
 
                     const row = document.createElement("tr");
-
                     row.innerHTML = `
-                        <td>${firstRow ? titleName : ""}</td>
-                        <td>${firstRow || chapterName !== "N/A" ? chapterName : ""}</td>
-                        <td>${firstRow || subchapterName !== "N/A" ? subchapterName : ""}</td>
-                        <td>${partName}</td>
+                        <td>${firstRow ? title.number + " - " + title.name : ""}</td>
+                        <td>${firstRow || chapter.label !== "N/A" ? chapter.label : ""}</td>
+                        <td>${firstRow || subchapter.label !== "N/A" ? subchapter.label : ""}</td>
+                        <td>${part.label}</td>
                         <td>${title.latest_issue_date || "N/A"}</td>
                         <td>${title.latest_amended_on || "N/A"}</td>
                         <td>${wordCount}</td>
@@ -81,6 +89,7 @@ async function displayData(titles) {
 
     console.log("✅ Data displayed successfully.");
 }
+
 
 
 window.onload = fetchData;
