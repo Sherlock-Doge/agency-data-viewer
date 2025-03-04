@@ -1,5 +1,6 @@
-const AGENCY_API = "https://www.ecfr.gov/api/admin/v1/agencies.json";
-const CORRECTIONS_API = "https://www.ecfr.gov/api/admin/v1/corrections.json";
+const PROXY = "https://corsproxy.io/?";
+const AGENCY_API = PROXY + "https://www.ecfr.gov/api/admin/v1/agencies.json";
+const CORRECTIONS_API = PROXY + "https://www.ecfr.gov/api/admin/v1/corrections.json";
 
 async function fetchData() {
     try {
