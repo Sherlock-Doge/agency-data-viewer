@@ -1,30 +1,29 @@
 async function fetchData() {
     try {
-        console.log("Starting data fetch...");
+        console.log("Fetching data from APIs...");
 
-        // Use the correct eCFR API URLs
-        const AGENCY_API = "https://www.ecfr.gov/api/admin/v1/agencies.json";
-        const CORRECTIONS_API = "https://www.ecfr.gov/api/admin/v1/corrections.json";
-        const TITLES_API = "https://www.ecfr.gov/api/versioner/v1/titles.json";
+        // Using a CORS proxy to bypass CORS restrictions
+        const PROXY = "https://corsproxy.io/?";
+        const AGENCY_API = PROXY + "https://www.ecfr.gov/api/admin/v1/agencies.json";
+        const CORRECTIONS_API = PROXY + "https://www.ecfr.gov/api/admin/v1/corrections.json";
+        const TITLES_API = PROXY + "https://www.ecfr.gov/api/versioner/v1/titles.json";
 
         // Fetch all APIs in parallel
-        const responses = await Promise.all([
+        const [agencyResponse, correctionsResponse, titlesResponse] = await Promise.all([
             fetch(AGENCY_API),
             fetch(CORRECTIONS_API),
             fetch(TITLES_API)
         ]);
 
-        // Check if all responses are OK
-        for (let i = 0; i < responses.length; i++) {
-            if (!responses[i].ok) {
-                throw new Error(`API request failed: ${responses[i].url} - Status ${responses[i].status}`);
-            }
+        // Validate API responses
+        if (!agencyResponse.ok || !correctionsResponse.ok || !titlesResponse.ok) {
+            throw new Error(`One or more API requests failed.`);
         }
 
-        // Parse JSON
-        const agenciesData = await responses[0].json();
-        const correctionsData = await responses[1].json();
-        const titlesData = await responses[2].json();
+        // Convert responses to JSON
+        const agenciesData = await agencyResponse.json();
+        const correctionsData = await correctionsResponse.json();
+        const titlesData = await titlesResponse.json();
 
         console.log("✅ Successfully fetched API data.");
         console.log("📌 Agencies Data:", agenciesData);
