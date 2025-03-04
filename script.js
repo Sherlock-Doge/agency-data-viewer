@@ -14,18 +14,24 @@ async function fetchTitles() {
 async function fetchAncestry(titleNumber) {
     try {
         console.log(`🔍 Fetching ancestry for Title ${titleNumber}...`);
-        const date = "2025-02-28"; // Latest available date
+        const date = "2025-02-28"; 
         const response = await fetch(`https://www.ecfr.gov/api/versioner/v1/ancestry/${date}/title-${titleNumber}.json`);
-        
+
         if (!response.ok) {
             console.warn(`⚠️ Failed to fetch ancestry for Title ${titleNumber}`);
-            return null;
+            return [];
         }
 
-        return await response.json();
+        const ancestryData = await response.json();
+
+        return ancestryData.map(node => ({
+            type: node.type,
+            label: node.label || "N/A",
+            parent_label: node.parent_label || "N/A"
+        }));
     } catch (error) {
         console.error(`🚨 Error fetching ancestry for Title ${titleNumber}:`, error);
-        return null;
+        return [];
     }
 }
 
@@ -35,69 +41,54 @@ async function fetchWordCounts() {
         const response = await fetch("https://www.ecfr.gov/api/search/v1/counts/hierarchy");
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-        return await response.json();
+        const wordData = await response.json();
+        let wordCountMap = {};
+
+        wordData.forEach(item => {
+            if (item.identifier) {
+                wordCountMap[item.identifier] = item.count || 0;
+            }
+        });
+
+        return wordCountMap;
     } catch (error) {
         console.error("🚨 Error fetching word counts:", error);
         return {};
     }
 }
 
-async function fetchAgencies() {
-    try {
-        console.log("📥 Fetching agency data...");
-        const response = await fetch("https://www.ecfr.gov/api/admin/v1/agencies.json");
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-        return await response.json();
-    } catch (error) {
-        console.error("🚨 Error fetching agencies:", error);
-        return { agencies: [] };
-    }
-}
-
 async function fetchData() {
     const tableBody = document.querySelector("#titlesTable tbody");
-    tableBody.innerHTML = ""; // Clear table before adding rows
+    tableBody.innerHTML = "";
 
     const { titles } = await fetchTitles();
     const wordCounts = await fetchWordCounts();
-    const agenciesData = await fetchAgencies();
 
     for (let i = 0; i < titles.length; i++) {
         const title = titles[i];
 
-        // Find associated agency name
-        const agency = agenciesData.agencies.find(a => a.cfr_references.some(ref => ref.title == title.number));
-        const agencyName = agency ? agency.display_name : "Unknown";
-
-        // Add Title Header
         const titleRow = document.createElement("tr");
         titleRow.classList.add("title-header");
-        titleRow.innerHTML = `<td colspan="7"><strong>Title ${title.number} - ${title.name} (${agencyName})</strong></td>`;
+        titleRow.innerHTML = `<td colspan="7"><strong>Title ${title.number} - ${title.name}</strong></td>`;
         tableBody.appendChild(titleRow);
 
-        // Fetch the ancestry for this title
         const ancestry = await fetchAncestry(title.number);
-        if (ancestry && ancestry.length > 0) {
-            const titleHierarchy = ancestry.filter(a => a.type === "title")[0] || {};
-            
+        if (ancestry.length > 0) {
             ancestry.forEach(node => {
                 if (node.type === "part") {
                     const row = document.createElement("tr");
                     row.innerHTML = `
-                        <td></td> <!-- Empty for title -->
-                        <td>${titleHierarchy.label || "N/A"}</td>
+                        <td></td>
                         <td>${node.parent_label || "N/A"}</td>
                         <td>${node.label || "N/A"}</td>
-                        <td>${title.up_to_date_as_of || "N/A"}</td> <!-- ✅ Correct "Current as of" -->
-                        <td>${title.latest_amended_on || "N/A"}</td> <!-- ✅ Correct "Last Amended" -->
+                        <td>${title.up_to_date_as_of || "N/A"}</td>
+                        <td>${title.latest_amended_on || "N/A"}</td>
                         <td>${wordCounts[node.identifier] ? wordCounts[node.identifier].toLocaleString() : "N/A"}</td>
                     `;
                     tableBody.appendChild(row);
                 }
             });
         } else {
-            // No hierarchy available
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td colspan="4"></td>
@@ -108,7 +99,6 @@ async function fetchData() {
             tableBody.appendChild(row);
         }
 
-        // Wait 1 second before fetching the next title to prevent rate limits
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
