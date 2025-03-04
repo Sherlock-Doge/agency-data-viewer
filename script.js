@@ -3,93 +3,81 @@ async function fetchData() {
         console.log("✅ Fetching data from backend...");
 
         const BACKEND_URL = "https://ecfr-backend-sk8g.onrender.com";
-        const AGENCY_API = BACKEND_URL + "/api/agencies";
-        const CORRECTIONS_API = BACKEND_URL + "/api/corrections";
-        const TITLES_API = BACKEND_URL + "/api/titles";
+        const TITLES_API = `${BACKEND_URL}/api/titles`;
 
-        console.log(`🔍 Fetching: ${AGENCY_API}`);
-        console.log(`🔍 Fetching: ${CORRECTIONS_API}`);
         console.log(`🔍 Fetching: ${TITLES_API}`);
 
-        const [agencyResponse, correctionsResponse, titlesResponse] = await Promise.all([
-            fetch(AGENCY_API),
-            fetch(CORRECTIONS_API),
-            fetch(TITLES_API)
-        ]);
+        const titlesResponse = await fetch(TITLES_API);
+        if (!titlesResponse.ok) throw new Error("🚨 API Error: Failed to fetch titles.");
 
-        console.log("📌 API responses received.");
-
-        if (!agencyResponse.ok || !correctionsResponse.ok || !titlesResponse.ok) {
-            throw new Error(`🚨 API Error: One or more requests failed.`);
-        }
-
-        const agenciesData = await agencyResponse.json();
-        const correctionsData = await correctionsResponse.json();
         const titlesData = await titlesResponse.json();
-
-        console.log("✅ Successfully fetched data.");
-        console.log("📌 Agencies Data:", agenciesData);
-        console.log("📌 Corrections Data:", correctionsData);
+        console.log("✅ Successfully fetched titles data.");
         console.log("📌 Titles Data:", titlesData);
 
-        // ✅ Check if `displayData()` is even running
-        console.log("🚀 Calling displayData now...");
-        displayData(agenciesData.agencies, correctionsData.ecfr_corrections, titlesData.titles);
-        console.log("✅ displayData has been called!");
+        // Render the structured data in the table
+        displayData(titlesData.titles);
     } catch (error) {
         console.error("🚨 Error fetching data:", error);
     }
 }
 
-function displayData(agencies, corrections, titles) {
+async function fetchWordCount(title, part) {
+    try {
+        const BACKEND_URL = "https://ecfr-backend-sk8g.onrender.com";
+        const WORDCOUNT_API = `${BACKEND_URL}/api/wordcount/${title}/${part}`;
+        
+        const response = await fetch(WORDCOUNT_API);
+        if (!response.ok) throw new Error("Failed to fetch word count.");
+
+        const data = await response.json();
+        return data.wordCount;
+    } catch (error) {
+        console.error(`🚨 Error fetching word count for Title ${title}, Part ${part}:`, error);
+        return "N/A";
+    }
+}
+
+async function displayData(titles) {
     console.log("✅ Organizing and displaying data...");
 
     const tableBody = document.getElementById("agencyTableBody");
     tableBody.innerHTML = ""; // Clear the table before adding new data
 
-    // Create a map to store agencies under each Title
-    const titleMap = {};
+    for (const title of titles) {
+        const titleName = `Title ${title.number} - ${title.name}`;
+        let firstRow = true;
 
-    agencies.forEach(agency => {
-        const agencyTitleNumber = agency.cfr_references?.[0]?.title || "Unknown";
-        if (!titleMap[agencyTitleNumber]) {
-            titleMap[agencyTitleNumber] = {
-                name: `Title ${agencyTitleNumber}`,
-                agencies: [],
-                latestIssueDate: "N/A",
-                latestAmended: "N/A",
-                wordCount: "Unknown"
-            };
+        for (const chapter of title.children || []) {
+            const chapterName = chapter.label || "N/A";
+
+            for (const subchapter of chapter.children || []) {
+                const subchapterName = subchapter.label || "N/A";
+
+                for (const part of subchapter.children || []) {
+                    const partName = part.label || "N/A";
+                    const partNumber = part.identifier || "N/A";
+
+                    // Fetch the word count for this part
+                    const wordCount = await fetchWordCount(title.number, partNumber);
+
+                    const row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${firstRow ? titleName : ""}</td>
+                        <td>${firstRow || chapterName !== "N/A" ? chapterName : ""}</td>
+                        <td>${firstRow || subchapterName !== "N/A" ? subchapterName : ""}</td>
+                        <td>${partName}</td>
+                        <td>${title.latest_issue_date || "N/A"}</td>
+                        <td>${title.latest_amended_on || "N/A"}</td>
+                        <td>${wordCount}</td>
+                    `;
+
+                    tableBody.appendChild(row);
+                    firstRow = false;
+                }
+            }
         }
-
-        agency.children.forEach(subAgency => {
-            titleMap[agencyTitleNumber].agencies.push(subAgency.name);
-        });
-    });
-
-    // Add title details from API
-    titles.forEach(title => {
-        if (titleMap[title.number]) {
-            titleMap[title.number].name = `Title ${title.number} - ${title.name}`;
-            titleMap[title.number].latestIssueDate = title.latest_issue_date || "N/A";
-            titleMap[title.number].latestAmended = title.latest_amended_on || "N/A";
-        }
-    });
-
-    // Display the data in table
-    Object.values(titleMap).forEach(title => {
-        const row = document.createElement("tr");
-
-        row.innerHTML = `
-            <td>${title.name}</td>
-            <td>${title.agencies.map(agency => `<div>${agency}</div>`).join("") || "N/A"}</td>
-            <td>${title.latestIssueDate}</td>
-            <td>${title.latestAmended}</td>
-            <td>${title.wordCount}</td>
-        `;
-
-        tableBody.appendChild(row);
-    });
+    }
 
     console.log("✅ Data displayed successfully.");
 }
