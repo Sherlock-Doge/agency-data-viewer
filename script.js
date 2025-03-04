@@ -1,95 +1,118 @@
-async function fetchData() {
+async function fetchTitles() {
     try {
-        console.log("✅ Fetching data from backend...");
+        console.log("📥 Fetching eCFR Titles...");
+        const response = await fetch("https://www.ecfr.gov/api/versioner/v1/titles.json");
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-        const BACKEND_URL = "https://ecfr-backend-sk8g.onrender.com";
-        const TITLES_API = `${BACKEND_URL}/api/titles`;
-
-        console.log(`🔍 Fetching: ${TITLES_API}`);
-
-        const titlesResponse = await fetch(TITLES_API);
-        if (!titlesResponse.ok) throw new Error("🚨 API Error: Failed to fetch titles.");
-
-        const titlesData = await titlesResponse.json();
-        console.log("✅ Successfully fetched titles data.");
-        console.log("📌 Titles Data:", titlesData);
-
-        // Render the structured data in the table
-        displayData(titlesData.titles);
+        return await response.json();
     } catch (error) {
-        console.error("🚨 Error fetching data:", error);
+        console.error("🚨 Error fetching titles:", error);
+        return { titles: [] };
     }
 }
 
-async function fetchWordCount(title, part) {
+async function fetchAncestry(titleNumber) {
     try {
-        const BACKEND_URL = "https://ecfr-backend-sk8g.onrender.com";
-        const WORDCOUNT_API = `${BACKEND_URL}/api/wordcount/${title}/${part}`;
+        console.log(`🔍 Fetching ancestry for Title ${titleNumber}...`);
+        const date = "2025-02-28"; // Latest available date
+        const response = await fetch(`https://www.ecfr.gov/api/versioner/v1/ancestry/${date}/title-${titleNumber}.json`);
         
-        const response = await fetch(WORDCOUNT_API);
-        if (!response.ok) throw new Error("Failed to fetch word count.");
-
-        const data = await response.json();
-        return data.wordCount;
-    } catch (error) {
-        console.error(`🚨 Error fetching word count for Title ${title}, Part ${part}:`, error);
-        return "N/A";
-    }
-}
-
-async function displayData(titles) {
-    console.log("✅ Organizing and displaying data...");
-
-    const tableBody = document.getElementById("agencyTableBody");
-    if (!tableBody) {
-        console.error("🚨 Table body not found!");
-        return;
-    }
-    tableBody.innerHTML = ""; // Clear the table before adding new data
-
-    for (const title of titles) {
-        console.log(`🔹 Processing Title: ${title.number} - ${title.name}`);
-
-        if (!title.children || title.children.length === 0) {
-            console.warn(`⚠️ No chapters found for ${title.number}`);
-            continue; // Skip if no chapters exist
+        if (!response.ok) {
+            console.warn(`⚠️ Failed to fetch ancestry for Title ${titleNumber}`);
+            return null;
         }
 
-        let firstRow = true;
+        return await response.json();
+    } catch (error) {
+        console.error(`🚨 Error fetching ancestry for Title ${titleNumber}:`, error);
+        return null;
+    }
+}
 
-        for (const chapter of title.children || []) {
-            console.log(`   📌 Chapter: ${chapter.label}`);
+async function fetchWordCounts() {
+    try {
+        console.log("📥 Fetching word counts...");
+        const response = await fetch("https://www.ecfr.gov/api/search/v1/counts/hierarchy");
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-            for (const subchapter of chapter.children || []) {
-                console.log(`      📌 Subchapter: ${subchapter.label}`);
+        return await response.json();
+    } catch (error) {
+        console.error("🚨 Error fetching word counts:", error);
+        return {};
+    }
+}
 
-                for (const part of subchapter.children || []) {
-                    console.log(`         📌 Part: ${part.label}`);
+async function fetchAgencies() {
+    try {
+        console.log("📥 Fetching agency data...");
+        const response = await fetch("https://www.ecfr.gov/api/admin/v1/agencies.json");
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-                    const partNumber = part.identifier || "N/A";
-                    const wordCount = await fetchWordCount(title.number, partNumber);
+        return await response.json();
+    } catch (error) {
+        console.error("🚨 Error fetching agencies:", error);
+        return { agencies: [] };
+    }
+}
 
+async function fetchData() {
+    const tableBody = document.querySelector("#titlesTable tbody");
+    tableBody.innerHTML = ""; // Clear table before adding rows
+
+    const { titles } = await fetchTitles();
+    const wordCounts = await fetchWordCounts();
+    const agenciesData = await fetchAgencies();
+
+    for (let i = 0; i < titles.length; i++) {
+        const title = titles[i];
+
+        // Find associated agency name
+        const agency = agenciesData.agencies.find(a => a.cfr_references.some(ref => ref.title == title.number));
+        const agencyName = agency ? agency.display_name : "Unknown";
+
+        // Add Title Header
+        const titleRow = document.createElement("tr");
+        titleRow.classList.add("title-header");
+        titleRow.innerHTML = `<td colspan="7"><strong>Title ${title.number} - ${title.name} (${agencyName})</strong></td>`;
+        tableBody.appendChild(titleRow);
+
+        // Fetch the ancestry for this title
+        const ancestry = await fetchAncestry(title.number);
+        if (ancestry && ancestry.length > 0) {
+            const titleHierarchy = ancestry.filter(a => a.type === "title")[0] || {};
+            
+            ancestry.forEach(node => {
+                if (node.type === "part") {
                     const row = document.createElement("tr");
                     row.innerHTML = `
-                        <td>${firstRow ? title.number + " - " + title.name : ""}</td>
-                        <td>${firstRow || chapter.label !== "N/A" ? chapter.label : ""}</td>
-                        <td>${firstRow || subchapter.label !== "N/A" ? subchapter.label : ""}</td>
-                        <td>${part.label}</td>
-                        <td>${title.latest_issue_date || "N/A"}</td>
-                        <td>${title.latest_amended_on || "N/A"}</td>
-                        <td>${wordCount}</td>
+                        <td></td> <!-- Empty for title -->
+                        <td>${titleHierarchy.label || "N/A"}</td>
+                        <td>${node.parent_label || "N/A"}</td>
+                        <td>${node.label || "N/A"}</td>
+                        <td>${title.up_to_date_as_of || "N/A"}</td> <!-- ✅ Correct "Current as of" -->
+                        <td>${title.latest_amended_on || "N/A"}</td> <!-- ✅ Correct "Last Amended" -->
+                        <td>${wordCounts[node.identifier] ? wordCounts[node.identifier].toLocaleString() : "N/A"}</td>
                     `;
-
                     tableBody.appendChild(row);
-                    firstRow = false;
                 }
-            }
+            });
+        } else {
+            // No hierarchy available
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td colspan="4"></td>
+                <td>${title.up_to_date_as_of || "N/A"}</td>
+                <td>${title.latest_amended_on || "N/A"}</td>
+                <td>N/A</td>
+            `;
+            tableBody.appendChild(row);
         }
+
+        // Wait 1 second before fetching the next title to prevent rate limits
+        await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
-    console.log("✅ Data displayed successfully.");
+    console.log("✅ Table populated successfully.");
 }
 
-
-
-window.onload = fetchData;
+fetchData();
