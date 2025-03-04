@@ -82,4 +82,5 @@ async function displayData(titles) {
     console.log("✅ Data displayed successfully.");
 }
 
+
 window.onload = fetchData;
