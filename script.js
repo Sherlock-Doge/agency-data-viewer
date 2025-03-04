@@ -1,4 +1,4 @@
-function displayData(agencies, corrections, titles) {
+function renderData(agencies, corrections, titles) {
     console.log("✅ Displaying data...");
 
     const tableBody = document.getElementById("agencyTableBody");
@@ -80,7 +80,7 @@ async function fetchData() {
         console.log("📌 Titles Data:", titlesData);
 
         // Display the data
-        displayData(agenciesData.agencies, correctionsData.ecfr_corrections, titlesData.titles);
+        renderData(agenciesData.agencies, correctionsData.ecfr_corrections, titlesData.titles);
     } catch (error) {
         console.error("🚨 Error fetching data:", error);
     }
