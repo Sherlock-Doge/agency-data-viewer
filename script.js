@@ -42,4 +42,48 @@ async function fetchData() {
     }
 }
 
+function displayData(agencies, corrections, titles) {
+    console.log("✅ Displaying data...");
+
+    const tableBody = document.getElementById("agencyTableBody");
+    tableBody.innerHTML = ""; // Clear the table before adding new data
+
+    // Sort agencies alphabetically
+    agencies.sort((a, b) => a.name.localeCompare(b.name));
+
+    agencies.forEach(agency => {
+        const row = document.createElement("tr");
+        const childrenNames = agency.children.map(child => child.name).join(", ") || "N/A";
+
+        // Find the latest correction related to this agency
+        const latestCorrection = corrections
+            .filter(corr => corr.cfr_references.some(ref => 
+                agency.cfr_references.some(agRef => agRef.title == ref.hierarchy.title)
+            ))
+            .sort((a, b) => new Date(b.error_corrected) - new Date(a.error_corrected))[0];
+
+        const currentAsOf = latestCorrection?.error_corrected || "Unknown";
+        const lastAmended = latestCorrection?.error_occurred || "Unknown";
+        const wordCount = latestCorrection?.corrective_action?.split(" ").length || "Unknown";
+
+        // Find matching title information
+        const agencyTitle = agency.cfr_references?.[0]?.title || null;
+        const matchingTitle = titles.find(title => title.number == agencyTitle);
+        const latestAmended = matchingTitle?.latest_amended_on || "N/A";
+        const latestIssueDate = matchingTitle?.latest_issue_date || "N/A";
+
+        row.innerHTML = `
+            <td>${agency.name}</td>
+            <td>${childrenNames}</td>
+            <td>${latestIssueDate}</td>
+            <td>${latestAmended}</td>
+            <td>${wordCount}</td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+
+    console.log("✅ Data displayed successfully.");
+}
+
 window.onload = fetchData;
