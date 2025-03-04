@@ -1,24 +1,18 @@
-const PROXY = "https://corsproxy.io/?";
-const AGENCY_API = PROXY + "https://www.ecfr.gov/api/admin/v1/agencies.json";
-const CORRECTIONS_API = PROXY + "https://www.ecfr.gov/api/admin/v1/corrections.json";
-
 async function fetchData() {
     try {
         const [agencyResponse, correctionsResponse] = await Promise.all([
-            fetch(AGENCY_API),
-            fetch(CORRECTIONS_API)
+            fetch('/api/admin/v1/agencies.json'),
+            fetch('/api/admin/v1/corrections.json')
         ]);
 
-        if (!agencyResponse.ok || !correctionsResponse.ok) {
-            throw new Error(`API request failed: ${agencyResponse.status}, ${correctionsResponse.status}`);
-        }
+        const PROXY = "https://corsproxy.io/?";
+const AGENCY_API = PROXY + "https://www.ecfr.gov/api/admin/v1/agencies.json";
+const CORRECTIONS_API = PROXY + "https://www.ecfr.gov/api/admin/v1/corrections.json";
 
-        const agenciesData = await agencyResponse.json();
-        const correctionsData = await correctionsResponse.json();
 
         displayData(agenciesData.agencies, correctionsData.ecfr_corrections);
     } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
     }
 }
 
