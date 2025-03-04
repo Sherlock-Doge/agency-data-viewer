@@ -3,33 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eCFR Titles</title>
+    <title>eCFR Data Viewer</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            background-color: white;
         }
         th, td {
-            border: 1px solid black;
+            border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #f4f4f4;
         }
         .title-header {
+            background-color: #e2e2e2;
             font-weight: bold;
-            background-color: #e9ecef;
         }
     </style>
 </head>
 <body>
-
-    <h1>📌 Example of Updated Table Structure</h1>
+    <h1>eCFR Titles Overview</h1>
+    
     <table id="titlesTable">
         <thead>
             <tr>
@@ -45,67 +52,6 @@
         <tbody></tbody>
     </table>
 
-    <script>
-        async function fetchData() {
-            try {
-                console.log("📥 Fetching eCFR Titles...");
-                const response = await fetch("https://ecfr-backend-sk8g.onrender.com/api/titles");
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-                const data = await response.json();
-                const tableBody = document.querySelector("#titlesTable tbody");
-
-                tableBody.innerHTML = ""; // Clear table before adding rows
-
-                data.titles.forEach(title => {
-                    // Create Title Header Row
-                    const titleRow = document.createElement("tr");
-                    titleRow.classList.add("title-header");
-                    titleRow.innerHTML = `
-                        <td colspan="7"><strong>Title ${title.number} - ${title.name}</strong></td>
-                    `;
-                    tableBody.appendChild(titleRow);
-
-                    // Add Chapters, Subchapters, and Parts
-                    if (title.hierarchy && title.hierarchy.length > 0) {
-                        title.hierarchy.forEach(chapter => {
-                            chapter.children.forEach(subchapter => {
-                                subchapter.children.forEach(part => {
-                                    const row = document.createElement("tr");
-                                    row.innerHTML = `
-                                        <td></td> <!-- Empty for title -->
-                                        <td>${chapter.label}</td>
-                                        <td>${subchapter.label}</td>
-                                        <td>${part.label}</td>
-                                        <td>${title.up_to_date_as_of || "N/A"}</td>
-                                        <td>${title.latest_amended_on || "N/A"}</td>
-                                        <td>${part.word_count ? part.word_count.toLocaleString() : "N/A"}</td>
-                                    `;
-                                    tableBody.appendChild(row);
-                                });
-                            });
-                        });
-                    } else {
-                        // If no hierarchy is available, just display the title details
-                        const row = document.createElement("tr");
-                        row.innerHTML = `
-                            <td colspan="4"></td>
-                            <td>${title.up_to_date_as_of || "N/A"}</td>
-                            <td>${title.latest_amended_on || "N/A"}</td>
-                            <td>N/A</td>
-                        `;
-                        tableBody.appendChild(row);
-                    }
-                });
-
-                console.log("✅ Table populated successfully.");
-            } catch (error) {
-                console.error("🚨 Error fetching data:", error);
-            }
-        }
-
-        fetchData();
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
