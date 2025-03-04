@@ -1,28 +1,35 @@
 async function fetchData() {
     try {
+        // CORS Proxy to avoid issues with direct API calls
         const PROXY = "https://corsproxy.io/?";
         const AGENCY_API = PROXY + "https://www.ecfr.gov/api/admin/v1/agencies.json";
         const CORRECTIONS_API = PROXY + "https://www.ecfr.gov/api/admin/v1/corrections.json";
+        const TITLES_API = PROXY + "https://www.ecfr.gov/api/versioner/v1/titles.json";
 
-        const [agencyResponse, correctionsResponse] = await Promise.all([
+        // Fetch all required data in parallel
+        const [agencyResponse, correctionsResponse, titlesResponse] = await Promise.all([
             fetch(AGENCY_API),
-            fetch(CORRECTIONS_API)
+            fetch(CORRECTIONS_API),
+            fetch(TITLES_API)
         ]);
 
-        if (!agencyResponse.ok || !correctionsResponse.ok) {
-            throw new Error("API request failed");
+        // Check if responses are okay
+        if (!agencyResponse.ok || !correctionsResponse.ok || !titlesResponse.ok) {
+            throw new Error("One or more API requests failed");
         }
 
+        // Parse JSON responses
         const agenciesData = await agencyResponse.json();
         const correctionsData = await correctionsResponse.json();
+        const titlesData = await titlesResponse.json();
 
-        displayData(agenciesData.agencies, correctionsData.ecfr_corrections);
+        displayData(agenciesData.agencies, correctionsData.ecfr_corrections, titlesData.titles);
     } catch (error) {
         console.error('Error fetching data:', error);
     }
 }
 
-function displayData(agencies, corrections) {
+function displayData(agencies, corrections, titles) {
     const tableBody = document.getElementById("agencyTableBody");
     tableBody.innerHTML = "";
 
@@ -43,11 +50,17 @@ function displayData(agencies, corrections) {
         const lastAmended = latestCorrection?.error_occurred || "Unknown";
         const wordCount = latestCorrection?.corrective_action?.split(" ").length || "Unknown";
 
+        // Find matching title information
+        const agencyTitle = agency.cfr_references?.[0]?.title || null;
+        const matchingTitle = titles.find(title => title.number == agencyTitle);
+        const latestAmended = matchingTitle?.latest_amended_on || "N/A";
+        const latestIssueDate = matchingTitle?.latest_issue_date || "N/A";
+
         row.innerHTML = `
             <td>${agency.name}</td>
             <td>${childrenNames}</td>
-            <td>${currentAsOf}</td>
-            <td>${lastAmended}</td>
+            <td>${latestIssueDate}</td>
+            <td>${latestAmended}</td>
             <td>${wordCount}</td>
         `;
 
