@@ -1,27 +1,40 @@
 async function fetchData() {
     try {
-        // CORS Proxy to avoid issues with direct API calls
-        const PROXY = "https://corsproxy.io/?";
-        const AGENCY_API = PROXY + "https://www.ecfr.gov/api/admin/v1/agencies.json";
-        const CORRECTIONS_API = PROXY + "https://www.ecfr.gov/api/admin/v1/corrections.json";
-        const TITLES_API = PROXY + "https://www.ecfr.gov/api/versioner/v1/titles.json";
+        // Ensure correct API URLs
+        const AGENCY_API = "https://www.ecfr.gov/api/admin/v1/agencies.json";
+        const CORRECTIONS_API = "https://www.ecfr.gov/api/admin/v1/corrections.json";
+        const TITLES_API = "https://www.ecfr.gov/api/versioner/v1/titles.json";
 
-        // Fetch all required data in parallel
+        console.log("Fetching data from APIs...");
+
+        // Fetch all APIs
         const [agencyResponse, correctionsResponse, titlesResponse] = await Promise.all([
             fetch(AGENCY_API),
             fetch(CORRECTIONS_API),
             fetch(TITLES_API)
         ]);
 
-        // Check if responses are okay
-        if (!agencyResponse.ok || !correctionsResponse.ok || !titlesResponse.ok) {
-            throw new Error("One or more API requests failed");
+        // Check if any API request failed
+        if (!agencyResponse.ok) {
+            throw new Error(`Failed to fetch agencies.json: ${agencyResponse.status}`);
+        }
+        if (!correctionsResponse.ok) {
+            throw new Error(`Failed to fetch corrections.json: ${correctionsResponse.status}`);
+        }
+        if (!titlesResponse.ok) {
+            throw new Error(`Failed to fetch titles.json: ${titlesResponse.status}`);
         }
 
-        // Parse JSON responses
+        console.log("API responses successful.");
+
+        // Convert responses to JSON
         const agenciesData = await agencyResponse.json();
         const correctionsData = await correctionsResponse.json();
         const titlesData = await titlesResponse.json();
+
+        console.log("Agencies Data:", agenciesData);
+        console.log("Corrections Data:", correctionsData);
+        console.log("Titles Data:", titlesData);
 
         displayData(agenciesData.agencies, correctionsData.ecfr_corrections, titlesData.titles);
     } catch (error) {
