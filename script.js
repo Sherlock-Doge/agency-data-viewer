@@ -138,10 +138,12 @@ async function fetchData() {
     const tableBody = document.querySelector("#titlesTable tbody");
     tableBody.innerHTML = "";
 
-    // 📌 Fetch core data first (so scoreboard updates quickly)
+    // 📌 Step 1: Fetch core metadata **FIRST**, so scoreboard updates quickly
     const [titlesData, agenciesData] = await Promise.all([fetchTitles(), fetchAgencies()]);
     const { titles } = titlesData;
-    const wordCounts = await fetchWordCounts();
+
+    // 📌 Immediately update scoreboard with title/agency count (fast)
+    updateScoreboard(titles.length, agenciesData.agencies.length, "Loading...", "Loading...");
 
     if (!titles || titles.length === 0) {
         console.error("🚨 No Titles Data Received!");
@@ -151,10 +153,9 @@ async function fetchData() {
     let mostRecentTitle = null;
     let mostRecentDate = null;
 
-    // 📌 Update scoreboard first
-    updateScoreboard(titles.length, agenciesData.agencies.length, mostRecentTitle, mostRecentDate);
+    // 📌 Step 2: Fetch word counts & populate the table **AFTER** scoreboard is ready
+    const wordCounts = await fetchWordCounts();
 
-    // 📌 Populate Table
     for (let title of titles) {
         console.log(`🔍 Processing Title: ${title.number} - ${title.name}`);
 
@@ -200,15 +201,7 @@ async function fetchData() {
                 }
             });
         }
-
-        if (!mostRecentDate || (title.latest_amended_on && title.latest_amended_on > mostRecentDate)) {
-            mostRecentDate = title.latest_amended_on;
-            mostRecentTitle = `Title ${title.number} - ${title.name}`;
-        }
     }
-
-    // 📌 Final Scoreboard Update (Most Recent Amendment)
-    updateScoreboard(titles.length, agenciesData.agencies.length, mostRecentTitle, mostRecentDate);
 
     console.log("✅ Table populated successfully.");
 }
