@@ -26,7 +26,7 @@ async function fetchAgencies() {
     }
 }
 
-// 📌 Fetch word counts for parts and sections
+// 📌 Fetch word counts from backend
 async function fetchWordCounts() {
     try {
         console.log("📥 Fetching word counts...");
@@ -36,25 +36,24 @@ async function fetchWordCounts() {
         const wordData = await response.json();
         let wordCountMap = {};
 
-        // ✅ Ensure the response is an array before processing
-        if (!Array.isArray(wordData)) {
-            console.error("🚨 Unexpected word count format", wordData);
+        // ✅ Fix Unexpected Response Format
+        if (typeof wordData !== "object") {
+            console.error("🚨 Unexpected word count format:", wordData);
             return {};
         }
 
-        // 📌 Convert the API response into a key-value map for easier lookup
-        wordData.forEach(item => {
-            if (item.identifier) {
-                wordCountMap[item.identifier] = item.count || 0;
-            }
+        // 📌 Convert response to key-value map
+        Object.keys(wordData).forEach(identifier => {
+            wordCountMap[identifier] = wordData[identifier] || 0;
         });
 
         return wordCountMap;
     } catch (error) {
         console.error("🚨 Error fetching word counts:", error);
-        return {}; // Prevent crashes with empty response
+        return {}; // Return empty object to prevent crashes
     }
 }
+
 
 // 📌 Fetch ancestry data for a specific title (chapters, subchapters, parts)
 async function fetchAncestry(titleNumber) {
