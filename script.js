@@ -2,13 +2,13 @@
 async function fetchTitles() {
     try {
         console.log("📥 Fetching eCFR Titles...");
-        const response = await fetch("https://your-backend-url.com/api/titles");
+        const response = await fetch("https://ecfr-backend-sk8g.onrender.com/api/titles");
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         return await response.json();
     } catch (error) {
         console.error("🚨 Error fetching titles:", error);
-        return { titles: [] }; // Return an empty object to prevent crashes
+        return { titles: [] }; // Prevent crashes with empty response
     }
 }
 
@@ -16,13 +16,13 @@ async function fetchTitles() {
 async function fetchAgencies() {
     try {
         console.log("📥 Fetching agency data...");
-        const response = await fetch("https://your-backend-url.com/api/agencies");
+        const response = await fetch("https://ecfr-backend-sk8g.onrender.com/api/agencies");
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         return await response.json();
     } catch (error) {
         console.error("🚨 Error fetching agencies:", error);
-        return { agencies: [] }; // Return an empty array to prevent crashes
+        return { agencies: [] }; // Prevent crashes with empty response
     }
 }
 
@@ -30,7 +30,7 @@ async function fetchAgencies() {
 async function fetchWordCounts() {
     try {
         console.log("📥 Fetching word counts...");
-        const response = await fetch("https://your-backend-url.com/api/wordcounts");
+        const response = await fetch("https://ecfr-backend-sk8g.onrender.com/api/wordcounts");
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const wordData = await response.json();
@@ -52,7 +52,7 @@ async function fetchWordCounts() {
         return wordCountMap;
     } catch (error) {
         console.error("🚨 Error fetching word counts:", error);
-        return {}; // Return an empty object to prevent crashes
+        return {}; // Prevent crashes with empty response
     }
 }
 
@@ -60,7 +60,7 @@ async function fetchWordCounts() {
 async function fetchAncestry(titleNumber) {
     try {
         console.log(`🔍 Fetching ancestry for Title ${titleNumber}...`);
-        const response = await fetch(`https://your-backend-url.com/api/ancestry/${titleNumber}`);
+        const response = await fetch(`https://ecfr-backend-sk8g.onrender.com/api/ancestry/${titleNumber}`);
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const ancestryData = await response.json();
@@ -76,7 +76,7 @@ async function fetchAncestry(titleNumber) {
         }));
     } catch (error) {
         console.error(`🚨 Error fetching ancestry for Title ${titleNumber}:`, error);
-        return []; // Return an empty array to prevent crashes
+        return []; // Prevent crashes with empty response
     }
 }
 
