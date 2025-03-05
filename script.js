@@ -68,11 +68,11 @@ async function fetchAncestry(titleNumber) {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const data = await response.json();
-        console.log(`✅ Ancestry for Title ${titleNumber}:`, data);
+        console.log(`✅ Full Ancestry Response for Title ${titleNumber}:`, JSON.stringify(data, null, 2));
 
         // ✅ Extract the hierarchical structure properly
         if (data && data.children) {
-            return extractAncestryHierarchy(data.children);
+            return extractAncestryHierarchy(data.children, data.label);
         }
         
         return []; // Return an empty array if no valid data
@@ -82,21 +82,27 @@ async function fetchAncestry(titleNumber) {
     }
 }
 
-// 📌 Extract Hierarchical Structure
+// 📌 Extract Hierarchical Structure (Now Includes Sections)
 function extractAncestryHierarchy(children, parentLabel = "N/A") {
     let hierarchy = [];
+    
     children.forEach(node => {
-        hierarchy.push({
+        const currentNode = {
             identifier: node.identifier,
             label: node.label || "N/A",
             type: node.type || "N/A",
-            parent_label: parentLabel
-        });
+            parent_label: parentLabel,
+        };
 
+        hierarchy.push(currentNode);
+
+        // 🔍 Recursively process children if they exist
         if (node.children && node.children.length > 0) {
             hierarchy = hierarchy.concat(extractAncestryHierarchy(node.children, node.label));
         }
     });
+
+    console.log("📊 Extracted Hierarchy:", hierarchy);
     return hierarchy;
 }
 
@@ -133,13 +139,13 @@ async function fetchData() {
         titleRow.innerHTML = `<td colspan="7"><strong>Title ${title.number} - ${title.name} (${agencyName})</strong></td>`;
         tableBody.appendChild(titleRow);
 
-        // 📌 Fetch hierarchy (chapters, subchapters, parts) for this title
+        // 📌 Fetch hierarchy (chapters, subchapters, parts, sections) for this title
         const ancestry = await fetchAncestry(title.number);
 
         if (ancestry.length > 0) {
             ancestry.forEach(node => {
-                if (node.type === "part" || node.type === "chapter" || node.type === "subchapter") {
-                    // 📌 Create a new row for each part in the title
+                if (["part", "chapter", "subchapter", "section"].includes(node.type)) {
+                    // 📌 Create a new row for each section in the title
                     const row = document.createElement("tr");
                     row.innerHTML = `
                         <td></td>
