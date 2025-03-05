@@ -1,7 +1,7 @@
 async function fetchTitles() {
     try {
         console.log("📥 Fetching eCFR Titles...");
-        const response = await fetch("https://www.ecfr.gov/api/versioner/v1/titles.json");
+        const response = await fetch("https://your-backend-url.com/api/titles");
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         return await response.json();
@@ -11,38 +11,32 @@ async function fetchTitles() {
     }
 }
 
-async function fetchAncestry(titleNumber) {
+async function fetchAgencies() {
     try {
-        console.log(`🔍 Fetching ancestry for Title ${titleNumber}...`);
-        const date = "2025-02-28"; 
-        const response = await fetch(`https://www.ecfr.gov/api/versioner/v1/ancestry/${date}/title-${titleNumber}.json`);
+        console.log("📥 Fetching agency data...");
+        const response = await fetch("https://your-backend-url.com/api/agencies");
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-        if (!response.ok) {
-            console.warn(`⚠️ Failed to fetch ancestry for Title ${titleNumber}`);
-            return [];
-        }
-
-        const ancestryData = await response.json();
-
-        return ancestryData.map(node => ({
-            type: node.type,
-            label: node.label || "N/A",
-            parent_label: node.parent_label || "N/A"
-        }));
+        return await response.json();
     } catch (error) {
-        console.error(`🚨 Error fetching ancestry for Title ${titleNumber}:`, error);
-        return [];
+        console.error("🚨 Error fetching agencies:", error);
+        return { agencies: [] };
     }
 }
 
 async function fetchWordCounts() {
     try {
         console.log("📥 Fetching word counts...");
-        const response = await fetch("https://www.ecfr.gov/api/search/v1/counts/hierarchy");
+        const response = await fetch("https://your-backend-url.com/api/wordcounts");
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const wordData = await response.json();
         let wordCountMap = {};
+
+        if (!Array.isArray(wordData)) {
+            console.error("🚨 Unexpected word count format", wordData);
+            return {};
+        }
 
         wordData.forEach(item => {
             if (item.identifier) {
@@ -57,19 +51,41 @@ async function fetchWordCounts() {
     }
 }
 
+async function fetchAncestry(titleNumber) {
+    try {
+        console.log(`🔍 Fetching ancestry for Title ${titleNumber}...`);
+        const response = await fetch(`https://your-backend-url.com/api/ancestry/${titleNumber}`);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const ancestryData = await response.json();
+        if (!Array.isArray(ancestryData)) throw new Error("Invalid ancestry format");
+
+        return ancestryData.map(node => ({
+            type: node.type,
+            label: node.label || "N/A",
+            parent_label: node.parent_label || "N/A"
+        }));
+    } catch (error) {
+        console.error(`🚨 Error fetching ancestry for Title ${titleNumber}:`, error);
+        return [];
+    }
+}
+
 async function fetchData() {
     const tableBody = document.querySelector("#titlesTable tbody");
-    tableBody.innerHTML = "";
+    tableBody.innerHTML = ""; // Clear table
 
     const { titles } = await fetchTitles();
+    const agenciesData = await fetchAgencies();
     const wordCounts = await fetchWordCounts();
 
-    for (let i = 0; i < titles.length; i++) {
-        const title = titles[i];
+    for (let title of titles) {
+        const agency = agenciesData.agencies.find(a => a.cfr_references.some(ref => ref.title == title.number));
+        const agencyName = agency ? agency.display_name : "Unknown";
 
         const titleRow = document.createElement("tr");
         titleRow.classList.add("title-header");
-        titleRow.innerHTML = `<td colspan="7"><strong>Title ${title.number} - ${title.name}</strong></td>`;
+        titleRow.innerHTML = `<td colspan="7"><strong>Title ${title.number} - ${title.name} (${agencyName})</strong></td>`;
         tableBody.appendChild(titleRow);
 
         const ancestry = await fetchAncestry(title.number);
