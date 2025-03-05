@@ -13,7 +13,7 @@ h1 {
 }
 
 /* Scoreboard Styles */
-#scoreboard {
+.scoreboard {
     width: 100%;
     margin-bottom: 20px;
     background: #ffffff;
@@ -31,17 +31,21 @@ h1 {
     padding: 5px 10px;
 }
 
-/* Main Table Styles */
+.score-value {
+    font-size: 22px;
+    color: #007bff;
+}
+
+/* Table Styles */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
     background-color: white;
 }
 
 th, td {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 10px;
     text-align: left;
 }
 
@@ -49,51 +53,22 @@ th {
     background-color: #f4f4f4;
 }
 
-/* Title Row */
-.title-header {
-    background-color: #d9d9d9;
+/* Clickable Title Link */
+.title-link {
+    text-decoration: none;
+    color: #007bff;
     font-weight: bold;
-    cursor: pointer;
 }
 
-/* Chapter Level */
-.chapter-row {
-    background-color: #eef5ff;
-    cursor: pointer;
-    padding-left: 20px;
+.title-link:hover {
+    text-decoration: underline;
 }
 
-/* Subchapter Level */
-.subchapter-row {
-    background-color: #e3f7e3;
-    cursor: pointer;
-    padding-left: 40px;
-}
-
-/* Part Level */
-.part-row {
-    background-color: #fff3e6;
-    cursor: pointer;
-    padding-left: 60px;
-}
-
-/* Section Level */
-.section-row {
+/* Alternating Row Colors for Readability */
+tbody tr:nth-child(even) {
     background-color: #f9f9f9;
-    padding-left: 80px;
 }
 
-/* Hover Effects */
-.title-header:hover, .chapter-row:hover, .subchapter-row:hover, .part-row:hover {
-    background-color: #ccc;
-}
-
-/* Initially Hide Nested Rows */
-.hidden {
-    display: none;
-}
-
-/* Expand/Collapse Animation */
-tr {
-    transition: all 0.3s ease-in-out;
+tbody tr:nth-child(odd) {
+    background-color: #ffffff;
 }
