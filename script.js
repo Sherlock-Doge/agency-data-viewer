@@ -113,10 +113,23 @@ function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecen
 function toggleRow(event) {
     const row = event.target.closest("tr");
     const identifier = row.dataset.identifier;
-    const type = row.dataset.type;
+    const isExpanded = row.classList.toggle("expanded");
 
     document.querySelectorAll(`tr[data-parent="${identifier}"]`).forEach(childRow => {
-        childRow.classList.toggle("hidden");
+        if (isExpanded) {
+            childRow.classList.remove("hidden");
+        } else {
+            childRow.classList.add("hidden");
+            collapseChildren(childRow.dataset.identifier); // Collapse all child rows
+        }
+    });
+}
+
+// 📌 Collapse all child elements when a parent is collapsed
+function collapseChildren(parentIdentifier) {
+    document.querySelectorAll(`tr[data-parent="${parentIdentifier}"]`).forEach(childRow => {
+        childRow.classList.add("hidden");
+        collapseChildren(childRow.dataset.identifier);
     });
 }
 
@@ -125,8 +138,9 @@ async function fetchData() {
     const tableBody = document.querySelector("#titlesTable tbody");
     tableBody.innerHTML = "";
 
-    const { titles } = await fetchTitles();
-    const agenciesData = await fetchAgencies();
+    // 📌 Fetch core data first (so scoreboard updates quickly)
+    const [titlesData, agenciesData] = await Promise.all([fetchTitles(), fetchAgencies()]);
+    const { titles } = titlesData;
     const wordCounts = await fetchWordCounts();
 
     if (!titles || titles.length === 0) {
@@ -137,6 +151,10 @@ async function fetchData() {
     let mostRecentTitle = null;
     let mostRecentDate = null;
 
+    // 📌 Update scoreboard first
+    updateScoreboard(titles.length, agenciesData.agencies.length, mostRecentTitle, mostRecentDate);
+
+    // 📌 Populate Table
     for (let title of titles) {
         console.log(`🔍 Processing Title: ${title.number} - ${title.name}`);
 
@@ -146,12 +164,15 @@ async function fetchData() {
 
         const agencyName = agency ? agency.display_name : "Unknown";
 
+        // 📌 Title Row (Main Level)
         const titleRow = document.createElement("tr");
         titleRow.classList.add("title-header");
         titleRow.dataset.identifier = title.number;
         titleRow.dataset.type = "title";
-        titleRow.innerHTML = `<td colspan="7"><strong>Title ${title.number} - ${title.name} (${agencyName})</strong></td>`;
-        titleRow.addEventListener("click", toggleRow);
+        titleRow.innerHTML = `
+            <td colspan="7"><button class="toggle-btn">+</button> <strong>Title ${title.number} - ${title.name} (${agencyName})</strong></td>
+        `;
+        titleRow.querySelector(".toggle-btn").addEventListener("click", toggleRow);
         tableBody.appendChild(titleRow);
 
         const ancestry = await fetchAncestry(title.number);
@@ -166,14 +187,15 @@ async function fetchData() {
                     row.classList.add("hidden");
 
                     row.innerHTML = `
-                        <td></td>
+                        <td style="padding-left: ${10 * (node.type === "chapter" ? 1 : node.type === "subchapter" ? 2 : node.type === "part" ? 3 : 4)}px;">
+                            <button class="toggle-btn">+</button> ${node.label || "N/A"}
+                        </td>
                         <td>${node.parent_identifier || "N/A"}</td>
-                        <td>${node.label || "N/A"}</td>
                         <td>N/A</td>
                         <td>N/A</td>
                         <td>${wordCounts[node.identifier] ? wordCounts[node.identifier].toLocaleString() : "N/A"}</td>
                     `;
-                    row.addEventListener("click", toggleRow);
+                    row.querySelector(".toggle-btn").addEventListener("click", toggleRow);
                     tableBody.appendChild(row);
                 }
             });
@@ -183,10 +205,9 @@ async function fetchData() {
             mostRecentDate = title.latest_amended_on;
             mostRecentTitle = `Title ${title.number} - ${title.name}`;
         }
-
-        await new Promise(resolve => setTimeout(resolve, 250));
     }
 
+    // 📌 Final Scoreboard Update (Most Recent Amendment)
     updateScoreboard(titles.length, agenciesData.agencies.length, mostRecentTitle, mostRecentDate);
 
     console.log("✅ Table populated successfully.");
