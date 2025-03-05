@@ -5,7 +5,9 @@ async function fetchTitles() {
         const response = await fetch("https://ecfr-backend-sk8g.onrender.com/api/titles");
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-        return await response.json();
+        const data = await response.json();
+        console.log("✅ Titles Data:", data);
+        return data;
     } catch (error) {
         console.error("🚨 Error fetching titles:", error);
         return { titles: [] }; // Prevent crashes
@@ -19,7 +21,9 @@ async function fetchAgencies() {
         const response = await fetch("https://ecfr-backend-sk8g.onrender.com/api/agencies");
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-        return await response.json();
+        const data = await response.json();
+        console.log("✅ Agencies Data:", data);
+        return data;
     } catch (error) {
         console.error("🚨 Error fetching agencies:", error);
         return { agencies: [] }; // Prevent crashes
@@ -34,6 +38,8 @@ async function fetchWordCounts() {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const wordData = await response.json();
+        console.log("✅ Word Count Data:", wordData);
+
         let wordCountMap = {};
 
         // ✅ Fix Unexpected Response Format
@@ -61,7 +67,9 @@ async function fetchAncestry(titleNumber) {
         const response = await fetch(`https://ecfr-backend-sk8g.onrender.com/api/ancestry/${titleNumber}`);
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-        return await response.json();
+        const data = await response.json();
+        console.log(`✅ Ancestry for Title ${titleNumber}:`, data);
+        return data;
     } catch (error) {
         console.error(`🚨 Error fetching ancestry for Title ${titleNumber}:`, error);
         return []; // Prevent crashes
@@ -78,27 +86,61 @@ async function fetchData() {
     const agenciesData = await fetchAgencies();
     const wordCounts = await fetchWordCounts();
 
+    if (!titles || titles.length === 0) {
+        console.error("🚨 No Titles Data Received!");
+        return;
+    }
+
     // 📌 Populate Table
     for (let title of titles) {
+        console.log(`🔍 Processing Title: ${title.number} - ${title.name}`);
+
+        // 🔍 Find the agency associated with this title (if any)
+        const agency = agenciesData.agencies.find(a => 
+            a.cfr_references.some(ref => ref.title == title.number)
+        );
+        console.log(`🔍 Associated Agency for Title ${title.number}:`, agency);
+
+        const agencyName = agency ? agency.display_name : "Unknown";
+
+        // 📌 Add a header row for the title
         const titleRow = document.createElement("tr");
-        titleRow.innerHTML = `<td colspan="7"><strong>Title ${title.number} - ${title.name}</strong></td>`;
+        titleRow.classList.add("title-header");
+        titleRow.innerHTML = `<td colspan="7"><strong>Title ${title.number} - ${title.name} (${agencyName})</strong></td>`;
         tableBody.appendChild(titleRow);
 
+        // 📌 Fetch hierarchy (chapters, subchapters, parts) for this title
         const ancestry = await fetchAncestry(title.number);
-        ancestry.forEach(node => {
-            if (node.type === "part") {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td></td>
-                    <td>${node.parent_label || "N/A"}</td>
-                    <td>${node.label || "N/A"}</td>
-                    <td>${title.up_to_date_as_of || "N/A"}</td>
-                    <td>${title.latest_amended_on || "N/A"}</td>
-                    <td>${wordCounts[node.identifier] ? wordCounts[node.identifier].toLocaleString() : "N/A"}</td>
-                `;
-                tableBody.appendChild(row);
-            }
-        });
+
+        if (ancestry.length > 0) {
+            ancestry.forEach(node => {
+                if (node.type === "part") {
+                    // 📌 Create a new row for each part in the title
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td></td>
+                        <td>${node.parent_label || "N/A"}</td>
+                        <td>${node.label || "N/A"}</td>
+                        <td>${title.up_to_date_as_of || "N/A"}</td>
+                        <td>${title.latest_amended_on || "N/A"}</td>
+                        <td>${wordCounts[node.identifier] ? wordCounts[node.identifier].toLocaleString() : "N/A"}</td>
+                    `;
+                    tableBody.appendChild(row);
+                }
+            });
+        } else {
+            console.warn(`⚠️ No Ancestry Data Found for Title ${title.number}`);
+
+            // 📌 If no ancestry found, just display the title with empty data
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td colspan="4"></td>
+                <td>${title.up_to_date_as_of || "N/A"}</td>
+                <td>${title.latest_amended_on || "N/A"}</td>
+                <td>N/A</td>
+            `;
+            tableBody.appendChild(row);
+        }
 
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
