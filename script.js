@@ -69,7 +69,9 @@ async function fetchAncestry(titleNumber) {
 
         const data = await response.json();
         console.log(`✅ Ancestry for Title ${titleNumber}:`, data);
-        return data;
+
+        // ✅ Ensure it always returns an array
+        return data.ancestors || [];  // <-- FIX HERE
     } catch (error) {
         console.error(`🚨 Error fetching ancestry for Title ${titleNumber}:`, error);
         return []; // Prevent crashes
