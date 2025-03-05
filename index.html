@@ -4,55 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>eCFR Data Viewer</title>
-   <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-        h1 {
-            text-align: center;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: white;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f4f4f4;
-        }
-        .title-header {
-            background-color: #e2e2e2;
-            font-weight: bold;
-        }
-        /* Scoreboard styling */
-        .scoreboard {
-            display: flex;
-            justify-content: space-around;
-            padding: 15px;
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .score-item {
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .score-value {
-            font-size: 22px;
-            color: #007bff;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>eCFR Titles Overview</h1>
@@ -68,13 +20,11 @@
         </div>
     </div>
 
+    <!-- Main Table -->
     <table id="titlesTable">
         <thead>
             <tr>
                 <th>Title</th>
-                <th>Chapter</th>
-                <th>Subchapter</th>
-                <th>Part</th>
                 <th>Current as of</th>
                 <th>Last Amended</th>
                 <th>Word Count</th>
