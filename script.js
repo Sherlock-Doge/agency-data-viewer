@@ -1,4 +1,4 @@
-// 📌 Fetch all eCFR Titles from the backend
+// 📌 Fetch eCFR Titles from Backend
 async function fetchTitles() {
     try {
         console.log("📥 Fetching eCFR Titles...");
@@ -8,11 +8,11 @@ async function fetchTitles() {
         return await response.json();
     } catch (error) {
         console.error("🚨 Error fetching titles:", error);
-        return { titles: [] }; // Prevent crashes with empty response
+        return { titles: [] }; // Prevent crashes
     }
 }
 
-// 📌 Fetch all agency data from the backend
+// 📌 Fetch Agency Data from Backend
 async function fetchAgencies() {
     try {
         console.log("📥 Fetching agency data...");
@@ -22,11 +22,11 @@ async function fetchAgencies() {
         return await response.json();
     } catch (error) {
         console.error("🚨 Error fetching agencies:", error);
-        return { agencies: [] }; // Prevent crashes with empty response
+        return { agencies: [] }; // Prevent crashes
     }
 }
 
-// 📌 Fetch word counts from backend
+// 📌 Fetch Word Counts from Backend
 async function fetchWordCounts() {
     try {
         console.log("📥 Fetching word counts...");
@@ -50,93 +50,61 @@ async function fetchWordCounts() {
         return wordCountMap;
     } catch (error) {
         console.error("🚨 Error fetching word counts:", error);
-        return {}; // Return empty object to prevent crashes
+        return {}; // Prevent crashes
     }
 }
 
-
-// 📌 Fetch ancestry data for a specific title (chapters, subchapters, parts)
+// 📌 Fetch Ancestry Data for a Title
 async function fetchAncestry(titleNumber) {
     try {
         console.log(`🔍 Fetching ancestry for Title ${titleNumber}...`);
         const response = await fetch(`https://ecfr-backend-sk8g.onrender.com/api/ancestry/${titleNumber}`);
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-        const ancestryData = await response.json();
-
-        // ✅ Ensure the response is an array before processing
-        if (!Array.isArray(ancestryData)) throw new Error("Invalid ancestry format");
-
-        // 📌 Extract relevant ancestry data (type, label, parent label)
-        return ancestryData.map(node => ({
-            type: node.type,
-            label: node.label || "N/A",
-            parent_label: node.parent_label || "N/A"
-        }));
+        return await response.json();
     } catch (error) {
         console.error(`🚨 Error fetching ancestry for Title ${titleNumber}:`, error);
-        return []; // Prevent crashes with empty response
+        return []; // Prevent crashes
     }
 }
 
-// 📌 Main function to fetch and populate the table with eCFR data
+// 📌 Main Function to Fetch and Populate Table
 async function fetchData() {
     const tableBody = document.querySelector("#titlesTable tbody");
-    tableBody.innerHTML = ""; // Clear existing table content before loading new data
+    tableBody.innerHTML = "";
 
-    // 📌 Fetch all required data (titles, agencies, word counts)
+    // 📌 Fetch Required Data
     const { titles } = await fetchTitles();
     const agenciesData = await fetchAgencies();
     const wordCounts = await fetchWordCounts();
 
-    // 📌 Iterate through each title and populate the table
+    // 📌 Populate Table
     for (let title of titles) {
-        // 🔍 Find the agency associated with this title (if any)
-        const agency = agenciesData.agencies.find(a => a.cfr_references.some(ref => ref.title == title.number));
-        const agencyName = agency ? agency.display_name : "Unknown";
-
-        // 📌 Add a header row for the title
         const titleRow = document.createElement("tr");
-        titleRow.classList.add("title-header");
-        titleRow.innerHTML = `<td colspan="7"><strong>Title ${title.number} - ${title.name} (${agencyName})</strong></td>`;
+        titleRow.innerHTML = `<td colspan="7"><strong>Title ${title.number} - ${title.name}</strong></td>`;
         tableBody.appendChild(titleRow);
 
-        // 📌 Fetch hierarchy (chapters, subchapters, parts) for this title
         const ancestry = await fetchAncestry(title.number);
-        if (ancestry.length > 0) {
-            ancestry.forEach(node => {
-                if (node.type === "part") {
-                    // 📌 Create a new row for each part in the title
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td></td> <!-- Empty cell to align with title -->
-                        <td>${node.parent_label || "N/A"}</td>
-                        <td>${node.label || "N/A"}</td>
-                        <td>${title.up_to_date_as_of || "N/A"}</td> <!-- ✅ "Current as of" date -->
-                        <td>${title.latest_amended_on || "N/A"}</td> <!-- ✅ "Last Amended" date -->
-                        <td>${wordCounts[node.identifier] ? wordCounts[node.identifier].toLocaleString() : "N/A"}</td> <!-- ✅ Word count lookup -->
-                    `;
-                    tableBody.appendChild(row);
-                }
-            });
-        } else {
-            // 📌 If no ancestry found, just display the title with empty data
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td colspan="4"></td> <!-- Empty columns -->
-                <td>${title.up_to_date_as_of || "N/A"}</td>
-                <td>${title.latest_amended_on || "N/A"}</td>
-                <td>N/A</td>
-            `;
-            tableBody.appendChild(row);
-        }
+        ancestry.forEach(node => {
+            if (node.type === "part") {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td></td>
+                    <td>${node.parent_label || "N/A"}</td>
+                    <td>${node.label || "N/A"}</td>
+                    <td>${title.up_to_date_as_of || "N/A"}</td>
+                    <td>${title.latest_amended_on || "N/A"}</td>
+                    <td>${wordCounts[node.identifier] ? wordCounts[node.identifier].toLocaleString() : "N/A"}</td>
+                `;
+                tableBody.appendChild(row);
+            }
+        });
 
-        // ⏳ Prevent API rate limits by adding a delay between requests
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
     console.log("✅ Table populated successfully.");
 }
 
-// 📌 Start the data fetching process when the script loads
+// 📌 Start Fetching Data
 fetchData();
