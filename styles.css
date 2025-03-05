@@ -1,1 +1,74 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+/* Headings */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Scoreboard Styles */
+#scoreboard {
+    width: 100%;
+    margin-bottom: 20px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+}
+
+.score-item {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 5px 10px;
+}
+
+/* Main Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background-color: white;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+/* Title Row (Highlight Titles) */
+.title-header {
+    background-color: #e2e2e2;
+    font-weight: bold;
+}
+
+/* Hierarchy Colors (Subtle) */
+.chapter-row {
+    background-color: #eef5ff;
+}
+
+.subchapter-row {
+    background-color: #e3f7e3;
+}
+
+.part-row {
+    background-color: #fff3e6;
+}
+
+.section-row {
+    background-color: #f9f9f9;
+}
 
