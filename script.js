@@ -41,11 +41,6 @@ async function fetchWordCounts() {
         console.log("✅ Word Count Data:", wordData);
 
         let wordCountMap = {};
-        if (typeof wordData !== "object") {
-            console.error("🚨 Unexpected word count format:", wordData);
-            return {};
-        }
-
         Object.keys(wordData).forEach(identifier => {
             wordCountMap[identifier] = wordData[identifier] || 0;
         });
@@ -65,13 +60,9 @@ async function fetchAncestry(titleNumber) {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const data = await response.json();
-        console.log(`✅ Full Ancestry Response for Title ${titleNumber}:`, JSON.stringify(data, null, 2));
+        console.log(`✅ Full Ancestry Response for Title ${titleNumber}:`, data);
 
-        if (data && data.children) {
-            return extractAncestryHierarchy(data.children, data.identifier);
-        }
-
-        return [];
+        return data.children ? extractAncestryHierarchy(data.children, data.identifier) : [];
     } catch (error) {
         console.error(`🚨 Error fetching ancestry for Title ${titleNumber}:`, error);
         return [];
@@ -97,7 +88,6 @@ function extractAncestryHierarchy(children, parentIdentifier) {
         }
     });
 
-    console.log("📊 Extracted Hierarchy:", hierarchy);
     return hierarchy;
 }
 
@@ -105,24 +95,24 @@ function extractAncestryHierarchy(children, parentIdentifier) {
 function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecentDate) {
     document.getElementById("totalTitles").textContent = totalTitles;
     document.getElementById("totalAgencies").textContent = totalAgencies;
-    document.getElementById("recentAmendedTitle").textContent = mostRecentTitle || "N/A";
-    document.getElementById("recentAmendedDate").textContent = mostRecentDate || "N/A";
+    document.getElementById("recentAmendedTitle").innerHTML = mostRecentTitle 
+        ? `<a href="#">${mostRecentTitle} (${mostRecentDate})</a>` 
+        : "N/A";
 }
 
 // 📌 Toggle Expand/Collapse Rows
 function toggleRow(event) {
     const row = event.target.closest("tr");
     const identifier = row.dataset.identifier;
+    const toggleBtn = row.querySelector(".toggle-btn");
+
     const isExpanded = row.classList.toggle("expanded");
 
     document.querySelectorAll(`tr[data-parent="${identifier}"]`).forEach(childRow => {
-        if (isExpanded) {
-            childRow.classList.remove("hidden");
-        } else {
-            childRow.classList.add("hidden");
-            collapseChildren(childRow.dataset.identifier); // Collapse all child rows
-        }
+        childRow.classList.toggle("hidden", !isExpanded);
     });
+
+    toggleBtn.textContent = isExpanded ? "−" : "+";
 }
 
 // 📌 Collapse all child elements when a parent is collapsed
@@ -138,11 +128,11 @@ async function fetchData() {
     const tableBody = document.querySelector("#titlesTable tbody");
     tableBody.innerHTML = "";
 
-    // 📌 Step 1: Fetch core metadata **FIRST**, so scoreboard updates quickly
+    // 📌 Step 1: Fetch metadata (Scoreboard updates immediately)
     const [titlesData, agenciesData] = await Promise.all([fetchTitles(), fetchAgencies()]);
     const { titles } = titlesData;
 
-    // 📌 Immediately update scoreboard with title/agency count (fast)
+    // 📌 Step 2: Set quick scoreboard data
     updateScoreboard(titles.length, agenciesData.agencies.length, "Loading...", "Loading...");
 
     if (!titles || titles.length === 0) {
@@ -153,7 +143,7 @@ async function fetchData() {
     let mostRecentTitle = null;
     let mostRecentDate = null;
 
-    // 📌 Step 2: Fetch word counts & populate the table **AFTER** scoreboard is ready
+    // 📌 Step 3: Fetch word counts (After scoreboard loads)
     const wordCounts = await fetchWordCounts();
 
     for (let title of titles) {
@@ -176,29 +166,28 @@ async function fetchData() {
         titleRow.querySelector(".toggle-btn").addEventListener("click", toggleRow);
         tableBody.appendChild(titleRow);
 
+        // 📌 Step 4: Fetch hierarchy (chapters, subchapters, parts, sections)
         const ancestry = await fetchAncestry(title.number);
 
         if (ancestry.length > 0) {
             ancestry.forEach(node => {
-                if (["chapter", "subchapter", "part", "section"].includes(node.type)) {
-                    const row = document.createElement("tr");
-                    row.dataset.parent = node.parent_identifier;
-                    row.dataset.identifier = node.identifier;
-                    row.dataset.type = node.type;
-                    row.classList.add("hidden");
+                const row = document.createElement("tr");
+                row.dataset.parent = node.parent_identifier;
+                row.dataset.identifier = node.identifier;
+                row.dataset.type = node.type;
+                row.classList.add("hidden");
 
-                    row.innerHTML = `
-                        <td style="padding-left: ${10 * (node.type === "chapter" ? 1 : node.type === "subchapter" ? 2 : node.type === "part" ? 3 : 4)}px;">
-                            <button class="toggle-btn">+</button> ${node.label || "N/A"}
-                        </td>
-                        <td>${node.parent_identifier || "N/A"}</td>
-                        <td>N/A</td>
-                        <td>N/A</td>
-                        <td>${wordCounts[node.identifier] ? wordCounts[node.identifier].toLocaleString() : "N/A"}</td>
-                    `;
-                    row.querySelector(".toggle-btn").addEventListener("click", toggleRow);
-                    tableBody.appendChild(row);
-                }
+                row.innerHTML = `
+                    <td style="padding-left: ${10 * (node.type === "chapter" ? 1 : node.type === "subchapter" ? 2 : node.type === "part" ? 3 : 4)}px;">
+                        <button class="toggle-btn">+</button> ${node.label || "N/A"}
+                    </td>
+                    <td>${node.parent_identifier || "N/A"}</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                    <td>${wordCounts[node.identifier] ? wordCounts[node.identifier].toLocaleString() : "N/A"}</td>
+                `;
+                row.querySelector(".toggle-btn").addEventListener("click", toggleRow);
+                tableBody.appendChild(row);
             });
         }
     }
