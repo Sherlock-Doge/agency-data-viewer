@@ -31,14 +31,18 @@ async function fetchWordCounts() {
     }
 }
 
-// 📌 Update Scoreboard
-function updateScoreboard(totalTitles, mostRecentTitle, mostRecentDate) {
+// 📌 Update Scoreboard with full title
+function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecentDate, mostRecentTitleName) {
     document.getElementById("totalTitles").textContent = totalTitles;
-    document.getElementById("recentAmendedTitle").innerHTML = mostRecentTitle 
-        ? `<a href="https://www.ecfr.gov/current/title-${mostRecentTitle}" target="_blank">${mostRecentTitle}</a>` 
-        : "N/A";
+    document.getElementById("totalAgencies").textContent = totalAgencies;
+
+    const recentAmendedTitleElement = document.getElementById("recentAmendedTitle");
+    recentAmendedTitleElement.href = `https://www.ecfr.gov/current/title-${mostRecentTitle.replace("Title ", "")}`;
+    recentAmendedTitleElement.textContent = `${mostRecentTitle} - ${mostRecentTitleName}`;
+
     document.getElementById("recentAmendedDate").textContent = mostRecentDate || "N/A";
 }
+
 
 // 📌 Main Function to Fetch and Populate Table
 async function fetchData() {
