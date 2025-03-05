@@ -70,12 +70,34 @@ async function fetchAncestry(titleNumber) {
         const data = await response.json();
         console.log(`✅ Ancestry for Title ${titleNumber}:`, data);
 
-        // ✅ Ensure it always returns an array
-        return data.ancestors || [];  // <-- FIX HERE
+        // ✅ Extract the hierarchical structure properly
+        if (data && data.children) {
+            return extractAncestryHierarchy(data.children);
+        }
+        
+        return []; // Return an empty array if no valid data
     } catch (error) {
         console.error(`🚨 Error fetching ancestry for Title ${titleNumber}:`, error);
         return []; // Prevent crashes
     }
+}
+
+// 📌 Extract Hierarchical Structure
+function extractAncestryHierarchy(children, parentLabel = "N/A") {
+    let hierarchy = [];
+    children.forEach(node => {
+        hierarchy.push({
+            identifier: node.identifier,
+            label: node.label || "N/A",
+            type: node.type || "N/A",
+            parent_label: parentLabel
+        });
+
+        if (node.children && node.children.length > 0) {
+            hierarchy = hierarchy.concat(extractAncestryHierarchy(node.children, node.label));
+        }
+    });
+    return hierarchy;
 }
 
 // 📌 Main Function to Fetch and Populate Table
@@ -116,7 +138,7 @@ async function fetchData() {
 
         if (ancestry.length > 0) {
             ancestry.forEach(node => {
-                if (node.type === "part") {
+                if (node.type === "part" || node.type === "chapter" || node.type === "subchapter") {
                     // 📌 Create a new row for each part in the title
                     const row = document.createElement("tr");
                     row.innerHTML = `
@@ -144,7 +166,7 @@ async function fetchData() {
             tableBody.appendChild(row);
         }
 
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 500));
     }
 
     console.log("✅ Table populated successfully.");
