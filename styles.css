@@ -49,26 +49,51 @@ th {
     background-color: #f4f4f4;
 }
 
-/* Title Row (Highlight Titles) */
+/* Title Row */
 .title-header {
-    background-color: #e2e2e2;
+    background-color: #d9d9d9;
     font-weight: bold;
+    cursor: pointer;
 }
 
-/* Hierarchy Colors (Subtle) */
+/* Chapter Level */
 .chapter-row {
     background-color: #eef5ff;
+    cursor: pointer;
+    padding-left: 20px;
 }
 
+/* Subchapter Level */
 .subchapter-row {
     background-color: #e3f7e3;
+    cursor: pointer;
+    padding-left: 40px;
 }
 
+/* Part Level */
 .part-row {
     background-color: #fff3e6;
+    cursor: pointer;
+    padding-left: 60px;
 }
 
+/* Section Level */
 .section-row {
     background-color: #f9f9f9;
+    padding-left: 80px;
 }
 
+/* Hover Effects */
+.title-header:hover, .chapter-row:hover, .subchapter-row:hover, .part-row:hover {
+    background-color: #ccc;
+}
+
+/* Initially Hide Nested Rows */
+.hidden {
+    display: none;
+}
+
+/* Expand/Collapse Animation */
+tr {
+    transition: all 0.3s ease-in-out;
+}
