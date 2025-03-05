@@ -42,13 +42,11 @@ async function fetchWordCounts() {
 
         let wordCountMap = {};
 
-        // ✅ Fix Unexpected Response Format
         if (typeof wordData !== "object") {
             console.error("🚨 Unexpected word count format:", wordData);
             return {};
         }
 
-        // 📌 Convert response to key-value map
         Object.keys(wordData).forEach(identifier => {
             wordCountMap[identifier] = wordData[identifier] || 0;
         });
@@ -70,7 +68,6 @@ async function fetchAncestry(titleNumber) {
         const data = await response.json();
         console.log(`✅ Full Ancestry Response for Title ${titleNumber}:`, JSON.stringify(data, null, 2));
 
-        // ✅ Extract the hierarchical structure properly
         if (data && data.children) {
             return extractAncestryHierarchy(data.children, data.label);
         }
@@ -82,7 +79,7 @@ async function fetchAncestry(titleNumber) {
     }
 }
 
-// 📌 Extract Hierarchical Structure (Now Includes Sections)
+// 📌 Extract Hierarchical Structure
 function extractAncestryHierarchy(children, parentLabel = "N/A") {
     let hierarchy = [];
     
@@ -96,7 +93,6 @@ function extractAncestryHierarchy(children, parentLabel = "N/A") {
 
         hierarchy.push(currentNode);
 
-        // 🔍 Recursively process children if they exist
         if (node.children && node.children.length > 0) {
             hierarchy = hierarchy.concat(extractAncestryHierarchy(node.children, node.label));
         }
@@ -106,12 +102,19 @@ function extractAncestryHierarchy(children, parentLabel = "N/A") {
     return hierarchy;
 }
 
+// 📌 Update Scoreboard
+function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecentDate) {
+    document.getElementById("totalTitles").textContent = totalTitles;
+    document.getElementById("totalAgencies").textContent = totalAgencies;
+    document.getElementById("recentAmendedTitle").textContent = mostRecentTitle || "N/A";
+    document.getElementById("recentAmendedDate").textContent = mostRecentDate || "N/A";
+}
+
 // 📌 Main Function to Fetch and Populate Table
 async function fetchData() {
     const tableBody = document.querySelector("#titlesTable tbody");
     tableBody.innerHTML = "";
 
-    // 📌 Fetch Required Data
     const { titles } = await fetchTitles();
     const agenciesData = await fetchAgencies();
     const wordCounts = await fetchWordCounts();
@@ -121,11 +124,12 @@ async function fetchData() {
         return;
     }
 
-    // 📌 Populate Table
+    let mostRecentTitle = null;
+    let mostRecentDate = null;
+
     for (let title of titles) {
         console.log(`🔍 Processing Title: ${title.number} - ${title.name}`);
 
-        // 🔍 Find the agency associated with this title (if any)
         const agency = agenciesData.agencies.find(a => 
             a.cfr_references.some(ref => ref.title == title.number)
         );
@@ -133,19 +137,16 @@ async function fetchData() {
 
         const agencyName = agency ? agency.display_name : "Unknown";
 
-        // 📌 Add a header row for the title
         const titleRow = document.createElement("tr");
         titleRow.classList.add("title-header");
         titleRow.innerHTML = `<td colspan="7"><strong>Title ${title.number} - ${title.name} (${agencyName})</strong></td>`;
         tableBody.appendChild(titleRow);
 
-        // 📌 Fetch hierarchy (chapters, subchapters, parts, sections) for this title
         const ancestry = await fetchAncestry(title.number);
 
         if (ancestry.length > 0) {
             ancestry.forEach(node => {
                 if (["part", "chapter", "subchapter", "section"].includes(node.type)) {
-                    // 📌 Create a new row for each section in the title
                     const row = document.createElement("tr");
                     row.innerHTML = `
                         <td></td>
@@ -161,7 +162,6 @@ async function fetchData() {
         } else {
             console.warn(`⚠️ No Ancestry Data Found for Title ${title.number}`);
 
-            // 📌 If no ancestry found, just display the title with empty data
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td colspan="4"></td>
@@ -172,8 +172,15 @@ async function fetchData() {
             tableBody.appendChild(row);
         }
 
+        if (!mostRecentDate || (title.latest_amended_on && title.latest_amended_on > mostRecentDate)) {
+            mostRecentDate = title.latest_amended_on;
+            mostRecentTitle = `Title ${title.number} - ${title.name}`;
+        }
+
         await new Promise(resolve => setTimeout(resolve, 500));
     }
+
+    updateScoreboard(titles.length, agenciesData.agencies.length, mostRecentTitle, mostRecentDate);
 
     console.log("✅ Table populated successfully.");
 }
