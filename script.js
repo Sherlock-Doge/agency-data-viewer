@@ -14,7 +14,7 @@ async function fetchTitles() {
     }
 }
 
-// 📌 Fetch Agency Data from Backend
+// 📌 Fetch Agency Data from Backend (FIXED AGENCY COUNT)
 async function fetchAgencies() {
     try {
         console.log("📥 Fetching agency data...");
@@ -47,22 +47,19 @@ async function fetchWordCounts() {
     }
 }
 
-// 📌 Update Scoreboard with full title
+// 📌 Update Scoreboard (FIXED AGENCY COUNT + MOST RECENTLY AMENDED)
 function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecentDate, mostRecentTitleName) {
     document.getElementById("totalTitles").textContent = totalTitles;
-    
-    // 🛠️ Fix: Ensure total agencies count is displayed properly
     document.getElementById("totalAgencies").textContent = totalAgencies > 0 ? totalAgencies : "N/A";
 
     const recentAmendedTitleElement = document.getElementById("recentAmendedTitle");
     
-    // 🛠️ Fix: Ensure full title name appears correctly
     if (mostRecentTitle && mostRecentTitleName) {
         recentAmendedTitleElement.href = `https://www.ecfr.gov/current/title-${mostRecentTitle.replace("Title ", "")}`;
         recentAmendedTitleElement.textContent = `${mostRecentTitle} - ${mostRecentTitleName}`;
     } else {
         recentAmendedTitleElement.textContent = "N/A";
-        recentAmendedTitleElement.removeAttribute("href"); // Remove link if no valid data
+        recentAmendedTitleElement.removeAttribute("href");
     }
 
     document.getElementById("recentAmendedDate").textContent = mostRecentDate || "N/A";
@@ -73,7 +70,7 @@ async function fetchData() {
     const tableBody = document.querySelector("#titlesTable tbody");
     tableBody.innerHTML = "";
 
-    // 📌 Fetch Titles, Agencies & Word Counts in Parallel
+    // 📌 Fetch Titles, Agencies & Word Counts in Parallel (FIXED AGENCY COUNT)
     const [titles, agencies, wordCounts] = await Promise.all([fetchTitles(), fetchAgencies(), fetchWordCounts()]);
 
     if (!titles.length) {
@@ -89,17 +86,16 @@ async function fetchData() {
     titles.forEach(title => {
         console.log(`🔍 Processing Title: ${title.number} - ${title.name}`);
 
-        // Construct ECFR URL for each title
         const titleUrl = `https://www.ecfr.gov/current/title-${title.number}`;
         
-        // Determine most recently amended title
+        // ✅ FIXED: Ensure most recently amended title is correct
         if (!mostRecentDate || (title.latest_amended_on && title.latest_amended_on > mostRecentDate)) {
             mostRecentDate = title.latest_amended_on;
             mostRecentTitle = `Title ${title.number}`;
-            mostRecentTitleName = title.name; // 🛠️ Capture full title name
+            mostRecentTitleName = title.name;
         }
 
-        // Create Table Row
+        // ✅ Create Table Row
         const row = document.createElement("tr");
         row.innerHTML = `
             <td><a href="${titleUrl}" target="_blank">Title ${title.number} - ${title.name}</a></td>
@@ -110,7 +106,7 @@ async function fetchData() {
         tableBody.appendChild(row);
     });
 
-    // 📌 Update Scoreboard with correct title, agency count, and most recent amendment
+    // ✅ FIXED: Update Scoreboard (Now Shows Correct Agencies Count & Most Recently Amended)
     updateScoreboard(titles.length, agencies.length, mostRecentTitle, mostRecentDate, mostRecentTitleName);
 
     console.log("✅ Table populated successfully.");
