@@ -1,85 +1,116 @@
-const express = require("express");
-const axios = require("axios");
-const NodeCache = require("node-cache");
-
-const app = express();
-const PORT = process.env.PORT || 10000;
-const BASE_URL = "https://www.ecfr.gov";
-
-// ✅ Initialize Cache (24-hour persistence)
-const wordCountCache = new NodeCache({ stdTTL: 86400, checkperiod: 3600 });
-
-// 📌 ✅ CORS Middleware - Allows frontend access
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-Type");
-    next();
-});
-
-// 📌 Fetch Titles (Summary Info)
-app.get("/api/titles", async (req, res) => {
+// 📌 Fetch eCFR Titles from Backend
+async function fetchTitles() {
     try {
         console.log("📥 Fetching eCFR Titles...");
-        const response = await axios.get(`${BASE_URL}/api/versioner/v1/titles.json`);
-        res.json(response.data);
-    } catch (error) {
-        console.error("🚨 Error fetching titles:", error.message);
-        res.status(500).json({ error: "Failed to fetch title data" });
-    }
-});
+        const response = await fetch("https://ecfr-backend-sk8g.onrender.com/api/titles");
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-// 📌 Fetch Agencies
-app.get("/api/agencies", async (req, res) => {
+        const data = await response.json();
+        console.log("✅ Titles Data:", data);
+        return data.titles || [];
+    } catch (error) {
+        console.error("🚨 Error fetching titles:", error);
+        return [];
+    }
+}
+
+// 📌 Fetch Agency Data from Backend (FIXED AGENCY COUNT)
+async function fetchAgencies() {
     try {
         console.log("📥 Fetching agency data...");
-        const response = await axios.get(`${BASE_URL}/api/admin/v1/agencies.json`);
-        res.json(response.data);
-    } catch (error) {
-        console.error("🚨 Error fetching agencies:", error.message);
-        res.status(500).json({ error: "Failed to fetch agency data" });
-    }
-});
+        const response = await fetch("https://ecfr-backend-sk8g.onrender.com/api/agencies");
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-// 📌 Fetch Precomputed Word Counts
-app.get("/api/wordcounts", async (req, res) => {
+        const data = await response.json();
+        console.log("✅ Agencies Data:", data);
+        return data.agencies || [];
+    } catch (error) {
+        console.error("🚨 Error fetching agencies:", error);
+        return [];
+    }
+}
+
+// 📌 Fetch Word Counts from Backend
+async function fetchWordCounts() {
     try {
-        console.log("📥 Fetching precomputed word counts...");
+        console.log("📥 Fetching word counts...");
+        const response = await fetch("https://ecfr-backend-sk8g.onrender.com/api/wordcounts");
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-        // ✅ Check if cached data exists
-        let cachedWordCounts = wordCountCache.get("wordCounts");
-        if (cachedWordCounts) {
-            console.log("✅ Returning cached word counts");
-            return res.json(cachedWordCounts);
-        }
+        const wordData = await response.json();
+        console.log("✅ Word Count Data:", wordData);
 
-        // 🔍 Fetch from eCFR API
-        const response = await axios.get(`${BASE_URL}/api/search/v1/counts/hierarchy`);
-        const rawData = response.data.children;
-
-        if (!rawData || !Array.isArray(rawData)) {
-            throw new Error("Invalid word count data format");
-        }
-
-        // 📊 Extract title-level word counts
-        let wordCounts = {};
-        rawData.forEach(title => {
-            if (title.level === "title" && title.hierarchy && title.count) {
-                wordCounts[title.hierarchy] = title.count;
-            }
-        });
-
-        console.log("✅ Word counts fetched and cached");
-        wordCountCache.set("wordCounts", wordCounts); // Cache results
-
-        res.json(wordCounts);
+        return wordData || {};
     } catch (error) {
-        console.error("🚨 Error fetching word counts:", error.message);
-        res.status(500).json({ error: "Failed to fetch word count data" });
+        console.error("🚨 Error fetching word counts:", error);
+        return {};
     }
-});
+}
 
-// 📌 Start the Server
-app.listen(PORT, () => {
-    console.log(`✅ Server running on port ${PORT}`);
-});
+// 📌 Update Scoreboard (FIXED AGENCY COUNT + MOST RECENTLY AMENDED)
+function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecentDate, mostRecentTitleName) {
+    document.getElementById("totalTitles").textContent = totalTitles;
+    document.getElementById("totalAgencies").textContent = totalAgencies > 0 ? totalAgencies : "N/A";
+
+    const recentAmendedTitleElement = document.getElementById("recentAmendedTitle");
+    
+    if (mostRecentTitle && mostRecentTitleName) {
+        recentAmendedTitleElement.href = `https://www.ecfr.gov/current/title-${mostRecentTitle.replace("Title ", "")}`;
+        recentAmendedTitleElement.textContent = `${mostRecentTitle} - ${mostRecentTitleName}`;
+    } else {
+        recentAmendedTitleElement.textContent = "N/A";
+        recentAmendedTitleElement.removeAttribute("href");
+    }
+
+    document.getElementById("recentAmendedDate").textContent = mostRecentDate || "N/A";
+}
+
+// 📌 Main Function to Fetch and Populate Table
+async function fetchData() {
+    const tableBody = document.querySelector("#titlesTable tbody");
+    tableBody.innerHTML = "";
+
+    // 📌 Fetch Titles, Agencies & Word Counts in Parallel (FIXED AGENCY COUNT)
+    const [titles, agencies, wordCounts] = await Promise.all([fetchTitles(), fetchAgencies(), fetchWordCounts()]);
+
+    if (!titles.length) {
+        console.error("🚨 No Titles Data Received!");
+        return;
+    }
+
+    let mostRecentTitle = null;
+    let mostRecentTitleName = null;
+    let mostRecentDate = null;
+
+    // 📌 Populate Table
+    titles.forEach(title => {
+        console.log(`🔍 Processing Title: ${title.number} - ${title.name}`);
+
+        const titleUrl = `https://www.ecfr.gov/current/title-${title.number}`;
+        
+        // ✅ FIXED: Ensure most recently amended title is correct
+        if (!mostRecentDate || (title.latest_amended_on && title.latest_amended_on > mostRecentDate)) {
+            mostRecentDate = title.latest_amended_on;
+            mostRecentTitle = `Title ${title.number}`;
+            mostRecentTitleName = title.name;
+        }
+
+        // ✅ Create Table Row
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td><a href="${titleUrl}" target="_blank">Title ${title.number} - ${title.name}</a></td>
+            <td>${title.up_to_date_as_of || "N/A"}</td>
+            <td>${title.latest_amended_on || "N/A"}</td>
+            <td>${wordCounts[title.number] ? wordCounts[title.number].toLocaleString() : "N/A"}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+
+    // ✅ FIXED: Update Scoreboard (Now Shows Correct Agencies Count & Most Recently Amended)
+    updateScoreboard(titles.length, agencies.length, mostRecentTitle, mostRecentDate, mostRecentTitleName);
+
+    console.log("✅ Table populated successfully.");
+}
+
+// 📌 Start Fetching Data
+fetchData();
