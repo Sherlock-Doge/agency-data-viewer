@@ -46,18 +46,18 @@ nav ul li a:hover {
     text-decoration: underline;
 }
 
-/* Scoreboard Styles - Ensuring a Thick Border */
+/* Scoreboard Styles */
 .scoreboard {
     width: 80%;
     margin: 20px auto;
     background: #ffffff;
-    border: 5px solid #777;  /* ✅ Thick Gray Border to Match the Table */
+    border: 5px solid #777; /* ✅ Thick Border */
     border-radius: 10px;
     padding: 15px;
     text-align: center;
     display: flex;
     justify-content: space-around;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* ✅ Slight shadow for depth */
+    font-size: 18px; /* ✅ Ensures all text sizes match */
 }
 
 .score-item {
@@ -67,13 +67,18 @@ nav ul li a:hover {
 }
 
 .score-value {
-    font-size: 22px;
+    font-size: 18px; /* ✅ Matches black text */
     color: #007bff;
     text-decoration: none;
 }
 
 .score-value:hover {
     text-decoration: underline;
+}
+
+/* Ensures Parentheses Size Consistency */
+#recentAmendedDate {
+    font-size: 18px; /* ✅ Matches scoreboard text */
 }
 
 /* Main Content Wrapper */
@@ -85,32 +90,51 @@ nav ul li a:hover {
 /* Main Table Styles */
 table {
     width: 90%;
+    border-collapse: separate; /* ✅ Ensures proper border rendering */
     margin: 20px auto;
     background-color: white;
-    border: 6px solid #777;  /* ✅ Thick Outer Border */
+    border: 5px solid #777; /* ✅ Thick Table Border */
     border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* ✅ Slight shadow for depth */
+    overflow: hidden;
 }
 
-/* Ensure table borders are visible */
+/* Table Header Styling */
+th {
+    background-color: #007bff;
+    color: white;
+    font-size: 18px; /* ✅ Increased text size */
+    font-weight: bold; /* ✅ Ensures boldness */
+    padding: 15px;
+}
+
+/* Adjust Title Header for Nested Text */
+th.title-header {
+    position: relative;
+    font-size: 18px; /* ✅ Matches updated header size */
+    font-weight: bold;
+    padding-bottom: 30px; /* ✅ Creates space for subtitle */
+}
+
+/* Nested Subtitle Below Title */
+th.title-header::after {
+    content: "(use links below to navigate to eCFR pages)";
+    display: block;
+    font-size: 14px; /* ✅ Smaller than main header */
+    font-weight: normal;
+    color: #ddd; /* ✅ Light gray text for subtlety */
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Table Cell Styling */
 th, td {
-    border: 2px solid #777;  /* ✅ Inner Borders */
+    border: 2px solid #777; /* ✅ Consistent Borders */
     padding: 12px;
     text-align: center;
 }
 
-th {
-    background-color: #007bff;
-    color: white;
-    font-size: 16px;
-}
-
-/* Add margin to separate the table from footer */
-table {
-    margin-bottom: 30px;
-}
-
-/* Hover effect */
 tr:hover {
     background-color: #f1f1f1;
 }
@@ -122,6 +146,6 @@ footer {
     text-align: center;
     padding: 15px;
     width: 100%;
-    position: relative;  /* ✅ Fixes overlapping issue */
+    position: relative; /* ✅ Maintains proper footer behavior */
     bottom: 0;
 }
