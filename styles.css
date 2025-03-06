@@ -4,6 +4,9 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Header Styles */
@@ -72,19 +75,25 @@ nav ul li a:hover {
     text-decoration: underline;
 }
 
+/* Main Content Wrapper */
+.main-content {
+    flex: 1;
+    padding-bottom: 50px; /* Ensures space for footer */
+}
+
 /* Main Table Styles */
 table {
     width: 90%;
     border-collapse: collapse;
     margin: 20px auto;
     background-color: white;
-    border: 3px solid #aaa;
+    border: 5px solid #777;  /* ✅ Thick Border */
     border-radius: 10px;
     overflow: hidden;
 }
 
 th, td {
-    border: 1px solid #aaa;
+    border: 2px solid #777;  /* ✅ Consistent Borders */
     padding: 12px;
     text-align: center;
 }
@@ -105,7 +114,7 @@ footer {
     color: white;
     text-align: center;
     padding: 15px;
-    position: fixed;
     width: 100%;
+    position: relative;  /* ✅ Changed from fixed */
     bottom: 0;
 }
