@@ -60,6 +60,7 @@ nav ul li a:hover {
     align-items: center;
 }
 
+/* Scoreboard Font Adjustments */
 .score-item {
     font-size: 20px;
     font-weight: bold;
@@ -89,16 +90,16 @@ table {
     border-spacing: 0; /* Ensures borders touch */
     margin: 20px auto;
     background-color: white;
-    border: 5px solid #777;  /* ✅ Visible thick border */
+    border: 5px solid #bbb;  /* ✅ Softer light gray border for balance */
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2); /* ✅ Subtle shadow to enhance contrast */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15); /* ✅ Softer subtle shadow */
 }
 
 /* Table Header */
 th {
-    background-color: #003366; /* Deep Navy Blue */
-    color: #f8f9fa; /* Soft White */
+    background-color: #002855; /* ✅ Deep Navy Blue for better contrast */
+    color: #f8f9fa; /* ✅ Off-white for readability */
     font-size: 18px;
     font-weight: bold;
     padding: 12px;
@@ -112,16 +113,16 @@ th .subtext {
     margin-top: 5px;
 }
 
-/* Table Row & Cell Styles */
+/* Table Borders */
 th, td {
-    border: 2px solid #777;  /* ✅ Ensure the thick border matches */
+    border: 2px solid #777;  /* ✅ Ensuring thick border is visible */
     padding: 12px;
     text-align: center;
 }
 
 /* Table Links (Titles) */
 td a {
-    color: #0056b3;
+    color: #004a99;
     text-decoration: none;
     font-weight: bold;
 }
@@ -132,7 +133,7 @@ td a:hover {
 
 /* Prevent visited links from turning purple */
 td a:visited {
-    color: #0056b3;
+    color: #004a99;
 }
 
 /* Row Hover Effect */
