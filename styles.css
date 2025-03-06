@@ -19,7 +19,7 @@ header {
 
 .header-container h1 {
     margin: 0;
-    font-size: 36px; /* Increased title size for stronger presence */
+    font-size: 36px; /* Title size increased */
 }
 
 nav ul {
@@ -51,13 +51,13 @@ nav ul li a:hover {
     width: 80%;
     margin: 20px auto;
     background: #ffffff;
-    border: 4px solid #777; /* Made border slightly stronger */
+    border: 4px solid #777; /* Thick visible border */
     border-radius: 10px;
     padding: 15px;
     text-align: center;
     display: flex;
     justify-content: space-around;
-    align-items: center; /* Improved centering */
+    align-items: center;
 }
 
 .score-item {
@@ -67,7 +67,7 @@ nav ul li a:hover {
 }
 
 .score-value {
-    font-size: 20px; /* Matched black & blue text sizes */
+    font-size: 20px;
     color: #0056b3;
     text-decoration: none;
 }
@@ -85,19 +85,21 @@ nav ul li a:hover {
 /* Main Table Styles */
 table {
     width: 90%;
-    border-collapse: collapse;
+    border-collapse: separate; /* ✅ Changed to separate for visible border */
+    border-spacing: 0; /* Ensures borders touch */
     margin: 20px auto;
     background-color: white;
-    border: 5px solid #aaa;  /* Softened gray border */
+    border: 5px solid #777;  /* ✅ Visible thick border */
     border-radius: 10px;
     overflow: hidden;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2); /* ✅ Subtle shadow to enhance contrast */
 }
 
 /* Table Header */
 th {
-    background-color: #003366; /* Deep Navy Blue for reduced eye strain */
+    background-color: #003366; /* Deep Navy Blue */
     color: #f8f9fa; /* Soft White */
-    font-size: 18px; /* Increased text size for clarity */
+    font-size: 18px;
     font-weight: bold;
     padding: 12px;
 }
@@ -112,14 +114,14 @@ th .subtext {
 
 /* Table Row & Cell Styles */
 th, td {
-    border: 2px solid #aaa;  /* Softer Gray Borders */
+    border: 2px solid #777;  /* ✅ Ensure the thick border matches */
     padding: 12px;
     text-align: center;
 }
 
 /* Table Links (Titles) */
 td a {
-    color: #0056b3; /* Bolder, darker blue */
+    color: #0056b3;
     text-decoration: none;
     font-weight: bold;
 }
@@ -145,6 +147,6 @@ footer {
     text-align: center;
     padding: 15px;
     width: 100%;
-    position: relative;  /* Keeps footer in place */
+    position: relative;
     bottom: 0;
 }
