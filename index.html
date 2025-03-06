@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eCFR Data Viewer</title>
+    <title>eCFR Snapshot</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <!-- Locked Header Bar -->
-    <div class="header-bar">
-        <a href="index.html">Home</a>
-        <span>eCFR Titles Overview</span>
-        <a href="search.html">Search</a>
-    </div>
+    <!-- Fixed Header Bar -->
+    <header class="header">
+        <div class="header-content">
+            <h1>eCFR Snapshot</h1>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="search.html">Search</a>
+            </nav>
+        </div>
+    </header>
 
     <!-- Scoreboard Section -->
     <div class="scoreboard">
@@ -26,7 +30,7 @@
         </div>
     </div>
 
-    <!-- Main Table -->
+    <!-- Main Data Table -->
     <table id="titlesTable">
         <thead>
             <tr>
@@ -39,10 +43,10 @@
         <tbody></tbody>
     </table>
 
-    <!-- Sticky Footer -->
-    <div class="footer-bar">
-        &copy; 2025 eCFR Data Viewer. All rights reserved.
-    </div>
+    <!-- Fixed Footer -->
+    <footer class="footer">
+        © 2025 eCFR Snapshot. All rights reserved.
+    </footer>
 
     <script src="script.js"></script>
 </body>
