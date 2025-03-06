@@ -49,13 +49,35 @@ async function fetchWordCounts() {
     }
 }
 
+// 📌 Fetch Word Count for a Single Title (when "Generate" button is clicked)
+async function fetchSingleTitleWordCount(titleNumber, buttonElement) {
+    try {
+        console.log(`📥 Fetching word count for Title ${titleNumber}...`);
+        buttonElement.textContent = "Fetching...";
+        buttonElement.disabled = true;
+
+        const response = await fetch(`${BACKEND_URL}/api/wordcount/${titleNumber}`);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const data = await response.json();
+        console.log(`✅ Word Count for Title ${titleNumber}:`, data.wordCount);
+
+        // ✅ Update the UI with fetched word count
+        buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
+    } catch (error) {
+        console.error(`🚨 Error fetching word count for Title ${titleNumber}:`, error);
+        buttonElement.textContent = "Retry";
+        buttonElement.disabled = false;
+    }
+}
+
 // 📌 Update Scoreboard (includes most recently amended title logic)
 function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecentDate, mostRecentTitleName) {
     document.getElementById("totalTitles").textContent = totalTitles;
     document.getElementById("totalAgencies").textContent = totalAgencies > 0 ? totalAgencies : "N/A";
 
     const recentAmendedTitleElement = document.getElementById("recentAmendedTitle");
-    
+
     if (mostRecentTitle && mostRecentTitleName) {
         recentAmendedTitleElement.href = `https://www.ecfr.gov/current/title-${mostRecentTitle.replace("Title ", "")}`;
         recentAmendedTitleElement.textContent = `${mostRecentTitle} - ${mostRecentTitleName}`;
@@ -94,28 +116,27 @@ async function fetchData() {
 
         const titleUrl = `https://www.ecfr.gov/current/title-${title.number}`;
 
-        // ✅ Keep your existing robust logic here:
+        // ✅ Keep track of most recently amended title
         if (!mostRecentDate || (title.latest_amended_on && title.latest_amended_on > mostRecentDate)) {
             mostRecentDate = title.latest_amended_on;
             mostRecentTitle = `Title ${title.number}`;
             mostRecentTitleName = title.name;
         }
 
-        // ✅ Display word counts from backend if available
-        const wordCountDisplay = wordCounts[title.number] 
-            ? wordCounts[title.number].toLocaleString() 
-            : "N/A";
+        // ✅ Display word counts from backend if available, otherwise show "Generate" button
+        let wordCountDisplay = wordCounts[title.number]
+            ? wordCounts[title.number].toLocaleString()
+            : `<button onclick="fetchSingleTitleWordCount(${title.number}, this)">Generate</button>`;
 
-        const rowHTML = `
-            <td>${title.number}</td>
+        // ✅ Create Correctly Structured Table Row
+        const row = document.createElement("tr");
+        row.innerHTML = `
             <td><a href="${titleUrl}" target="_blank">${title.name}</a></td>
             <td>${title.up_to_date_as_of || "N/A"}</td>
             <td>${title.latest_amended_on || "N/A"}</td>
-            <td>${wordCounts[title.number] ? wordCounts[title.number].toLocaleString() : "N/A"}</td>
+            <td>${wordCountDisplay}</td>
         `;
 
-        const row = document.createElement("tr");
-        row.innerHTML = rowHTML;
         tableBody.appendChild(row);
     });
 
