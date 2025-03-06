@@ -137,10 +137,10 @@ async function fetchData() {
                 ? wordCounts[title.number].toLocaleString()
                 : `<button onclick="fetchSingleTitleWordCount(${title.number}, this)">Generate</button>`;
 
-            // ✅ Create Correctly Structured Table Row
+            // ✅ Create Correctly Structured Table Row (Now Shows "Title X - Proper Name")
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td><a href="${titleUrl}" target="_blank">${title.name}</a></td>
+                <td><a href="${titleUrl}" target="_blank">Title ${title.number} - ${title.name}</a></td>
                 <td>${title.up_to_date_as_of || "N/A"}</td>
                 <td>${title.latest_amended_on || "N/A"}</td>
                 <td>${wordCountDisplay}</td>
