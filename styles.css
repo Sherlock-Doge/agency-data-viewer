@@ -84,16 +84,16 @@ nav ul li a:hover {
 /* Main Table Styles */
 table {
     width: 90%;
-    border-collapse: collapse;
     margin: 20px auto;
     background-color: white;
-    border: 5px solid #777;  /* ✅ Thick Border */
+    border: 6px solid #777;  /* ✅ Thick Outer Border */
     border-radius: 10px;
-    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* ✅ Slight shadow for depth */
 }
 
+/* Ensure table borders are visible */
 th, td {
-    border: 2px solid #777;  /* ✅ Consistent Borders */
+    border: 2px solid #777;  /* ✅ Inner Borders */
     padding: 12px;
     text-align: center;
 }
@@ -104,6 +104,12 @@ th {
     font-size: 16px;
 }
 
+/* Add margin to separate the table from footer */
+table {
+    margin-bottom: 30px;
+}
+
+/* Hover effect */
 tr:hover {
     background-color: #f1f1f1;
 }
@@ -115,6 +121,6 @@ footer {
     text-align: center;
     padding: 15px;
     width: 100%;
-    position: relative;  /* ✅ Changed from fixed */
+    position: relative;  /* ✅ Fixes overlapping issue */
     bottom: 0;
 }
