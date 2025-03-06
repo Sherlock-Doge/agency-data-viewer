@@ -97,64 +97,70 @@ function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecen
 
 // 📌 Main Function to Fetch and Populate Table
 async function fetchData() {
+    console.log("📥 Starting data fetch...");
+    
     const tableBody = document.querySelector("#titlesTable tbody");
     tableBody.innerHTML = "";
 
-    // 📌 Fetch Titles, Agencies & Word Counts in Parallel
-    const [titles, agencies, wordCounts] = await Promise.all([
-        fetchTitles(),
-        fetchAgencies(),
-        fetchWordCounts()
-    ]);
+    try {
+        // 📌 Fetch Titles, Agencies & Word Counts in Parallel
+        const [titles, agencies, wordCounts] = await Promise.all([
+            fetchTitles(),
+            fetchAgencies(),
+            fetchWordCounts()
+        ]);
 
-    if (!titles.length) {
-        console.error("🚨 No Titles Data Received!");
-        return;
-    }
-
-    let mostRecentTitle = null;
-    let mostRecentTitleName = null;
-    let mostRecentDate = null;
-
-    // 📌 Populate Table and find the most recently amended title
-    titles.forEach(title => {
-        console.log(`🔍 Processing Title: ${title.number} - ${title.name}`);
-
-        const titleUrl = `https://www.ecfr.gov/current/title-${title.number}`;
-
-        // ✅ Keep track of most recently amended title
-        if (!mostRecentDate || (title.latest_amended_on && title.latest_amended_on > mostRecentDate)) {
-            mostRecentDate = title.latest_amended_on;
-            mostRecentTitle = `Title ${title.number}`;
-            mostRecentTitleName = title.name;
+        if (!titles.length) {
+            console.error("🚨 No Titles Data Received!");
+            return;
         }
 
-        // ✅ Display word counts from backend if available, otherwise show "Generate" button
-        let wordCountDisplay = wordCounts[title.number]
-            ? wordCounts[title.number].toLocaleString()
-            : `<button onclick="fetchSingleTitleWordCount(${title.number}, this)">Generate</button>`;
+        let mostRecentTitle = null;
+        let mostRecentTitleName = null;
+        let mostRecentDate = null;
 
-        // ✅ Create Correctly Structured Table Row
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td><a href="${titleUrl}" target="_blank">${title.name}</a></td>
-            <td>${title.up_to_date_as_of || "N/A"}</td>
-            <td>${title.latest_amended_on || "N/A"}</td>
-            <td>${wordCountDisplay}</td>
-        `;
+        // 📌 Populate Table and find the most recently amended title
+        titles.forEach(title => {
+            console.log(`🔍 Processing Title: ${title.number} - ${title.name}`);
 
-        tableBody.appendChild(row);
-    });
+            const titleUrl = `https://www.ecfr.gov/current/title-${title.number}`;
 
-    updateScoreboard(
-        titles.length,
-        agencies.length,
-        mostRecentTitle,
-        mostRecentDate,
-        mostRecentTitleName
-    );
+            // ✅ Keep track of most recently amended title
+            if (!mostRecentDate || (title.latest_amended_on && title.latest_amended_on > mostRecentDate)) {
+                mostRecentDate = title.latest_amended_on;
+                mostRecentTitle = `Title ${title.number}`;
+                mostRecentTitleName = title.name;
+            }
 
-    console.log("✅ Table populated successfully.");
+            // ✅ Display word counts from backend if available, otherwise show "Generate" button
+            let wordCountDisplay = wordCounts[title.number]
+                ? wordCounts[title.number].toLocaleString()
+                : `<button onclick="fetchSingleTitleWordCount(${title.number}, this)">Generate</button>`;
+
+            // ✅ Create Correctly Structured Table Row
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td><a href="${titleUrl}" target="_blank">${title.name}</a></td>
+                <td>${title.up_to_date_as_of || "N/A"}</td>
+                <td>${title.latest_amended_on || "N/A"}</td>
+                <td>${wordCountDisplay}</td>
+            `;
+
+            tableBody.appendChild(row);
+        });
+
+        updateScoreboard(
+            titles.length,
+            agencies.length,
+            mostRecentTitle,
+            mostRecentDate,
+            mostRecentTitleName
+        );
+
+        console.log("✅ Table populated successfully.");
+    } catch (error) {
+        console.error("🚨 Error in fetchData():", error);
+    }
 }
 
 // 📌 Start Fetching Data on Load
