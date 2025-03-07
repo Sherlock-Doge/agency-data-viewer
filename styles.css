@@ -17,13 +17,20 @@ header {
 
 /* Header Links */
 .header-right a {
-    color: white;
+    color: white !important;
     text-decoration: none;
     margin: 0 15px;
 }
 
 .header-right a:hover {
     text-decoration: underline;
+}
+
+/* Ensure "eCFR Analyzer" is white and NEVER underlined */
+.header-left a {
+    color: white !important;
+    text-decoration: none !important;
+    pointer-events: none;
 }
 
 /* Logo & Banner */
@@ -47,29 +54,36 @@ header {
 
 /* Spacer between Header and Scoreboard */
 .spacer {
-    height: 15px;
+    height: 25px;
 }
 
 /* Scoreboard */
 .scoreboard {
     display: flex;
-    justify-content: space-around;
-    padding: 10px;
+    justify-content: space-between;
+    width: 80%;
+    margin: 0 auto 25px auto;
+    padding: 15px;
     background: white;
     border: 2px solid #777;
     border-radius: 8px;
     text-align: center;
-    width: 80%;
-    margin: 0 auto;
 }
 
-/* Scoreboard CTA Links */
-.cta-link {
-    color: blue;
+/* Ensure scoreboard items stack properly */
+.score-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Ensure "Total Agencies" looks like regular text but underlines on hover */
+.score-item a {
+    color: black !important;
     text-decoration: none;
 }
 
-.cta-link:hover {
+.score-item a:hover {
     text-decoration: underline;
 }
 
@@ -95,7 +109,7 @@ th {
 
 /* Table Links - Blue */
 td a {
-    color: blue;
+    color: blue !important;
     text-decoration: none;
 }
 
@@ -105,7 +119,7 @@ td a:hover {
 
 /* Prevent visited links from turning purple */
 a:visited {
-    color: blue;
+    color: blue !important;
 }
 
 /* Footer */
