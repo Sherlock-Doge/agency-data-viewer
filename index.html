@@ -5,93 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>eCFR Dashboard</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        /* ✅ Full Page Layout */
-        html, body {
-            margin: 0;
-            padding: 0;
-        }
-
-        /* ✅ Header Styling */
-        header {
-            background-color: #0d0d0d;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: relative;
-        }
-
-        /* ✅ Left Section of Header */
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .header-logo {
-            width: 110px;
-            height: 110px;
-        }
-
-        .header-title {
-            font-size: 26px;
-            font-weight: bold;
-        }
-
-        /* ✅ Home Link Styling */
-        .header-title a {
-            text-decoration: none;
-            color: white;
-        }
-
-        /* ✅ Right Section of Header */
-        .header-right a {
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            text-decoration: none;
-        }
-
-        /* ✅ Centered Banner Image in Header */
-        .header-banner {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            height: 100px; /* ✅ Increased size for better proportion */
-            width: auto;
-            max-width: 100%;
-        }
-
-        /* ✅ Match Table Header Row Background Color to Header/Footer */
-        #titlesTable thead {
-            background-color: #0d0d0d; /* ✅ Now matches the header/footer */
-            color: white;
-        }
-
-        #titlesTable thead th {
-            color: white; /* ✅ Ensures text stays readable */
-        }
-
-        /* ✅ Fine print CTA prompts */
-        .cta-text {
-            font-size: 12px; /* ✅ Small, fine-print size */
-            color: #666; /* ✅ Light gray for subtle contrast */
-            display: block; /* ✅ Ensures it's below the main text */
-            margin-top: 3px; /* ✅ Creates spacing */
-            text-align: center;
-        }
-
-        /* ✅ Table Header CTA Text in WHITE */
-        .table-header-cta {
-            font-size: 12px;
-            color: white; /* ✅ White for contrast */
-            display: block;
-            margin-top: 3px;
-            text-align: center;
-        }
-    </style>
 </head>
 <body>
 
@@ -117,7 +30,7 @@
         </div>
         <div class="score-item">
             <strong><a href="agencies.html">Total Agencies:</a></strong> <span id="totalAgencies">153</span>
-            <span class="cta-text">(Click to see all Agencies)</span> <!-- ✅ Fixed placement -->
+            <span class="cta-text">(Click to see all Agencies)</span>
         </div>
         <div class="score-item">
             <strong>Most Recently Amended:</strong>
@@ -125,7 +38,7 @@
                 <a id="recentAmendedTitle" class="score-value" href="#" target="_blank">N/A</a>
                 <span id="recentAmendedDate">(N/A)</span>
             </div>
-            <span class="cta-text">(Click above & navigate to recent eCFR)</span> <!-- ✅ Now below the data -->
+            <span class="cta-text">(Click above & navigate to recent eCFR)</span>
         </div>
     </div>
 
@@ -135,7 +48,7 @@
             <tr>
                 <th class="title-header">
                     Title
-                    <span class="table-header-cta">(Click below & navigate to eCFR sites)</span> <!-- ✅ White text, fine print -->
+                    <span class="table-header-cta">(Click below & navigate to eCFR sites)</span>
                 </th>
                 <th>Current as of</th>
                 <th>Last Amended</th>
