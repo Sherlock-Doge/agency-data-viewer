@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eCFR Snapshot</title>
+    <title>eCFR Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         /* ✅ Fine print CTA prompts */
@@ -23,6 +23,27 @@
             margin-top: 3px;
             text-align: center;
         }
+
+        /* ✅ Header Styling */
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* ✅ Aligns logo and title to the left */
+            gap: 15px; /* ✅ Adds spacing between logo and title */
+            padding-left: 20px;
+        }
+
+        .header-logo {
+            width: 75px;
+            height: 75px;
+        }
+
+        /* ✅ Footer Styling */
+        footer p {
+            font-size: 14px;
+            text-align: center;
+            color: #ddd;
+        }
     </style>
 </head>
 <body>
@@ -30,7 +51,8 @@
     <!-- Header Section -->
     <header>
         <div class="header-container">
-            <h1>eCFR Snapshot</h1>
+            <img src="images/sherlock-doge-analyzer.png" alt="Sherlock Doge Logo" class="header-logo">
+            <h1>eCFR Dashboard</h1>
             <nav>
                 <ul>
                     <li><a href="index.html">Home</a></li>
@@ -77,7 +99,7 @@
 
     <!-- Footer -->
     <footer>
-        <p>© 2025 eCFR Snapshot. All rights reserved.</p>
+        <p>© 2025 eCFR Dashboard. Sponsored by DOGE.</p>
     </footer>
 
     <script src="script.js"></script>
