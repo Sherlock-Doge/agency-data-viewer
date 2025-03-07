@@ -90,10 +90,10 @@
             transition: opacity 0.5s ease-in-out;
         }
 
-        /* ✅ Position Search Bar Lower on Image */
+        /* ✅ Move Search Bar Even Lower on the Image */
         .search-container {
             position: absolute;
-            top: 58%; /* 🔻 Moves search bar lower on the image */
+            top: 68%; /* 🔻 Moves search bar further down to the lower chest area */
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 2;
@@ -148,7 +148,7 @@
         <!-- ✅ Larger Cipher Image Positioned Behind Search Bar -->
         <img src="images/cipher-doge.png" alt="Cipher Doge" class="cipher-image" id="cipherImage">
 
-        <!-- ✅ Search Bar Lowered to Chest Area -->
+        <!-- ✅ Search Bar Lowered Further on Image -->
         <div class="search-container">
             <input type="text" id="searchQuery" placeholder="Enter search term...">
             <button onclick="performSearch()">Search</button>
