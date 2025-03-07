@@ -106,12 +106,13 @@ table {
 
 /* Table Header */
 th {
-    background-color: #002855; /* ✅ Deep Navy Blue for better contrast */
-    color: #f8f9fa; /* ✅ Off-white for readability */
+    background-color: #0d0d0d !important; /* ✅ Black like header/footer */
+    color: #f8f9fa;
     font-size: 18px;
     font-weight: bold;
     padding: 12px;
 }
+
 
 /* Table Header Subtext */
 th .subtext {
