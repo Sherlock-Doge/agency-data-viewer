@@ -8,41 +8,53 @@
     <style>
         /* ✅ Fine print CTA prompts */
         .cta-text {
-            font-size: 12px; /* ✅ Small, fine-print size */
-            color: #666; /* ✅ Light gray for subtle contrast */
-            display: block; /* ✅ Ensures it's below the main text */
-            margin-top: 3px; /* ✅ Creates spacing */
+            font-size: 12px;
+            color: #666;
+            display: block;
+            margin-top: 3px;
             text-align: center;
         }
 
         /* ✅ Table Header CTA Text in WHITE */
         .table-header-cta {
             font-size: 12px;
-            color: white; /* ✅ Changed from gray to white */
+            color: white;
             display: block;
             margin-top: 3px;
             text-align: center;
         }
 
-        /* ✅ Header Styling */
+        /* ✅ Updated Header & Footer Styles */
+        header, footer {
+            background-color: #121212;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .header-container {
             display: flex;
             align-items: center;
-            justify-content: flex-start; /* ✅ Aligns logo and title to the left */
-            gap: 15px; /* ✅ Adds spacing between logo and title */
-            padding-left: 20px;
+            gap: 15px;
         }
 
         .header-logo {
-            width: 75px;
-            height: 75px;
+            width: 110px;
+            height: 110px;
         }
 
-        /* ✅ Footer Styling */
-        footer p {
-            font-size: 14px;
-            text-align: center;
-            color: #ddd;
+        .header-title {
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .header-title:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -51,14 +63,8 @@
     <!-- Header Section -->
     <header>
         <div class="header-container">
-            <img src="images/sherlock-doge-analyzer.png" alt="Sherlock Doge Logo" class="header-logo">
-            <h1>eCFR Dashboard</h1>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="search.html">Search</a></li>
-                </ul>
-            </nav>
+            <img src="images/sherlock-doge-analyzer.png" alt="Logo" class="header-logo">
+            <a href="index.html" class="header-title">eCFR Dashboard</a>
         </div>
     </header>
 
@@ -69,7 +75,7 @@
         </div>
         <div class="score-item">
             <strong><a href="agencies.html">Total Agencies:</a></strong> <span id="totalAgencies">153</span>
-            <span class="cta-text">(Click to see all Agencies)</span> <!-- ✅ Fixed placement -->
+            <span class="cta-text">(Click to see all Agencies)</span>
         </div>
         <div class="score-item">
             <strong>Most Recently Amended:</strong>
@@ -77,7 +83,7 @@
                 <a id="recentAmendedTitle" class="score-value" href="#" target="_blank">N/A</a>
                 <span id="recentAmendedDate">(N/A)</span>
             </div>
-            <span class="cta-text">(Click above & navigate to recent eCFR)</span> <!-- ✅ NOW BELOW THE DATA -->
+            <span class="cta-text">(Click above & navigate to recent eCFR)</span>
         </div>
     </div>
 
@@ -87,7 +93,7 @@
             <tr>
                 <th class="title-header">
                     Title
-                    <span class="table-header-cta">(Click below & navigate to eCFR sites)</span> <!-- ✅ Now white text -->
+                    <span class="table-header-cta">(Click below & navigate to eCFR sites)</span>
                 </th>
                 <th>Current as of</th>
                 <th>Last Amended</th>
