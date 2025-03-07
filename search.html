@@ -14,7 +14,7 @@
             margin: 0;
         }
 
-        /* ✅ Header Styling */
+        /* ✅ Header Styling (Matches Index) */
         header {
             background-color: #0d0d0d;
             padding: 10px 20px;
@@ -54,25 +54,28 @@
             text-decoration: none;
         }
 
-        /* ✅ Page Title Styling (Centered in Header) */
+        /* ✅ Page Title Styling (Perfectly Centered Inside Header) */
         .page-title {
             font-size: 28px;
             font-weight: bold;
             color: white;
             text-align: center;
-            padding: 20px 0;
-            background-color: #0d0d0d;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             margin: 0;
+            width: 100%;
         }
 
-        /* ✅ Centers Main Content and Adds Space */
+        /* ✅ Main Content (Search Box Centering & Spacing) */
         .main-content {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 30px 0; /* Adds space above/below */
+            padding: 40px 0;
         }
 
         /* ✅ Search Box Styling */
@@ -117,7 +120,7 @@
         </div>
     </header>
 
-    <!-- Page Title (Inside Header Bar) -->
+    <!-- Page Title (Inside Header Bar, Centered Properly) -->
     <h2 class="page-title">Search eCFR</h2>
 
     <!-- Main Content -->
