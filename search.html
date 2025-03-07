@@ -14,13 +14,14 @@
             margin: 0;
         }
 
-        /* ✅ Header Styling (Matches Index) */
+        /* ✅ Header Styling */
         header {
             background-color: #0d0d0d;
             padding: 10px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            position: relative; /* Allows for centered title */
         }
 
         /* ✅ Left Section of Header */
@@ -54,28 +55,24 @@
             text-decoration: none;
         }
 
-        /* ✅ Page Title Styling (Perfectly Centered Inside Header) */
+        /* ✅ Centered Page Title in Header */
         .page-title {
-            font-size: 28px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 26px;
             font-weight: bold;
             color: white;
-            text-align: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            margin: 0;
-            width: 100%;
         }
 
-        /* ✅ Main Content (Search Box Centering & Spacing) */
+        /* ✅ Centers Main Content and Adds Space */
         .main-content {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 40px 0;
+            padding: 30px 0; /* Adds space above/below */
         }
 
         /* ✅ Search Box Styling */
@@ -115,13 +112,11 @@
             <img src="images/sherlock-doge-analyzer.png" alt="Sherlock Doge Logo" class="header-logo">
             <h1 class="header-title"><a href="index.html">eCFR Dashboard</a></h1>
         </div>
+        <h2 class="page-title">Search eCFR</h2> <!-- ✅ Properly Centered in Header -->
         <div class="header-right">
             <a href="search.html">Search</a>
         </div>
     </header>
-
-    <!-- Page Title (Inside Header Bar, Centered Properly) -->
-    <h2 class="page-title">Search eCFR</h2>
 
     <!-- Main Content -->
     <div class="main-content">
