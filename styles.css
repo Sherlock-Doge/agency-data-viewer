@@ -9,20 +9,21 @@ body {
 /* Header Styles */
 header {
     background-color: #0d0d0d;
-    padding: 10px 20px;
+    padding: 15px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
 /* Header Links */
-.header-right a {
+.header-right .header-link {
     color: white !important;
+    font-weight: bold;
     text-decoration: none;
     margin: 0 15px;
 }
 
-.header-right a:hover {
+.header-right .header-link:hover {
     text-decoration: underline;
 }
 
@@ -48,13 +49,13 @@ header {
 /* Page Titles */
 .header-center {
     color: white;
-    font-size: 24px;
+    font-size: 26px; /* Increased to match eCFR Analyzer */
     font-weight: bold;
 }
 
 /* Spacer between Header and Scoreboard */
 .spacer {
-    height: 30px;
+    height: 25px;
 }
 
 /* Scoreboard */
@@ -63,27 +64,27 @@ header {
     justify-content: space-between;
     width: 60%;
     margin: 0 auto 25px auto;
-    padding: 15px;
+    padding: 12px;
     background: white;
     border: 2px solid #777;
     border-radius: 8px;
     text-align: center;
 }
 
-/* Ensure scoreboard items stack properly */
+/* Scoreboard Item Layout */
 .score-item {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* Ensure "Total Agencies" looks like regular text but underlines on hover */
-.score-item a {
-    color: black !important;
+/* Scoreboard Links (Only Numbers/Most Recently Amended) */
+.score-link {
+    color: blue !important;
     text-decoration: none;
 }
 
-.score-item a:hover {
+.score-link:hover {
     text-decoration: underline;
 }
 
@@ -118,7 +119,7 @@ td a:hover {
 }
 
 /* Prevent visited links from turning purple */
-td a:visited {
+a:visited {
     color: blue !important;
 }
 
