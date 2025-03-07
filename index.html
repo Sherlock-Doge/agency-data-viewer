@@ -6,6 +6,20 @@
     <title>eCFR Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <style>
+        /* ✅ Header Styling */
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* ✅ Left-align elements */
+            gap: 15px; /* ✅ Adds spacing between logo and title */
+            padding-left: 20px;
+        }
+
+        .header-logo {
+            width: 110px;
+            height: 110px;
+        }
+
         /* ✅ Fine print CTA prompts */
         .cta-text {
             font-size: 12px;
@@ -24,47 +38,27 @@
             text-align: center;
         }
 
-        /* ✅ Updated Header & Footer Styles */
-        header, footer {
-            background-color: #121212;
-            color: white;
-            padding: 15px 0;
+        /* ✅ Footer Styling */
+        footer {
+            background-color: #0d0d0d; /* ✅ Matches dark background of logo */
+            color: #ddd;
             text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .header-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .header-logo {
-            width: 110px;
-            height: 110px;
-        }
-
-        .header-title {
-            font-size: 36px;
-            font-weight: bold;
-            color: white;
-            text-decoration: none;
-        }
-
-        .header-title:hover {
-            text-decoration: underline;
+            padding: 15px;
         }
     </style>
 </head>
 <body>
 
     <!-- Header Section -->
-    <header>
+    <header style="background-color: #0d0d0d;">
         <div class="header-container">
-            <img src="images/sherlock-doge-analyzer.png" alt="Logo" class="header-logo">
-            <a href="index.html" class="header-title">eCFR Dashboard</a>
+            <img src="images/sherlock-doge-analyzer.png" alt="Sherlock Doge Logo" class="header-logo">
+            <h1><a href="index.html" style="text-decoration: none; color: white;">eCFR Dashboard</a></h1>
+            <nav>
+                <ul>
+                    <li><a href="search.html">Search</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
