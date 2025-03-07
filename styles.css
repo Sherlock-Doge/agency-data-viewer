@@ -15,6 +15,17 @@ header {
     justify-content: space-between;
 }
 
+/* Header Links */
+.header-right a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+}
+
+.header-right a:hover {
+    text-decoration: underline;
+}
+
 /* Logo & Banner */
 .header-left {
     display: flex;
@@ -27,31 +38,16 @@ header {
     height: 80px;
 }
 
-.header-title a {
+/* Page Titles */
+.header-center {
     color: white;
-    text-decoration: none;
     font-size: 24px;
     font-weight: bold;
 }
 
-.header-center {
-    color: white;
-    font-size: 22px;
-    font-weight: bold;
-    text-align: center;
-    flex-grow: 1;
-}
-
-/* Header Links */
-.header-right a {
-    color: white;
-    text-decoration: none;
-    margin-left: 20px;
-    font-size: 18px;
-}
-
-.header-right a:hover {
-    text-decoration: underline;
+/* Spacer between Header and Scoreboard */
+.spacer {
+    height: 15px;
 }
 
 /* Scoreboard */
@@ -63,8 +59,18 @@ header {
     border: 2px solid #777;
     border-radius: 8px;
     text-align: center;
-    max-width: 80%;
-    margin: 20px auto;
+    width: 80%;
+    margin: 0 auto;
+}
+
+/* Scoreboard CTA Links */
+.cta-link {
+    color: blue;
+    text-decoration: none;
+}
+
+.cta-link:hover {
+    text-decoration: underline;
 }
 
 /* Tables */
@@ -81,21 +87,15 @@ th, td {
     text-align: center;
 }
 
+/* First row black with white text */
 th {
     background-color: black;
     color: white;
 }
 
-/* Fix for CTA text inside Title */
-.title-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* Table Links */
+/* Table Links - Blue */
 td a {
-    color: black;
+    color: blue;
     text-decoration: none;
 }
 
@@ -105,7 +105,7 @@ td a:hover {
 
 /* Prevent visited links from turning purple */
 a:visited {
-    color: inherit;
+    color: blue;
 }
 
 /* Footer */
@@ -114,13 +114,16 @@ footer {
     color: white;
     text-align: center;
     padding: 15px;
+}
+
+.footer-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
 }
 
 .footer-logo {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
 }
