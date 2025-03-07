@@ -12,12 +12,18 @@
     <header>
         <div class="header-left">
             <img src="images/sherlock-doge-analyzer.png" alt="Sherlock Doge Logo" class="header-logo">
-            <h1 class="header-title"><a href="index.html">Dashboard</a></h1>
+            <h1 class="header-title"><a href="index.html">eCFR Analyzer</a></h1>
         </div>
+
+        <h2 class="header-center">Dashboard</h2>
+
         <div class="header-right">
             <a href="search.html">Search</a>
         </div>
     </header>
+
+    <!-- Space between Header and Scoreboard -->
+    <div class="spacer"></div>
 
     <!-- Scoreboard Section -->
     <div class="scoreboard">
@@ -26,7 +32,7 @@
         </div>
         <div class="score-item">
             <strong><a href="agencies.html">Total Agencies:</a></strong> <span id="totalAgencies">153</span>
-            <div class="cta-text">(Click to see all Agencies)</div> <!-- ✅ Fixed placement -->
+            <span class="cta-text">(Click to see all Agencies)</span>
         </div>
         <div class="score-item">
             <strong>Most Recently Amended:</strong>
@@ -34,7 +40,7 @@
                 <a id="recentAmendedTitle" class="score-value" href="#" target="_blank">N/A</a>
                 <span id="recentAmendedDate">(N/A)</span>
             </div>
-            <div class="cta-text">(Click above & navigate to recent eCFR)</div> <!-- ✅ Now below the data -->
+            <span class="cta-text">(Click above & navigate to recent eCFR)</span>
         </div>
     </div>
 
@@ -44,7 +50,7 @@
             <tr>
                 <th class="title-header">
                     Title
-                    <div class="table-header-cta">(Click below & navigate to eCFR sites)</div> <!-- ✅ White text, fine print -->
+                    <span class="table-header-cta">(Click below & navigate to eCFR sites)</span>
                 </th>
                 <th>Current as of</th>
                 <th>Last Amended</th>
@@ -56,9 +62,11 @@
 
     <!-- Footer -->
     <footer>
-        <p>© 2025 eCFR Analyzer</p>
-        <img src="images/morpheus.png" alt="Morpheus Logo" class="footer-logo"> <!-- ✅ Moved to footer -->
-        <p>Sponsored by DOGE.</p>
+        <div class="footer-container">
+            <p>© 2025 eCFR Analyzer</p>
+            <img src="images/morpheus.png" alt="Morpheus Logo" class="footer-logo">
+            <p>Sponsored by DOGE.</p>
+        </div>
     </footer>
 
     <script src="script.js"></script>
