@@ -54,14 +54,14 @@ header {
 
 /* Spacer between Header and Scoreboard */
 .spacer {
-    height: 25px;
+    height: 30px;
 }
 
 /* Scoreboard */
 .scoreboard {
     display: flex;
     justify-content: space-between;
-    width: 80%;
+    width: 60%;
     margin: 0 auto 25px auto;
     padding: 15px;
     background: white;
@@ -118,7 +118,7 @@ td a:hover {
 }
 
 /* Prevent visited links from turning purple */
-a:visited {
+td a:visited {
     color: blue !important;
 }
 
