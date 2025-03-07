@@ -3,59 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agencies - eCFR Dashboard</title>
+    <title>eCFR Agencies</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        header, footer {
-            background-color: #121212;
-            color: white;
-            padding: 15px 0;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .header-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .header-logo {
-            width: 110px;
-            height: 110px;
-        }
-
-        .header-title {
-            font-size: 36px;
-            font-weight: bold;
-            color: white;
-            text-decoration: none;
-        }
-
-        .header-title:hover {
-            text-decoration: underline;
-        }
-    </style>
 </head>
 <body>
 
-    <header>
+    <!-- Header -->
+    <header style="background-color: #0d0d0d;">
         <div class="header-container">
-            <img src="images/sherlock-doge-analyzer.png" alt="Logo" class="header-logo">
-            <a href="index.html" class="header-title">eCFR Dashboard</a>
+            <img src="images/sherlock-doge-analyzer.png" alt="Sherlock Doge Logo" class="header-logo">
+            <h1><a href="index.html" style="text-decoration: none; color: white;">eCFR Dashboard</a></h1>
         </div>
     </header>
 
     <main>
         <h2>eCFR Agencies</h2>
         <p>List of all regulatory agencies.</p>
+
+        <table id="agencies-table">
+            <thead>
+                <tr>
+                    <th>Agency</th>
+                    <th>Regulating Titles & Chapters</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be inserted dynamically -->
+            </tbody>
+        </table>
     </main>
 
-    <footer>
+    <!-- Footer -->
+    <footer style="background-color: #0d0d0d;">
         <p>© 2025 eCFR Dashboard. Sponsored by DOGE.</p>
     </footer>
 
+    <script src="script.js"></script>
 </body>
 </html>
