@@ -6,15 +6,23 @@
     <title>eCFR Agencies</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* ✅ Standardized Header */
-        .header-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between; /* ✅ Home left, Search right */
-            background-color: #0d0d0d; /* ✅ Matches logo bg */
-            padding: 10px 20px;
+        /* ✅ Full Page Layout */
+        html, body {
+            margin: 0;
+            padding: 0;
         }
 
+        /* ✅ Header Styling */
+        header {
+            background-color: #0d0d0d;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        /* ✅ Left Section of Header */
         .header-left {
             display: flex;
             align-items: center;
@@ -26,47 +34,80 @@
             height: 110px;
         }
 
+        .header-title {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        /* ✅ Home Link Styling */
         .header-title a {
             text-decoration: none;
             color: white;
-            font-size: 28px;
-            font-weight: bold;
         }
 
+        /* ✅ Right Section of Header */
         .header-right a {
-            text-decoration: none;
             color: white;
             font-size: 18px;
             font-weight: bold;
+            text-decoration: none;
         }
 
-        /* ✅ Footer Styling */
-        footer {
-            background-color: #0d0d0d;
+        /* ✅ Centered Banner Image in Header */
+        .header-banner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            height: 100px; /* ✅ Increased size for better proportion */
+            width: auto;
+            max-width: 100%;
+        }
+
+        /* ✅ Match Table Header Row Background Color to Header/Footer */
+        #agencies-table thead {
+            background-color: #0d0d0d; /* ✅ Now matches the header/footer */
+            color: white;
+        }
+
+        #agencies-table thead th {
+            color: white; /* ✅ Ensures text stays readable */
+        }
+
+        /* ✅ Page Title Styling (Centered) */
+        .page-title {
+            font-size: 28px;
+            font-weight: bold;
             color: white;
             text-align: center;
-            padding: 15px;
-            font-size: 14px;
+            padding: 20px 0;
+            background-color: #0d0d0d;
+            margin: 0;
         }
+
     </style>
 </head>
 <body>
 
-    <!-- Standardized Header -->
+    <!-- Header -->
     <header>
-        <div class="header-container">
-            <div class="header-left">
-                <img src="images/sherlock-doge-analyzer.png" alt="Sherlock Doge Logo" class="header-logo">
-                <a href="index.html" class="header-title">eCFR Dashboard</a>
-            </div>
-            <div class="header-right">
-                <a href="search.html">Search</a>
-            </div>
+        <div class="header-left">
+            <img src="images/sherlock-doge-analyzer.png" alt="Sherlock Doge Logo" class="header-logo">
+            <h1 class="header-title"><a href="index.html">eCFR Dashboard</a></h1>
+        </div>
+
+        <!-- ✅ Centered Banner Image (Morpheus) -->
+        <img src="images/morpheus.png" alt="Morpheus Banner" class="header-banner">
+
+        <div class="header-right">
+            <a href="search.html">Search</a>
         </div>
     </header>
 
+    <!-- Page Title -->
+    <h2 class="page-title">eCFR Agencies</h2>
+
     <main>
-        <h2>eCFR Agencies</h2>
         <p>List of all regulatory agencies.</p>
 
         <table id="agencies-table">
