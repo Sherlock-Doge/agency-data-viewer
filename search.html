@@ -22,16 +22,16 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <!-- ✅ Larger Cipher Image Positioned Behind Search Bar -->
+        <!-- ✅ Cipher Doge image properly positioned behind search bar -->
         <img src="images/cipher-doge.png" alt="Cipher Doge" class="cipher-image" id="cipherImage">
 
-        <!-- ✅ Search Bar Correctly Positioned -->
+        <!-- ✅ Search Bar correctly positioned and centered -->
         <div class="search-container">
             <input type="text" id="searchQuery" placeholder="Enter search term...">
             <button onclick="performSearch()">Search</button>
         </div>
 
-        <!-- Search Results -->
+        <!-- ✅ Search Results Container -->
         <div id="searchResults"></div>
     </div>
 
@@ -48,14 +48,17 @@
                 return;
             }
 
-            const response = await fetch(`https://www.ecfr.gov/api/search/${query}`);
-            if (!response.ok) {
-                alert("Error fetching search results.");
-                return;
-            }
+            try {
+                const response = await fetch(`https://www.ecfr.gov/api/search/${query}`);
+                if (!response.ok) {
+                    throw new Error(`Error fetching search results. Status: ${response.status}`);
+                }
 
-            const data = await response.json();
-            displaySearchResults(data);
+                const data = await response.json();
+                displaySearchResults(data);
+            } catch (error) {
+                alert(error.message);
+            }
         }
 
         function displaySearchResults(results) {
