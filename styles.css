@@ -67,14 +67,22 @@ nav ul li a:hover {
     padding: 5px 10px;
 }
 
-.score-value {
-    font-size: 20px;
-    color: #0056b3;
-    text-decoration: none;
+/* Ensures Title & Date stack correctly */
+.score-item div {
+    display: inline-block;
+    text-align: center;
 }
 
-.score-value:hover {
-    text-decoration: underline;
+/* Scoreboard Links */
+.score-item a {
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* ✅ Prevents visited links from turning purple */
+.score-item a:visited {
+    color: #0056b3 !important;
 }
 
 /* Main Content Wrapper */
