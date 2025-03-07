@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eCFR Dashboard</title>
+    <title>eCFR Analyzer</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,12 +12,8 @@
     <header>
         <div class="header-left">
             <img src="images/sherlock-doge-analyzer.png" alt="Sherlock Doge Logo" class="header-logo">
-            <h1 class="header-title"><a href="index.html">eCFR Dashboard</a></h1>
+            <h1 class="header-title"><a href="index.html">Dashboard</a></h1>
         </div>
-
-        <!-- Centered Banner Image -->
-        <img src="images/morpheus.png" alt="Morpheus Banner" class="header-banner">
-
         <div class="header-right">
             <a href="search.html">Search</a>
         </div>
@@ -29,9 +25,8 @@
             <strong>Total Titles:</strong> <span id="totalTitles">50</span>
         </div>
         <div class="score-item">
-            <strong><a href="agencies.html">Total Agencies:</a></strong> 
-            <span id="totalAgencies">153</span>
-            <span class="cta-text">(Click to see all Agencies)</span> 
+            <strong><a href="agencies.html">Total Agencies:</a></strong> <span id="totalAgencies">153</span>
+            <div class="cta-text">(Click to see all Agencies)</div> <!-- ✅ Fixed placement -->
         </div>
         <div class="score-item">
             <strong>Most Recently Amended:</strong>
@@ -39,7 +34,7 @@
                 <a id="recentAmendedTitle" class="score-value" href="#" target="_blank">N/A</a>
                 <span id="recentAmendedDate">(N/A)</span>
             </div>
-            <span class="cta-text">(Click above & navigate to recent eCFR)</span>
+            <div class="cta-text">(Click above & navigate to recent eCFR)</div> <!-- ✅ Now below the data -->
         </div>
     </div>
 
@@ -49,7 +44,7 @@
             <tr>
                 <th class="title-header">
                     Title
-                    <span class="table-header-cta">(Click below & navigate to eCFR sites)</span>
+                    <div class="table-header-cta">(Click below & navigate to eCFR sites)</div> <!-- ✅ White text, fine print -->
                 </th>
                 <th>Current as of</th>
                 <th>Last Amended</th>
@@ -61,7 +56,9 @@
 
     <!-- Footer -->
     <footer>
-        <p>© 2025 eCFR Dashboard. Sponsored by DOGE.</p>
+        <p>© 2025 eCFR Analyzer</p>
+        <img src="images/morpheus.png" alt="Morpheus Logo" class="footer-logo"> <!-- ✅ Moved to footer -->
+        <p>Sponsored by DOGE.</p>
     </footer>
 
     <script src="script.js"></script>
