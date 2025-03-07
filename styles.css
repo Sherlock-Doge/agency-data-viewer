@@ -15,7 +15,7 @@ header {
     justify-content: space-between;
 }
 
-/* Logo & Banner */
+/* Left Side: Logo & Title */
 .header-left {
     display: flex;
     align-items: center;
@@ -27,26 +27,53 @@ header {
     height: 80px;
 }
 
-.header-banner {
-    height: 60px;
-}
-
-/* Page Titles */
-.page-title {
-    text-align: center;
+.header-title a {
+    text-decoration: none;
     color: white;
     font-size: 24px;
     font-weight: bold;
+}
+
+/* Centered Page Title */
+.header-center {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    flex-grow: 1;
+}
+
+/* Right Side: Navigation Links */
+.header-right a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 15px;
+}
+
+.header-right a:hover {
+    text-decoration: underline;
 }
 
 /* Scoreboard */
 .scoreboard {
     display: flex;
     justify-content: space-around;
-    padding: 10px;
+    padding: 15px;
     background: white;
     border: 2px solid #777;
     border-radius: 8px;
+    text-align: center;
+    margin-top: 20px; /* Ensures space between header & scoreboard */
+}
+
+/* CTAs */
+.cta-text {
+    font-size: 12px;
+    color: #666;
+    display: block;
+    margin-top: 3px;
     text-align: center;
 }
 
@@ -55,13 +82,38 @@ table {
     width: 90%;
     margin: 20px auto;
     border-collapse: collapse;
-    border: 2px solid black;
+    border: 2px solid #bbb; /* Softer border */
 }
 
 th, td {
-    border: 2px solid black;
-    padding: 8px;
+    border: 2px solid #bbb;
+    padding: 10px;
     text-align: center;
+}
+
+/* Table Header */
+th {
+    background-color: #0d0d0d;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px;
+}
+
+/* Table Links */
+td a {
+    color: #004a99;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+td a:hover {
+    text-decoration: underline;
+}
+
+/* Prevent visited links from turning purple */
+td a:visited, .header-right a:visited, .header-title a:visited {
+    color: #004a99;
 }
 
 /* Footer */
@@ -70,4 +122,17 @@ footer {
     color: white;
     text-align: center;
     padding: 15px;
+}
+
+.footer-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.footer-logo {
+    width: 80px;
+    height: auto;
+    border-radius: 10px;
 }
