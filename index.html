@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>eCFR Snapshot</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .cta-text {
+            font-size: 12px; /* ✅ Fine print size */
+            color: #666; /* ✅ Lighter gray for subtlety */
+            display: block; /* ✅ Ensures it's under the data */
+            margin-top: 3px; /* ✅ Creates space between data & prompt */
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 
@@ -28,7 +37,7 @@
         </div>
         <div class="score-item">
             <strong><a href="agencies.html">Total Agencies:</a></strong> 153
-            <div class="cta-text">(Click to see all Agencies)</div> <!-- ✅ Added Call-to-Action -->
+            <span class="cta-text">(Click to see all Agencies)</span> <!-- ✅ Properly positioned under the number -->
         </div>
         <div class="score-item">
             <strong>Most Recently Amended:</strong>
@@ -36,7 +45,7 @@
                 <a id="recentAmendedTitle" class="score-value" href="#" target="_blank">N/A</a>
                 <span id="recentAmendedDate">(N/A)</span>
             </div>
-            <div class="cta-text">(Click above & navigate to recent eCFR)</div> <!-- ✅ Added Call-to-Action -->
+            <span class="cta-text">(Click above & navigate to recent eCFR)</span> <!-- ✅ Properly positioned under title -->
         </div>
     </div>
 
@@ -46,7 +55,7 @@
             <tr>
                 <th class="title-header">
                     Title
-                    <div class="cta-text">(Click below & navigate to eCFR sites)</div> <!-- ✅ Added Call-to-Action -->
+                    <span class="cta-text">(Click below & navigate to eCFR sites)</span> <!-- ✅ Fine print & centered -->
                 </th>
                 <th>Current as of</th>
                 <th>Last Amended</th>
