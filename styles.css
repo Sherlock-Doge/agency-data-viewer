@@ -27,11 +27,14 @@ header {
     text-decoration: underline;
 }
 
-/* Ensure "eCFR Analyzer" is white and NEVER underlined */
-.header-left a {
+/* Ensure "eCFR Analyzer" is clickable, stays white, and follows hover rules */
+.header-title a {
     color: white !important;
-    text-decoration: none !important;
-    pointer-events: none;
+    text-decoration: none;
+}
+
+.header-title a:hover {
+    text-decoration: underline;
 }
 
 /* Logo & Banner */
