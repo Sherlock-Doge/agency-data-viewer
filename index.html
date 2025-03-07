@@ -59,19 +59,37 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            height: 80px; /* Adjust to fit proportionally */
+            height: 100px; /* ✅ Increased size for better proportion */
             width: auto;
             max-width: 100%;
         }
 
         /* ✅ Match Table Header Row Background Color to Header/Footer */
         #titlesTable thead {
-            background-color: #0d0d0d; /* Now matches the header/footer */
+            background-color: #0d0d0d; /* ✅ Now matches the header/footer */
             color: white;
         }
 
         #titlesTable thead th {
-            color: white; /* Ensures text stays readable */
+            color: white; /* ✅ Ensures text stays readable */
+        }
+
+        /* ✅ Fine print CTA prompts */
+        .cta-text {
+            font-size: 12px; /* ✅ Small, fine-print size */
+            color: #666; /* ✅ Light gray for subtle contrast */
+            display: block; /* ✅ Ensures it's below the main text */
+            margin-top: 3px; /* ✅ Creates spacing */
+            text-align: center;
+        }
+
+        /* ✅ Table Header CTA Text in WHITE */
+        .table-header-cta {
+            font-size: 12px;
+            color: white; /* ✅ White for contrast */
+            display: block;
+            margin-top: 3px;
+            text-align: center;
         }
     </style>
 </head>
@@ -84,7 +102,7 @@
             <h1 class="header-title"><a href="index.html">eCFR Dashboard</a></h1>
         </div>
 
-        <!-- ✅ Centered Banner Image -->
+        <!-- ✅ Centered Banner Image (Morpheus) -->
         <img src="images/morpheus.png" alt="Morpheus Banner" class="header-banner">
 
         <div class="header-right">
@@ -99,7 +117,7 @@
         </div>
         <div class="score-item">
             <strong><a href="agencies.html">Total Agencies:</a></strong> <span id="totalAgencies">153</span>
-            <span class="cta-text">(Click to see all Agencies)</span>
+            <span class="cta-text">(Click to see all Agencies)</span> <!-- ✅ Fixed placement -->
         </div>
         <div class="score-item">
             <strong>Most Recently Amended:</strong>
@@ -107,7 +125,7 @@
                 <a id="recentAmendedTitle" class="score-value" href="#" target="_blank">N/A</a>
                 <span id="recentAmendedDate">(N/A)</span>
             </div>
-            <span class="cta-text">(Click above & navigate to recent eCFR)</span>
+            <span class="cta-text">(Click above & navigate to recent eCFR)</span> <!-- ✅ Now below the data -->
         </div>
     </div>
 
@@ -117,7 +135,7 @@
             <tr>
                 <th class="title-header">
                     Title
-                    <span class="table-header-cta">(Click below & navigate to eCFR sites)</span>
+                    <span class="table-header-cta">(Click below & navigate to eCFR sites)</span> <!-- ✅ White text, fine print -->
                 </th>
                 <th>Current as of</th>
                 <th>Last Amended</th>
