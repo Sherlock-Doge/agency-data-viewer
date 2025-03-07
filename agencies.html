@@ -30,9 +30,7 @@
                     <th>Regulating Titles & Chapters</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Data will be inserted dynamically -->
-            </tbody>
+            <tbody></tbody>
         </table>
     </main>
 
@@ -52,7 +50,7 @@
                 console.log("✅ Agencies Data:", data);
 
                 const tableBody = document.querySelector("#agencies-table tbody");
-                tableBody.innerHTML = ""; // Clear existing rows
+                tableBody.innerHTML = "";
 
                 if (!data.agencies || data.agencies.length === 0) {
                     tableBody.innerHTML = "<tr><td colspan='2'>No agency data available.</td></tr>";
