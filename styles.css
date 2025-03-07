@@ -4,9 +4,6 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
 }
 
 /* Header Styles */
@@ -18,55 +15,59 @@ header {
     justify-content: space-between;
 }
 
-/* Fix Header Image & Size */
+/* Logo & Banner */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 .header-logo {
-    width: 90px;
-    height: 90px;
+    width: 80px;
+    height: 80px;
 }
 
 .header-banner {
-    width: 120px;
-    height: auto;
+    height: 60px;
 }
 
-/* Fix Table Styles */
-table {
-    width: 90%;
-    border-collapse: collapse;
-    margin: 20px auto;
-    background-color: white;
-    border: 5px solid #bbb;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
-}
-
-th {
-    background-color: #0d0d0d;
-    color: #f8f9fa;
-    font-size: 18px;
+/* Page Titles */
+.page-title {
+    text-align: center;
+    color: white;
+    font-size: 24px;
     font-weight: bold;
-    padding: 12px;
+}
+
+/* Scoreboard */
+.scoreboard {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    background: white;
+    border: 2px solid #777;
+    border-radius: 8px;
     text-align: center;
 }
 
-/* Keep Links Blue */
-a {
-    color: #004a99;
-    text-decoration: none;
-    font-weight: bold;
+/* Tables */
+table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    border: 2px solid black;
 }
 
-a:visited {
-    color: #004a99 !important;
+th, td {
+    border: 2px solid black;
+    padding: 8px;
+    text-align: center;
 }
 
+/* Footer */
 footer {
-    background-color: #333;
+    background-color: #0d0d0d;
     color: white;
     text-align: center;
     padding: 15px;
-    width: 100%;
-    position: relative;
-    bottom: 0;
 }
