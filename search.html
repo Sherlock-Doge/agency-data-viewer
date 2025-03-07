@@ -80,6 +80,8 @@
         .search-container {
             text-align: center;
             margin-top: 20px;
+            position: relative;
+            z-index: 2; /* Search bar stays on top of the image */
         }
 
         #searchQuery {
@@ -104,15 +106,24 @@
             font-size: 14px;
         }
 
-        /* ✅ Stylized Image in Bottom-Right */
+        /* ✅ Image Positioned Behind Search Bar */
         .cipher-image {
             position: absolute;
-            bottom: 30px;
-            right: 30px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 300px;
             height: 300px;
             border-radius: 0.25rem;
             box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.5);
+            opacity: 1; /* Visible initially */
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        /* ✅ Hide Image When Search Results Load */
+        .hidden {
+            opacity: 0; /* Fades out */
+            pointer-events: none; /* Prevents interaction */
         }
     </style>
 </head>
@@ -132,6 +143,9 @@
 
     <!-- Main Content -->
     <div class="main-content">
+        <!-- ✅ Cipher Image Positioned Behind Search Bar -->
+        <img src="images/cipher-doge.png" alt="Cipher Doge" class="cipher-image" id="cipherImage">
+
         <div class="search-container">
             <input type="text" id="searchQuery" placeholder="Enter search term...">
             <button onclick="performSearch()">Search</button>
@@ -139,9 +153,6 @@
 
         <!-- Search Results -->
         <div id="searchResults"></div>
-
-        <!-- ✅ Image Added to Bottom-Right -->
-        <img src="images/cipher-doge.png" alt="Cipher Doge" class="cipher-image">
     </div>
 
     <!-- Footer -->
@@ -170,6 +181,9 @@
         function displaySearchResults(results) {
             const resultsContainer = document.getElementById("searchResults");
             resultsContainer.innerHTML = "";
+
+            // ✅ Hide Cipher Image when results appear
+            document.getElementById("cipherImage").classList.add("hidden");
 
             if (!results || results.length === 0) {
                 resultsContainer.innerHTML = "<p>No results found.</p>";
