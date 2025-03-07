@@ -1,1 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Federal Agencies & Regulations</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <header>
+        <h1>Federal Agencies & Their Regulations</h1>
+        <nav>
+            <a href="index.html">← Back to Main Dashboard</a>
+        </nav>
+    </header>
+
+    <main>
+        <table id="agencies-table">
+            <thead>
+                <tr>
+                    <th>Agency</th>
+                    <th>Regulating Titles & Chapters</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be inserted here dynamically -->
+            </tbody>
+        </table>
+    </main>
+
+    <script>
+        async function fetchAgencies() {
+            try {
+                const response = await fetch("https://ecfr-backend-service.onrender.com/api/agencies");
+                const data = await response.json();
+
+                const tableBody = document.querySelector("#agencies-table tbody");
+                tableBody.innerHTML = ""; // Clear existing rows
+
+                data.agencies.forEach(agency => {
+                    const row = document.createElement("tr");
+
+                    // Create Agency Name Cell
+                    const agencyCell = document.createElement("td");
+                    agencyCell.textContent = agency.name;
+
+                    // Create Regulating Titles & Chapters Cell
+                    const titlesCell = document.createElement("td");
+                    if (agency.cfr_references.length > 0) {
+                        agency.cfr_references.forEach(ref => {
+                            const link = document.createElement("a");
+                            link.href = `https://www.ecfr.gov/current/title-${ref.title}/chapter-${ref.chapter || ""}`;
+                            link.textContent = `Title ${ref.title}, Chapter ${ref.chapter || "N/A"}`;
+                            link.target = "_blank"; // Open in new tab
+
+                            titlesCell.appendChild(link);
+                            titlesCell.appendChild(document.createElement("br"));
+                        });
+                    } else {
+                        titlesCell.textContent = "No Titles Found";
+                    }
+
+                    row.appendChild(agencyCell);
+                    row.appendChild(titlesCell);
+                    tableBody.appendChild(row);
+                });
+
+            } catch (error) {
+                console.error("🚨 Error fetching agencies:", error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", fetchAgencies);
+    </script>
+
+</body>
+</html>
 
