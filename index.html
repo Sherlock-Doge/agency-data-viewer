@@ -6,15 +6,34 @@
     <title>eCFR Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* ✅ Standardized Header */
-        .header-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between; /* ✅ Title left, search right */
-            background-color: #111; /* ✅ Matches logo bg */
-            padding: 10px 20px;
+        /* ✅ Fine print CTA prompts */
+        .cta-text {
+            font-size: 12px; /* ✅ Small, fine-print size */
+            color: #666; /* ✅ Light gray for subtle contrast */
+            display: block; /* ✅ Ensures it's below the main text */
+            margin-top: 3px; /* ✅ Creates spacing */
+            text-align: center;
         }
 
+        /* ✅ Table Header CTA Text in WHITE */
+        .table-header-cta {
+            font-size: 12px;
+            color: white; /* ✅ Changed from gray to white */
+            display: block;
+            margin-top: 3px;
+            text-align: center;
+        }
+
+        /* ✅ Header Bar Styling */
+        header {
+            background-color: #0d0d0d; /* ✅ Solid dark color */
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* ✅ Ensures left/right alignment */
+        }
+
+        /* ✅ Left Section of Header */
         .header-left {
             display: flex;
             align-items: center;
@@ -26,26 +45,31 @@
             height: 110px;
         }
 
-        .header-title a {
-            text-decoration: none;
-            color: white;
-            font-size: 28px;
+        .header-title {
+            font-size: 26px;
             font-weight: bold;
         }
 
-        .header-right a {
+        /* ✅ Home Link Styling */
+        .header-title a {
             text-decoration: none;
+            color: white; /* ✅ Large, bold, white */
+        }
+
+        /* ✅ Right Side of Header */
+        .header-right a {
             color: white;
             font-size: 18px;
             font-weight: bold;
+            text-decoration: none;
         }
 
         /* ✅ Footer Styling */
         footer {
-            background-color: #111;
-            color: white;
+            background-color: #0d0d0d; /* ✅ Same solid color as header */
+            padding: 10px;
             text-align: center;
-            padding: 15px;
+            color: white;
             font-size: 14px;
         }
     </style>
@@ -54,14 +78,12 @@
 
     <!-- Header Section -->
     <header>
-        <div class="header-container">
-            <div class="header-left">
-                <img src="images/sherlock-doge-analyzer.png" alt="Sherlock Doge Logo" class="header-logo">
-                <a href="index.html" class="header-title">eCFR Dashboard</a>
-            </div>
-            <div class="header-right">
-                <a href="search.html">Search</a>
-            </div>
+        <div class="header-left">
+            <img src="images/sherlock-doge-analyzer.png" alt="Sherlock Doge Logo" class="header-logo">
+            <h1 class="header-title"><a href="index.html">eCFR Dashboard</a></h1>
+        </div>
+        <div class="header-right">
+            <a href="search.html">Search</a>
         </div>
     </header>
 
@@ -72,7 +94,7 @@
         </div>
         <div class="score-item">
             <strong><a href="agencies.html">Total Agencies:</a></strong> <span id="totalAgencies">153</span>
-            <span class="cta-text">(Click to see all Agencies)</span>
+            <span class="cta-text">(Click to see all Agencies)</span> <!-- ✅ Fixed placement -->
         </div>
         <div class="score-item">
             <strong>Most Recently Amended:</strong>
@@ -80,7 +102,7 @@
                 <a id="recentAmendedTitle" class="score-value" href="#" target="_blank">N/A</a>
                 <span id="recentAmendedDate">(N/A)</span>
             </div>
-            <span class="cta-text">(Click above & navigate to recent eCFR)</span>
+            <span class="cta-text">(Click above & navigate to recent eCFR)</span> <!-- ✅ Now below the data -->
         </div>
     </div>
 
@@ -90,7 +112,7 @@
             <tr>
                 <th class="title-header">
                     Title
-                    <span class="table-header-cta">(Click below & navigate to eCFR sites)</span>
+                    <span class="table-header-cta">(Click below & navigate to eCFR sites)</span> <!-- ✅ White text, fine print -->
                 </th>
                 <th>Current as of</th>
                 <th>Last Amended</th>
