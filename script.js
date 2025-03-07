@@ -33,22 +33,6 @@ async function fetchAgencies() {
     }
 }
 
-// 📌 Fetch Word Counts from Backend
-async function fetchWordCounts() {
-    try {
-        console.log("📥 Fetching word counts...");
-        const response = await fetch(`${BACKEND_URL}/api/wordcounts`);
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-
-        const wordData = await response.json();
-        console.log("✅ Word Count Data:", wordData);
-        return wordData || {};
-    } catch (error) {
-        console.error("🚨 Error fetching word counts:", error);
-        return {};
-    }
-}
-
 // 📌 Fetch Word Count for a Single Title (when "Generate" button is clicked)
 async function fetchSingleTitleWordCount(titleNumber, buttonElement) {
     try {
@@ -103,11 +87,10 @@ async function fetchData() {
     tableBody.innerHTML = "";
 
     try {
-        // 📌 Fetch Titles, Agencies & Word Counts in Parallel
-        const [titles, agencies, wordCounts] = await Promise.all([
+        // 📌 Fetch Titles & Agencies Only (No Auto Word Count)
+        const [titles, agencies] = await Promise.all([
             fetchTitles(),
-            fetchAgencies(),
-            fetchWordCounts()
+            fetchAgencies()
         ]);
 
         if (!titles.length) {
@@ -132,10 +115,8 @@ async function fetchData() {
                 mostRecentTitleName = title.name;
             }
 
-            // ✅ Display word counts from backend if available, otherwise show "Generate" button
-            let wordCountDisplay = wordCounts[title.number]
-                ? wordCounts[title.number].toLocaleString()
-                : `<button onclick="fetchSingleTitleWordCount(${title.number}, this)">Generate</button>`;
+            // ✅ Always show "Generate" button instead of checking wordCounts
+            let wordCountDisplay = `<button onclick="fetchSingleTitleWordCount(${title.number}, this)">Generate</button>`;
 
             // ✅ Create Correctly Structured Table Row (Now Shows "Title X - Proper Name")
             const row = document.createElement("tr");
