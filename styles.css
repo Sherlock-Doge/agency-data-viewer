@@ -15,25 +15,15 @@ header {
     justify-content: space-between;
 }
 
-/* Header Links */
-.header-right .header-link {
+/* Common Header Link Styling (Applies to both left & right header links) */
+.header-link {
     color: white !important;
     font-weight: bold;
     text-decoration: none;
     margin: 0 15px;
 }
 
-.header-right .header-link:hover {
-    text-decoration: underline;
-}
-
-/* Ensure "eCFR Analyzer" is clickable, stays white, and follows hover rules */
-.header-title a {
-    color: white !important;
-    text-decoration: none;
-}
-
-.header-title a:hover {
+.header-link:hover {
     text-decoration: underline;
 }
 
