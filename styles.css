@@ -62,34 +62,53 @@ header {
     height: 25px;
 }
 
-/* Scoreboard */
+/* Scoreboard - Styled to Look Like a Real Scoreboard */
 .scoreboard {
     display: flex;
-    justify-content: space-between;
-    width: 60%;
-    margin: 0 auto 25px auto;
-    padding: 12px;
-    background: white;
-    border: 2px solid #777;
-    border-radius: 8px;
+    justify-content: space-around; /* Ensures even spacing */
+    align-items: center; /* Centers vertically */
+    width: 70%; /* Slightly wider for a stronger presence */
+    margin: 20px auto; /* Gives breathing room */
+    padding: 20px;
+    background: #222; /* Darker background for contrast */
+    border: 5px solid #ffd700; /* Thick Gold Border */
+    border-radius: 12px;
     text-align: center;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); /* Subtle gold glow */
 }
 
-/* Scoreboard Item Layout */
+/* Each Scoreboard Section (Looks Like Score Panels) */
 .score-item {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; /* Ensures text stays centered */
+    justify-content: center;
+    flex: 1; /* Equal width for all items */
+    padding: 15px;
+    font-size: 22px; /* Bigger Text */
+    font-weight: bold;
+    color: white; /* White text for scoreboard feel */
+    text-transform: uppercase; /* Makes labels look official */
+    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3); /* Soft glow */
+    border-right: 3px solid rgba(255, 255, 255, 0.2); /* Vertical dividers */
 }
 
-/* Scoreboard Links (Only Numbers/Most Recently Amended) */
+/* Remove Divider for Last Item */
+.score-item:last-child {
+    border-right: none;
+}
+
+/* Scoreboard Links (Numbers Look Bigger & Better) */
 .score-link {
-    color: blue !important;
+    color: #ffd700 !important; /* Gold for emphasis */
+    font-size: 26px; /* Make the numbers pop */
+    font-weight: bold;
     text-decoration: none;
 }
 
 .score-link:hover {
     text-decoration: underline;
+    color: #fff; /* White hover effect */
 }
 
 /* Tables */
