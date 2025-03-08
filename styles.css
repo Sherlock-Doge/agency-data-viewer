@@ -62,7 +62,7 @@ header {
     height: 35px; /* Increased for equal spacing */
 }
 
-/* Scoreboard - Cyber/Morpheus Green Look */
+/* ✅ FIX: Scoreboard - Black Border with Neon Glow */
 .scoreboard {
     display: flex;
     justify-content: space-around; /* Ensures even spacing */
@@ -70,8 +70,8 @@ header {
     width: 70%; /* Slightly wider for a stronger presence */
     margin: 35px auto; /* Even spacing above & below */
     padding: 20px;
-    background: #111; /* Darker background for cyber effect */
-    border: 5px solid #008f4c; /* Deep Green Border */
+    background: #111; /* Dark background */
+    border: 5px solid black; /* Black Border */
     border-radius: 12px;
     text-align: center;
     box-shadow: 0 0 15px rgba(0, 255, 153, 0.7); /* Neon Green Glow */
@@ -98,12 +98,19 @@ header {
     border-right: none;
 }
 
-/* Ensure the heading ("Most Recently Amended") is larger than the answer */
+/* ✅ FIX: Ensure the heading ("Most Recently Amended") is larger than the answer */
 .score-item strong {
     font-size: 24px; /* Slightly larger than the answer */
 }
 
-/* ✅ FIX: Make "Total Agencies" (153) & Most Recently Amended Title Dark Green */
+/* ✅ FIX: FORCE "Total Agencies" (153) TO BE GREEN */
+#totalAgencies {
+    color: #008f4c !important; /* Deep Green */
+    font-size: 22px; /* Matches other text */
+    font-weight: bold;
+}
+
+/* ✅ FIX: Force All Scoreboard Links (Including Most Recently Amended) to Green */
 .score-link {
     color: #008f4c !important; /* Deep Green */
     font-size: 22px; /* Matches other text */
