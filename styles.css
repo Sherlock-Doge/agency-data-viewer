@@ -33,6 +33,11 @@ header {
     color: white !important;
 }
 
+/* Explicitly enforce "eCFR Analyzer" link to be white */
+.header-title .header-link {
+    color: white !important;
+}
+
 /* Logo & Banner */
 .header-left {
     display: flex;
