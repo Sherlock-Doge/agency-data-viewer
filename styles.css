@@ -4,8 +4,6 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
-    position: relative;
-    min-height: 100vh; /* Ensure full height */
 }
 
 /* Header Styles */
@@ -177,48 +175,56 @@ a:visited {
     color: blue !important;
 }
 
-/* Footer */
+/* ✅ Footer - **FULLY RESTORED** */
 footer {
     background-color: #0d0d0d;
     color: white;
     text-align: center;
     padding: 15px;
-    position: absolute;
-    bottom: 0;
+    position: fixed; /* ✅ Docked at the bottom of the page */
     width: 100%;
+    bottom: 0;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.footer-logo {
+    width: 60px;
+    height: 60px;
 }
 
 /* ✅ SEARCH PAGE FIXES */
 
 /* ✅ Resize & Round Corners on Cipher Image */
 .cipher-image {
-    width: 70%;
-    max-width: 600px;
+    width: 70%; /* ✅ Adjust image width */
+    max-width: 600px; /* ✅ Prevents image from getting too big */
     display: block;
-    margin: 20px auto;
-    border-radius: 0.5rem;
-    transition: opacity 0.5s ease-in-out;
+    margin: 20px auto; /* ✅ Centers the image */
+    border-radius: 0.5rem; /* ✅ Rounded corners */
+    transition: opacity 0.5s ease-in-out; /* ✅ Smooth transition effect */
 }
 
 /* ✅ Center Search Bar */
 .search-container {
-    width: 70%;
+    width: 70%; /* ✅ Match image width */
     max-width: 600px;
-    margin: -50px auto 20px auto;
+    margin: -50px auto 20px auto; /* ✅ Moves search bar UP to overlay image */
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
-    transition: all 0.5s ease-in-out;
+    transition: margin-top 0.5s ease-in-out;
 }
 
 /* ✅ Move Search Bar Up When Search is Triggered */
 .search-results-visible .search-container {
-    position: absolute;
-    top: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
+    margin-top: 80px; /* ✅ Moves search bar to just under the header */
 }
 
 /* ✅ Style Search Input */
@@ -245,28 +251,28 @@ footer {
     background-color: #444;
 }
 
-/* ✅ Transparent Search Results Box */
+/* ✅ Position Search Results to Overlay Cipher */
 #searchResults {
     display: none;
     position: absolute;
-    width: 70%;
-    top: 150px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.6);
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.7); /* ✅ Semi-transparent */
     padding: 20px;
-    border-radius: 12px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    max-width: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 /* ✅ Show Results Only When Needed */
 .search-results-visible #searchResults {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: block;
 }
 
 /* ✅ Fade Image When Results Show */
 .search-results-visible .cipher-image {
-    opacity: 0.2;
+    opacity: 0.2; /* ✅ Fade effect when search is triggered */
 }
