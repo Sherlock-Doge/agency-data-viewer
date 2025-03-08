@@ -76,7 +76,7 @@ function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecen
         recentAmendedTitleElement.removeAttribute("href");
     }
 
-    document.getElementById("recentAmendedDate").textContent = mostRecentDate || "N/A";
+    document.getElementById("recentAmendedDate").textContent = mostRecentDate ? `(${mostRecentDate})` : "(N/A)";
 }
 
 // 📌 Main Function to Fetch and Populate Table
