@@ -146,3 +146,59 @@ async function fetchData() {
 
 // 📌 Start Fetching Data on Load
 fetchData();
+
+// ✅ eCFR SEARCH FUNCTION (NEW FEATURE)
+async function performSearch() {
+    const query = document.getElementById("searchQuery").value.trim();
+    const resultsContainer = document.getElementById("searchResults");
+    const cipherImage = document.querySelector(".cipher-image");
+
+    if (!query) {
+        resultsContainer.innerHTML = "<p>Please enter a search term.</p>";
+        return;
+    }
+
+    console.log(`🔍 Searching for: ${query}`);
+    
+    // ✅ Fade Cipher Doge & Move Search Bar to the Top
+    document.body.classList.add("search-results-visible");
+    document.querySelector(".search-container").style.marginTop = "10px";
+
+    resultsContainer.innerHTML = "<p>Loading results...</p>";
+
+    try {
+        const response = await fetch(`https://www.ecfr.gov/api/search/v1/results?query=${encodeURIComponent(query)}`);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const data = await response.json();
+        console.log("✅ Search Results:", data);
+
+        // ✅ Clear Results & Show New Ones
+        resultsContainer.innerHTML = "";
+        if (data.results.length === 0) {
+            resultsContainer.innerHTML = "<p>No results found.</p>";
+        } else {
+            data.results.forEach((result, index) => {
+                const resultDiv = document.createElement("div");
+                resultDiv.classList.add("search-result");
+                resultDiv.innerHTML = `
+                    <p><strong>${index + 1}.</strong> <a href="https://www.ecfr.gov/${result.link}" target="_blank">${result.title}</a></p>
+                    <p>${result.description || "No description available."}</p>
+                `;
+                resultsContainer.appendChild(resultDiv);
+            });
+        }
+
+    } catch (error) {
+        console.error("🚨 Error performing search:", error);
+        resultsContainer.innerHTML = "<p>Error retrieving search results.</p>";
+    }
+}
+
+// ✅ Detect ENTER Key Press to Trigger Search
+document.getElementById("searchQuery").addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        performSearch();
+    }
+});
