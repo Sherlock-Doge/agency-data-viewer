@@ -98,6 +98,19 @@ header {
     border-right: none;
 }
 
+/* ✅ Fix: Force Scoreboard Links (153, Title 47...) to Stay Green */
+.score-link {
+    color: #008f4c !important;  /* Dark Green */
+    font-size: 22px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.score-link:hover {
+    text-decoration: underline;
+    color: #00ff99 !important; /* Neon Green Hover */
+}
+
 /* ✅ Fix: Ensure "Most Recently Amended" Layout */
 #recentAmendedWrapper {
     display: flex;
@@ -106,14 +119,15 @@ header {
     gap: 5px;
 }
 
-/* ✅ Fix: Large Table (LT) - Proper Borders, No Rounded Columns */
+/* ✅ Fix: Large Table (LT) Proper Gridlines & Borders */
 table {
     width: 90%;
     margin: 40px auto;
-    border-collapse: collapse; /* ✅ Fix: Ensures inner grid merges correctly */
-    border: 4px solid black; /* ✅ Fix: Thick black outer border */
-    border-radius: 12px; /* ✅ Fix: Ensures only the table edges are rounded */
+    border-spacing: 0; /* ✅ Fix: Prevents gaps but allows proper radius */
+    border: 4px solid black; /* ✅ Thick Black Outer Border */
+    border-radius: 8px; /* ✅ New 0.5 radius */
     background-color: white;
+    overflow: hidden; /* ✅ Ensures corners stay rounded */
 }
 
 /* ✅ Fix: Table Headers Stay Clean */
@@ -122,42 +136,37 @@ th {
     color: white;
     padding: 12px;
     font-size: 18px;
-    border: 2px solid black; /* ✅ Keeps inner grid aligned */
+    border-bottom: 2px solid black;
 }
 
 /* ✅ Fix: Proper Inner Gridlines Without Rounded Edges */
 td, th {
-    border: 2px solid black; /* ✅ Inner grid lines */
+    border: 1px solid black; /* ✅ Inner grid lines */
     padding: 10px;
     text-align: center;
 }
 
-/* ✅ Fix: Outer Border with Rounded Corners */
+/* ✅ Fix: Outer Border Rounded Corners ONLY on the First and Last Row */
 table tr:first-child th:first-child {
-    border-top-left-radius: 12px;
+    border-top-left-radius: 8px;
 }
 
 table tr:first-child th:last-child {
-    border-top-right-radius: 12px;
+    border-top-right-radius: 8px;
 }
 
 table tr:last-child td:first-child {
-    border-bottom-left-radius: 12px;
+    border-bottom-left-radius: 8px;
 }
 
 table tr:last-child td:last-child {
-    border-bottom-right-radius: 12px;
+    border-bottom-right-radius: 8px;
 }
 
-/* ✅ Fix: Ensuring Borders Are Applied Correctly */
-tr:first-child th {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-}
-
-tr:last-child td {
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
+/* ✅ Fix: Prevent Inner Rows from Getting Unwanted Rounded Borders */
+td:first-child,
+td:last-child {
+    border-radius: 0;
 }
 
 /* Table Links - Blue */
