@@ -57,9 +57,9 @@ header {
     font-weight: bold;
 }
 
-/* Spacer between Header and Scoreboard */
+/* Equal Spacer Above & Below the Scoreboard */
 .spacer {
-    height: 25px;
+    height: 35px; /* Increased for equal spacing */
 }
 
 /* Scoreboard - Cyber/Morpheus Green Look */
@@ -68,7 +68,7 @@ header {
     justify-content: space-around; /* Ensures even spacing */
     align-items: center; /* Centers vertically */
     width: 70%; /* Slightly wider for a stronger presence */
-    margin: 20px auto; /* Gives breathing room */
+    margin: 35px auto; /* Even spacing above & below */
     padding: 20px;
     background: #111; /* Darker background for cyber effect */
     border: 5px solid #008f4c; /* Deep Green Border */
@@ -103,7 +103,7 @@ header {
     font-size: 24px; /* Slightly larger than the answer */
 }
 
-/* Scoreboard Links (Numbers & Titles) - Dark Green Theme */
+/* ✅ FIX: Make "Total Agencies" (153) & Most Recently Amended Title Dark Green */
 .score-link {
     color: #008f4c !important; /* Deep Green */
     font-size: 22px; /* Matches other text */
@@ -116,10 +116,18 @@ header {
     color: #00ff99; /* Neon green hover effect */
 }
 
+/* ✅ FIX: Adjust "Most Recently Amended" Layout */
+#recentAmendedWrapper {
+    display: flex;
+    flex-direction: column; /* Makes the title appear above the date */
+    align-items: center;
+    gap: 5px; /* Small gap between title & date */
+}
+
 /* Tables */
 table {
     width: 90%;
-    margin: 20px auto;
+    margin: 35px auto; /* Increased to match scoreboard spacing */
     border-collapse: collapse;
     border: 2px solid black;
 }
