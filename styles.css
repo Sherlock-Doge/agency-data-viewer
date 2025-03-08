@@ -53,13 +53,8 @@ header {
 /* ✅ Fix: Ensure "Dashboard" Matches "eCFR Analyzer" Font Size */
 .header-center {
     color: white;
-    font-size: 32px;
+    font-size: 32px; /* Matched to h1 */
     font-weight: bold;
-}
-
-/* ✅ Fix: Equal Spacer Above & Below the Scoreboard */
-.spacer {
-    height: 40px;
 }
 
 /* ✅ Fix: Scoreboard - Black Border with Neon Glow */
@@ -98,30 +93,101 @@ header {
     border-right: none;
 }
 
+/* ✅ Fix: Ensure Scoreboard Links Stay Green */
+.score-link {
+    color: #008f4c !important;
+    font-size: 22px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.score-link:hover {
+    text-decoration: underline;
+    color: #00ff99 !important; /* Force all scoreboard links to match hover */
+}
+
+/* ✅ FINAL FIX: Large Table (LT) */
+table {
+    width: 90%;
+    margin: 40px auto;
+    border-collapse: separate; /* ✅ Keeps thick outer border */
+    border-spacing: 0; /* ✅ Prevents unwanted gaps */
+    background-color: white;
+    border: 5px solid black; /* ✅ Thick outer black border */
+    border-radius: 12px; /* ✅ Rounded corners */
+    overflow: hidden; /* ✅ Ensures border-radius applies correctly */
+}
+
+/* ✅ Header Row (Black with White Text) */
+th {
+    background-color: black;
+    color: white;
+    padding: 12px;
+    font-size: 18px;
+}
+
+/* ✅ Inner Gridlines */
+td, th {
+    border: 1px solid black; /* ✅ Single inner grid */
+    padding: 10px;
+    text-align: center;
+}
+
+/* ✅ Table Links - Blue */
+td a {
+    color: blue !important;
+    text-decoration: none;
+}
+
+td a:hover {
+    text-decoration: underline;
+}
+
+/* Prevent visited links from turning purple */
+a:visited {
+    color: blue !important;
+}
+
+/* Footer */
+footer {
+    background-color: #0d0d0d;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.footer-logo {
+    width: 60px;
+    height: 60px;
+}
+
 /* ✅ SEARCH PAGE FIXES */
 
 /* ✅ Resize Search Image */
 .cipher-image {
-    width: 70%;
-    max-width: 600px;
+    width: 70%; /* ✅ Adjust image width */
+    max-width: 600px; /* ✅ Prevents image from getting too big */
     display: block;
-    margin: 20px auto;
-    transition: opacity 0.5s ease-in-out;
+    margin: 20px auto; /* ✅ Centers the image */
+    transition: opacity 0.5s ease-in-out; /* ✅ Smooth transition effect */
 }
 
-/* ✅ Center Search Bar Initially */
+/* ✅ Center Search Bar */
 .search-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 70%;
+    width: 70%; /* ✅ Match image width */
     max-width: 600px;
+    margin: -50px auto 20px auto; /* ✅ Moves search bar UP to overlay image */
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
-    transition: all 0.5s ease-in-out;
 }
 
 /* ✅ Style Search Input */
@@ -148,67 +214,7 @@ header {
     background-color: #444;
 }
 
-/* ✅ Moves Search Bar to the Top AFTER Enter is Pressed */
-.search-results-visible .search-container {
-    position: relative;
-    top: 10px;
-    left: auto;
-    transform: none;
-    margin: 20px auto;
-}
-
-/* ✅ Fade Cipher Doge Image When Results Show */
+/* ✅ Fade Image When Results Show */
 .search-results-visible .cipher-image {
-    opacity: 0.2;
-}
-
-/* ✅ Ensure Results Load Over the Image */
-#searchResults {
-    display: none;
-    width: 80%;
-    margin: 20px auto;
-    background: white;
-    border: 2px solid black;
-    padding: 10px;
-    border-radius: 8px;
-}
-
-/* ✅ Show Results Only After Search */
-.search-results-visible #searchResults {
-    display: block;
-}
-
-/* ✅ Proper Styling for Search Results */
-.result-item {
-    padding: 10px;
-    border-bottom: 1px solid black;
-}
-
-.result-item:last-child {
-    border-bottom: none;
-}
-
-/* ✅ Prevent Unwanted Placeholder Bar */
-.hidden {
-    display: none !important;
-}
-
-/* ✅ Footer */
-footer {
-    background-color: #0d0d0d;
-    color: white;
-    text-align: center;
-    padding: 15px;
-}
-
-.footer-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-}
-
-.footer-logo {
-    width: 60px;
-    height: 60px;
+    opacity: 0.2; /* ✅ Fade effect when search is triggered */
 }
