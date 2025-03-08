@@ -89,7 +89,7 @@ header {
     font-weight: bold;
     color: white; /* White text for scoreboard feel */
     text-transform: uppercase; /* Makes labels look official */
-    text-shadow: 2px 2px 5px rgba(0, 255, 153, 0.3); /* Soft neon glow */
+    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3); /* Soft glow */
     border-right: 3px solid rgba(255, 255, 255, 0.2); /* Vertical dividers */
 }
 
@@ -98,17 +98,22 @@ header {
     border-right: none;
 }
 
-/* Scoreboard Links (Numbers Look Bigger & Green) */
+/* Ensure the heading ("Most Recently Amended") is larger than the answer */
+.score-item strong {
+    font-size: 24px; /* Slightly larger than the answer */
+}
+
+/* Scoreboard Links (Numbers & Titles) - Dark Green Theme */
 .score-link {
-    color: #00ff99 !important; /* Neon Green */
-    font-size: 26px; /* Make the numbers pop */
+    color: #008f4c !important; /* Deep Green */
+    font-size: 22px; /* Matches other text */
     font-weight: bold;
     text-decoration: none;
 }
 
 .score-link:hover {
     text-decoration: underline;
-    color: #fff; /* White hover effect */
+    color: #00ff99; /* Neon green hover effect */
 }
 
 /* Tables */
