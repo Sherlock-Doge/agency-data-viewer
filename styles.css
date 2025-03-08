@@ -199,31 +199,35 @@ footer {
 
 /* ✅ Resize & Round Corners on Cipher Image */
 .cipher-image {
-    width: 70%; /* ✅ Adjust image width */
-    max-width: 600px; /* ✅ Prevents image from getting too big */
+    width: 70%;
+    max-width: 600px;
     display: block;
-    margin: 20px auto; /* ✅ Centers the image */
-    border-radius: 0.5rem; /* ✅ Rounded corners */
-    transition: opacity 0.5s ease-in-out; /* ✅ Smooth transition effect */
+    margin: 20px auto;
+    border-radius: 0.5rem;
+    transition: opacity 0.5s ease-in-out;
 }
 
-/* ✅ Center Search Bar */
+/* ✅ Center Search Bar Initially */
 .search-container {
-    width: 70%; /* ✅ Match image width */
+    width: 70%;
     max-width: 600px;
-    margin: 20px auto; /* ✅ Positioning above results */
+    margin: 20px auto;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
-    transition: margin-top 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
 }
 
-/* ✅ Move Search Bar to the Top When Search is Triggered */
+/* ✅ Move Search Bar & Results UP When Search is Triggered */
 .search-results-visible .search-container {
-    position: relative;
-    top: 0;
-    margin-top: 20px; /* ✅ Keeps it just below the header */
+    position: absolute;
+    width: 100%;
+    max-width: 80%;
+    top: 90px; /* ✅ Sits right under the header bar */
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0 auto;
 }
 
 /* ✅ Style Search Input */
@@ -250,18 +254,19 @@ footer {
     background-color: #444;
 }
 
-/* ✅ Position Search Results Under Search Bar */
+/* ✅ Position Search Results Over Cipher, But Under Search Bar */
 #searchResults {
     display: none;
-    position: relative;
+    position: absolute;
     width: 80%;
-    margin: auto;
+    max-width: 800px;
     background: rgba(255, 255, 255, 0.85);
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     border-radius: 12px;
-    max-width: 80%;
-    top: 20px; /* ✅ Keeps results under the search bar */
+    left: 50%;
+    top: 140px; /* ✅ Below search bar, over Cipher */
+    transform: translateX(-50%);
 }
 
 /* ✅ Show Results Only When Needed */
@@ -271,5 +276,5 @@ footer {
 
 /* ✅ Fade Image When Results Show */
 .search-results-visible .cipher-image {
-    opacity: 0.2; /* ✅ Fade effect when search is triggered */
+    opacity: 0.2;
 }
