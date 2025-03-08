@@ -27,12 +27,6 @@ header {
     text-decoration: underline;
 }
 
-/* Ensure header links remain white after clicking */
-.header-link:visited,
-.header-link:active {
-    color: white !important;
-}
-
 /* Explicitly enforce "eCFR Analyzer" link to be white */
 .header-title .header-link {
     color: white !important;
@@ -50,19 +44,19 @@ header {
     height: 80px;
 }
 
-/* ✅ Fix: Ensure "Dashboard" Matches "eCFR Analyzer" Font Size */
+/* Page Title (Dashboard) */
 .header-center {
     color: white;
-    font-size: 32px; /* Matched to h1 */
+    font-size: 32px;
     font-weight: bold;
 }
 
-/* ✅ Fix: Equal Spacer Above & Below the Scoreboard */
+/* Spacer to create equal spacing above & below scoreboard */
 .spacer {
-    height: 40px; /* Ensures even spacing */
+    height: 40px;
 }
 
-/* ✅ Fix: Scoreboard - Black Border with Neon Glow */
+/* Scoreboard Section */
 .scoreboard {
     display: flex;
     justify-content: space-around;
@@ -71,13 +65,13 @@ header {
     margin: 40px auto;
     padding: 20px;
     background: #111;
-    border: 5px solid black; /* Thick Black Border */
+    border: 5px solid black;
     border-radius: 12px;
     text-align: center;
     box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
 }
 
-/* Each Scoreboard Section */
+/* Scoreboard Item Layout */
 .score-item {
     display: flex;
     flex-direction: column;
@@ -98,7 +92,20 @@ header {
     border-right: none;
 }
 
-/* ✅ Fix: Ensure "Most Recently Amended" Layout */
+/* Scoreboard Numbers */
+#totalAgencies, .score-link {
+    color: #008f4c !important;
+    font-size: 22px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.score-link:hover {
+    text-decoration: underline;
+    color: #00ff99 !important;
+}
+
+/* Ensure Most Recently Amended Layout */
 #recentAmendedWrapper {
     display: flex;
     flex-direction: column;
@@ -106,13 +113,14 @@ header {
     gap: 5px;
 }
 
-/* ✅ Fix: Large Table (LT) - Proper Borders, No Rounded Columns */
+/* ✅ Final Fix: Large Table (LT) - Thick Outer Border, Sharp Inner Grid */
 table {
     width: 90%;
     margin: 40px auto;
-    border-collapse: collapse; /* ✅ Fix: Ensures inner grid merges correctly */
-    border: 4px solid black; /* ✅ Fix: Thick black outer border */
-    border-radius: 12px; /* ✅ Fix: Ensures only the table edges are rounded */
+    border-spacing: 0; /* Ensures no extra gaps between cells */
+    border: 4px solid black; /* Thick outer border */
+    border-radius: 12px; /* Rounded corners */
+    overflow: hidden; /* Ensures corners stay rounded */
     background-color: white;
 }
 
@@ -122,31 +130,14 @@ th {
     color: white;
     padding: 12px;
     font-size: 18px;
-    border: 2px solid black; /* ✅ Keeps inner grid aligned */
+    border-bottom: 2px solid black;
 }
 
 /* ✅ Fix: Proper Inner Gridlines Without Rounded Edges */
 td, th {
-    border: 2px solid black; /* ✅ Inner grid lines */
+    border: 1px solid black; /* Inner grid lines */
     padding: 10px;
     text-align: center;
-}
-
-/* ✅ Fix: Outer Border with Rounded Corners */
-table tr:first-child th:first-child {
-    border-top-left-radius: 12px;
-}
-
-table tr:first-child th:last-child {
-    border-top-right-radius: 12px;
-}
-
-table tr:last-child td:first-child {
-    border-bottom-left-radius: 12px;
-}
-
-table tr:last-child td:last-child {
-    border-bottom-right-radius: 12px;
 }
 
 /* ✅ Fix: Ensuring Borders Are Applied Correctly */
@@ -160,6 +151,54 @@ tr:last-child td {
     border-bottom-right-radius: 12px;
 }
 
+/* ✅ Fix: Remove Inner Column Radius */
+th:first-child {
+    border-top-left-radius: 12px;
+}
+
+th:last-child {
+    border-top-right-radius: 12px;
+}
+
+td:first-child {
+    border-bottom-left-radius: 12px;
+}
+
+td:last-child {
+    border-bottom-right-radius: 12px;
+}
+
 /* Table Links - Blue */
 td a {
     color: blue !important;
+    text-decoration: none;
+}
+
+td a:hover {
+    text-decoration: underline;
+}
+
+/* Prevent visited links from turning purple */
+a:visited {
+    color: blue !important;
+}
+
+/* Footer */
+footer {
+    background-color: #0d0d0d;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.footer-logo {
+    width: 60px;
+    height: 60px;
+}
