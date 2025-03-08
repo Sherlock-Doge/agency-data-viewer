@@ -57,6 +57,11 @@ header {
     font-weight: bold;
 }
 
+/* ✅ Fix: Equal Spacer Above & Below the Scoreboard */
+.spacer {
+    height: 40px; /* Ensures even spacing */
+}
+
 /* ✅ Fix: Scoreboard - Black Border with Neon Glow */
 .scoreboard {
     display: flex;
@@ -93,7 +98,29 @@ header {
     border-right: none;
 }
 
-/* ✅ Fix: Ensure Scoreboard Links Stay Green */
+/* ✅ Fix: Ensure "Most Recently Amended" Layout */
+#recentAmendedWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+/* ✅ Fix: Scoreboard Links to Green */
+#totalAgencies,
+#recentAmendedTitle {
+    color: #008f4c !important;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* ✅ Fix: Hover State for Scoreboard Links */
+#totalAgencies:hover,
+#recentAmendedTitle:hover {
+    color: #00ff99 !important; /* Neon Green Hover */
+}
+
+/* ✅ Fix: Force All Scoreboard Links to Green */
 .score-link {
     color: #008f4c !important;
     font-size: 22px;
@@ -106,7 +133,7 @@ header {
     color: #00ff99 !important; /* Force all scoreboard links to match hover */
 }
 
-/* ✅ FINAL FIX: Large Table (LT) */
+/* ✅ SIMPLE & FINAL: Large Table (LT) */
 table {
     width: 90%;
     margin: 40px auto;
