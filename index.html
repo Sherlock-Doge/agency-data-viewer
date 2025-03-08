@@ -1,79 +1,209 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eCFR Analyzer</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
 
-    <!-- Header -->
-    <header>
-        <div class="header-left">
-            <img src="images/sherlock-doge-analyzer-.png" alt="Sherlock Doge Logo" class="header-logo">
-            <h1 class="header-title">
-                <a href="index.html" class="header-link">eCFR Analyzer</a>
-            </h1>
-        </div>
+/* Header Styles */
+header {
+    background-color: #0d0d0d;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-        <h2 class="header-center">Dashboard</h2>
+/* Common Header Link Styling */
+.header-link {
+    color: white !important;
+    font-weight: bold;
+    text-decoration: none;
+    margin: 0 15px;
+}
 
-        <div class="header-right">
-            <a href="index.html" class="header-link">Dashboard</a>
-            <a href="agencies.html" class="header-link">Agencies</a>
-            <a href="search.html" class="header-link">Search</a>
-        </div>
-    </header>
+.header-link:hover {
+    text-decoration: underline;
+}
 
-    <!-- Spacer to prevent header from touching scoreboard -->
-    <div class="spacer"></div>
+/* Ensure header links remain white after clicking */
+.header-link:visited,
+.header-link:active {
+    color: white !important;
+}
 
-    <!-- Scoreboard Section -->
-    <div class="scoreboard">
-        <div class="score-item">
-            <strong>Total Titles:</strong>
-            <span id="totalTitles">N/A</span>
-        </div>
-        <div class="score-item">
-            <strong>Total Agencies:</strong> 
-            <a href="agencies.html" class="score-link"><span id="totalAgencies">N/A</span></a>
-        </div>
-        <div class="score-item">
-            <strong>Most Recently Amended:</strong>
-            <div id="recentAmendedWrapper">
-                <a id="recentAmendedTitle" class="score-link" href="#" target="_blank">N/A</a>
-                <span id="recentAmendedDate">(N/A)</span>
-            </div>
-        </div>
-    </div>
+/* Explicitly enforce "eCFR Analyzer" link to be white */
+.header-title .header-link {
+    color: white !important;
+}
 
-    <!-- Titles Table -->
-    <table id="titlesTable">
-        <thead>
-            <tr>
-                <th class="title-header">
-                    Title
-                    <br>
-                    <span class="table-header-cta">(Click below & navigate to eCFR sites)</span>
-                </th>
-                <th>Current as of</th>
-                <th>Last Amended</th>
-                <th>Word Count</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+/* Logo & Banner */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-container">
-            <p>© 2025 eCFR Analyzer</p>
-            <img src="images/morpheus.png" alt="Morpheus Logo" class="footer-logo">
-            <p>Sponsored by DOGE.</p>
-        </div>
-    </footer>
+.header-logo {
+    width: 80px;
+    height: 80px;
+}
 
-    <script src="script.js"></script>
-</body>
-</html>
+/* ✅ Fix: Ensure "Dashboard" Matches "eCFR Analyzer" Font Size */
+.header-center {
+    color: white;
+    font-size: 32px; /* Matched to h1 */
+    font-weight: bold;
+}
+
+/* ✅ Fix: Equal Spacer Above & Below the Scoreboard */
+.spacer {
+    height: 40px; /* Ensures even spacing */
+}
+
+/* ✅ Fix: Scoreboard - Black Border with Neon Glow */
+.scoreboard {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 70%;
+    margin: 40px auto;
+    padding: 20px;
+    background: #111;
+    border: 5px solid black; /* Black Border */
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
+}
+
+/* Each Scoreboard Section */
+.score-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 15px;
+    font-size: 22px;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3);
+    border-right: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Remove Divider for Last Item */
+.score-item:last-child {
+    border-right: none;
+}
+
+/* Fix: Ensure "Most Recently Amended" Heading Stays Larger */
+.score-item strong {
+    font-size: 24px;
+}
+
+/* ✅ Fix: Ensure "Total Agencies" (153) Stays Green & Matches Hover */
+#totalAgencies {
+    color: #008f4c !important;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+#totalAgencies:hover {
+    color: #00ff99 !important; /* Neon Green Hover */
+}
+
+/* ✅ Fix: Force All Scoreboard Links to Green */
+.score-link {
+    color: #008f4c !important;
+    font-size: 22px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.score-link:hover {
+    text-decoration: underline;
+    color: #00ff99 !important; /* Force all scoreboard links to match hover */
+}
+
+/* ✅ Fix: Adjust "Most Recently Amended" Layout */
+#recentAmendedWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+/* ✅ Final Fix: Large Table (LT) - Thick Black Outer Border, Sharp Inner Grid */
+table {
+    width: 90%;
+    margin: 40px auto;
+    border-collapse: collapse; /* ✅ Fix: Ensures borders merge correctly */
+    border: 4px solid black; /* ✅ Fix: Thick outer border */
+    border-radius: 12px; /* ✅ Fix: Rounds only the outer edges */
+    overflow: hidden; /* ✅ Fix: Prevents weird column rounding */
+    background-color: white;
+}
+
+/* ✅ Fix: Table Headers Stay Clean */
+th {
+    background-color: black;
+    color: white;
+    padding: 12px;
+    font-size: 18px;
+    border-bottom: 2px solid black; /* ✅ Clean Divider */
+}
+
+/* ✅ Fix: Proper Inner Gridlines Without Rounded Edges */
+td, th {
+    border: 1px solid black; /* ✅ Inner grid lines */
+    padding: 10px;
+    text-align: center;
+}
+
+/* ✅ Fix: Ensuring Borders Are Applied Correctly */
+tr:first-child th {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+tr:last-child td {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+/* Table Links - Blue */
+td a {
+    color: blue !important;
+    text-decoration: none;
+}
+
+td a:hover {
+    text-decoration: underline;
+}
+
+/* Prevent visited links from turning purple */
+a:visited {
+    color: blue !important;
+}
+
+/* Footer */
+footer {
+    background-color: #0d0d0d;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.footer-logo {
+    width: 60px;
+    height: 60px;
+}
