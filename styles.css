@@ -134,11 +134,12 @@ header {
 table {
     width: 90%;
     margin: 40px auto;
-    border-collapse: collapse; /* ✅ Proper grid merging */
+    border-collapse: separate; /* ✅ Keeps thick outer border */
+    border-spacing: 0; /* ✅ Prevents unwanted gaps */
     background-color: white;
-    border: 5px solid black; /* ✅ Single thick outer border */
-    border-radius: 12px; /* ✅ Rounded outer edges only */
-    overflow: hidden; /* ✅ Ensures the rounded border applies correctly */
+    border: 5px solid black; /* ✅ Thick outer black border */
+    border-radius: 12px; /* ✅ Rounded corners */
+    overflow: hidden; /* ✅ Ensures border-radius applies correctly */
 }
 
 /* ✅ Header Row (Black with White Text) */
@@ -155,6 +156,7 @@ td, th {
     padding: 10px;
     text-align: center;
 }
+
 
 /* ✅ Table Links - Blue */
 td a {
