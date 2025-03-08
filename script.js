@@ -40,12 +40,6 @@ async function fetchSingleTitleWordCount(titleNumber, buttonElement) {
         buttonElement.textContent = "Fetching...";
         buttonElement.disabled = true;
 
-        // Display "This may take a few moments" message
-        const statusText = document.createElement("span");
-        statusText.textContent = " This may take a few moments...";
-        statusText.style.color = "gray";
-        buttonElement.parentElement.appendChild(statusText);
-
         const response = await fetch(`${BACKEND_URL}/api/wordcount/${titleNumber}`);
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
@@ -147,11 +141,12 @@ async function fetchData() {
 // 📌 Start Fetching Data on Load
 fetchData();
 
-// ✅ eCFR SEARCH FUNCTION (NEW FEATURE)
+// ✅ eCFR SEARCH FUNCTION
 async function performSearch() {
     const query = document.getElementById("searchQuery").value.trim();
     const resultsContainer = document.getElementById("searchResults");
     const cipherImage = document.querySelector(".cipher-image");
+    const searchContainer = document.querySelector(".search-container");
 
     if (!query) {
         resultsContainer.innerHTML = "<p>Please enter a search term.</p>";
@@ -160,9 +155,9 @@ async function performSearch() {
 
     console.log(`🔍 Searching for: ${query}`);
     
-    // ✅ Fade Cipher Doge & Move Search Bar to the Top
+    // ✅ Move search bar to the top & fade Cipher Doge
     document.body.classList.add("search-results-visible");
-    document.querySelector(".search-container").style.marginTop = "10px";
+    searchContainer.style.marginTop = "10px";
 
     resultsContainer.innerHTML = "<p>Loading results...</p>";
 
@@ -175,14 +170,14 @@ async function performSearch() {
 
         // ✅ Clear Results & Show New Ones
         resultsContainer.innerHTML = "";
-        if (data.results.length === 0) {
+        if (!data.results || data.results.length === 0) {
             resultsContainer.innerHTML = "<p>No results found.</p>";
         } else {
             data.results.forEach((result, index) => {
                 const resultDiv = document.createElement("div");
                 resultDiv.classList.add("search-result");
                 resultDiv.innerHTML = `
-                    <p><strong>${index + 1}.</strong> <a href="https://www.ecfr.gov/${result.link}" target="_blank">${result.title}</a></p>
+                    <p><strong>${index + 1}.</strong> <a href="https://www.ecfr.gov/${result.link}" target="_blank">${result.title || "No Title"}</a></p>
                     <p>${result.description || "No description available."}</p>
                 `;
                 resultsContainer.appendChild(resultDiv);
