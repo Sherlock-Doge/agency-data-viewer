@@ -27,6 +27,12 @@ header {
     text-decoration: underline;
 }
 
+/* Ensure header links remain white after clicking */
+.header-link:visited,
+.header-link:active {
+    color: white !important;
+}
+
 /* Explicitly enforce "eCFR Analyzer" link to be white */
 .header-title .header-link {
     color: white !important;
@@ -44,19 +50,19 @@ header {
     height: 80px;
 }
 
-/* Page Title (Dashboard) */
+/* ✅ Fix: Ensure "Dashboard" Matches "eCFR Analyzer" Font Size */
 .header-center {
     color: white;
-    font-size: 32px;
+    font-size: 32px; /* Matched to h1 */
     font-weight: bold;
 }
 
-/* Spacer to create equal spacing above & below scoreboard */
+/* ✅ Fix: Equal Spacer Above & Below the Scoreboard */
 .spacer {
-    height: 40px;
+    height: 40px; /* Ensures even spacing */
 }
 
-/* Scoreboard Section */
+/* ✅ Fix: Scoreboard - Black Border with Neon Glow */
 .scoreboard {
     display: flex;
     justify-content: space-around;
@@ -65,13 +71,13 @@ header {
     margin: 40px auto;
     padding: 20px;
     background: #111;
-    border: 5px solid black;
+    border: 5px solid black; /* Thick Black Border */
     border-radius: 12px;
     text-align: center;
     box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
 }
 
-/* Scoreboard Item Layout */
+/* Each Scoreboard Section */
 .score-item {
     display: flex;
     flex-direction: column;
@@ -92,20 +98,7 @@ header {
     border-right: none;
 }
 
-/* Scoreboard Numbers */
-#totalAgencies, .score-link {
-    color: #008f4c !important;
-    font-size: 22px;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.score-link:hover {
-    text-decoration: underline;
-    color: #00ff99 !important;
-}
-
-/* Ensure Most Recently Amended Layout */
+/* ✅ Fix: Ensure "Most Recently Amended" Layout */
 #recentAmendedWrapper {
     display: flex;
     flex-direction: column;
@@ -113,14 +106,13 @@ header {
     gap: 5px;
 }
 
-/* ✅ Final Fix: Large Table (LT) - Thick Outer Border, Sharp Inner Grid */
+/* ✅ Fix: Large Table (LT) - Proper Borders, No Rounded Columns */
 table {
     width: 90%;
     margin: 40px auto;
-    border-spacing: 0; /* Ensures no extra gaps between cells */
-    border: 4px solid black; /* Thick outer border */
-    border-radius: 12px; /* Rounded corners */
-    overflow: hidden; /* Ensures corners stay rounded */
+    border-collapse: collapse; /* ✅ Fix: Ensures inner grid merges correctly */
+    border: 4px solid black; /* ✅ Fix: Thick black outer border */
+    border-radius: 12px; /* ✅ Fix: Ensures only the table edges are rounded */
     background-color: white;
 }
 
@@ -130,14 +122,31 @@ th {
     color: white;
     padding: 12px;
     font-size: 18px;
-    border-bottom: 2px solid black;
+    border: 2px solid black; /* ✅ Keeps inner grid aligned */
 }
 
 /* ✅ Fix: Proper Inner Gridlines Without Rounded Edges */
 td, th {
-    border: 1px solid black; /* Inner grid lines */
+    border: 2px solid black; /* ✅ Inner grid lines */
     padding: 10px;
     text-align: center;
+}
+
+/* ✅ Fix: Outer Border with Rounded Corners */
+table tr:first-child th:first-child {
+    border-top-left-radius: 12px;
+}
+
+table tr:first-child th:last-child {
+    border-top-right-radius: 12px;
+}
+
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+}
+
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
 }
 
 /* ✅ Fix: Ensuring Borders Are Applied Correctly */
@@ -148,23 +157,6 @@ tr:first-child th {
 
 tr:last-child td {
     border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
-}
-
-/* ✅ Fix: Remove Inner Column Radius */
-th:first-child {
-    border-top-left-radius: 12px;
-}
-
-th:last-child {
-    border-top-right-radius: 12px;
-}
-
-td:first-child {
-    border-bottom-left-radius: 12px;
-}
-
-td:last-child {
     border-bottom-right-radius: 12px;
 }
 
