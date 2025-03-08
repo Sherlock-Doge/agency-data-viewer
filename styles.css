@@ -175,15 +175,12 @@ a:visited {
     color: blue !important;
 }
 
-/* ✅ Footer - **FULLY RESTORED** */
+/* Footer */
 footer {
     background-color: #0d0d0d;
     color: white;
     text-align: center;
     padding: 15px;
-    position: fixed; /* ✅ Docked at the bottom of the page */
-    width: 100%;
-    bottom: 0;
 }
 
 .footer-container {
@@ -214,7 +211,7 @@ footer {
 .search-container {
     width: 70%; /* ✅ Match image width */
     max-width: 600px;
-    margin: -50px auto 20px auto; /* ✅ Moves search bar UP to overlay image */
+    margin: 20px auto; /* ✅ Positioning above results */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -222,9 +219,11 @@ footer {
     transition: margin-top 0.5s ease-in-out;
 }
 
-/* ✅ Move Search Bar Up When Search is Triggered */
+/* ✅ Move Search Bar to the Top When Search is Triggered */
 .search-results-visible .search-container {
-    margin-top: 80px; /* ✅ Moves search bar to just under the header */
+    position: relative;
+    top: 0;
+    margin-top: 20px; /* ✅ Keeps it just below the header */
 }
 
 /* ✅ Style Search Input */
@@ -251,20 +250,18 @@ footer {
     background-color: #444;
 }
 
-/* ✅ Position Search Results to Overlay Cipher */
+/* ✅ Position Search Results Under Search Bar */
 #searchResults {
     display: none;
-    position: absolute;
-    width: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.7); /* ✅ Semi-transparent */
+    position: relative;
+    width: 80%;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.85);
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     border-radius: 12px;
     max-width: 80%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 20px; /* ✅ Keeps results under the search bar */
 }
 
 /* ✅ Show Results Only When Needed */
