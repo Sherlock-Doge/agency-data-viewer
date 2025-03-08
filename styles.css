@@ -4,9 +4,6 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Ensures the footer stays docked */
 }
 
 /* Header Styles */
@@ -178,23 +175,46 @@ a:visited {
     color: blue !important;
 }
 
+/* Footer (Fixed & Working) */
+footer {
+    background-color: #0d0d0d;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    position: relative;
+    width: 100%;
+    bottom: 0;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.footer-logo {
+    width: 60px;
+    height: 60px;
+}
+
 /* ✅ SEARCH PAGE FIXES */
 
 /* ✅ Resize & Round Corners on Cipher Image */
 .cipher-image {
-    width: 70%;
-    max-width: 600px;
+    width: 70%; /* ✅ Adjust image width */
+    max-width: 600px; /* ✅ Prevents image from getting too big */
     display: block;
-    margin: 20px auto;
-    border-radius: 0.5rem;
-    transition: opacity 0.5s ease-in-out;
+    margin: 20px auto; /* ✅ Centers the image */
+    border-radius: 0.5rem; /* ✅ Rounded corners */
+    transition: opacity 0.5s ease-in-out; /* ✅ Smooth transition effect */
 }
 
-/* ✅ Center Search Bar Initially */
+/* ✅ Center Search Bar */
 .search-container {
-    width: 70%;
+    width: 70%; /* ✅ Match image width */
     max-width: 600px;
-    margin: -50px auto 20px auto;
+    margin: -50px auto 20px auto; /* ✅ Moves search bar UP to overlay image */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -202,9 +222,12 @@ a:visited {
     transition: margin-top 0.5s ease-in-out;
 }
 
-/* ✅ Move Search Bar & Results Up When Search is Triggered */
+/* ✅ Move Search Bar Up When Search is Triggered */
 .search-results-visible .search-container {
-    margin-top: 10px;
+    position: absolute;
+    top: 100px; /* ✅ Positions the search bar just under the header */
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 /* ✅ Style Search Input */
@@ -231,17 +254,17 @@ a:visited {
     background-color: #444;
 }
 
-/* ✅ Position Search Results Properly */
+/* ✅ Position Search Results to Appear Under Search Bar */
 #searchResults {
     display: none;
     position: absolute;
-    width: 80%;
+    top: 150px; /* ✅ Positions results just below the search bar */
     left: 50%;
     transform: translateX(-50%);
-    top: calc(100px + 10px); /* Adjusted so it stays below the search bar */
-    background: transparent !important; /* ✅ Fully transparent results box */
+    width: 70%;
+    max-width: 800px;
+    background: rgba(255, 255, 255, 0); /* ✅ Fully transparent */
     padding: 20px;
-    box-shadow: none; /* ✅ Remove shadow so it's fully clear */
     border-radius: 12px;
 }
 
@@ -252,29 +275,5 @@ a:visited {
 
 /* ✅ Fade Image When Results Show */
 .search-results-visible .cipher-image {
-    opacity: 0.2;
-}
-
-/* ✅ FIX FOOTER BEING MOVED */
-footer {
-    background-color: #0d0d0d;
-    color: white;
-    text-align: center;
-    padding: 15px;
-    margin-top: auto; /* ✅ Ensures footer stays at bottom */
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
-
-.footer-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-}
-
-.footer-logo {
-    width: 60px;
-    height: 60px;
+    opacity: 0.2; /* ✅ Fade effect when search is triggered */
 }
