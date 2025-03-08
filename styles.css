@@ -134,12 +134,11 @@ header {
 table {
     width: 90%;
     margin: 40px auto;
-    border-collapse: separate; /* ✅ Keeps thick outer border */
-    border-spacing: 0; /* ✅ Prevents unwanted gaps */
+    border-collapse: collapse; /* ✅ Proper grid merging */
     background-color: white;
-    border: 5px solid black; /* ✅ Thick outer black border */
-    border-radius: 12px; /* ✅ Rounded corners */
-    overflow: hidden; /* ✅ Ensures border-radius applies correctly */
+    border: 5px solid black; /* ✅ Single thick outer border */
+    border-radius: 12px; /* ✅ Rounded outer edges only */
+    overflow: hidden; /* ✅ Ensures the rounded border applies correctly */
 }
 
 /* ✅ Header Row (Black with White Text) */
@@ -156,7 +155,6 @@ td, th {
     padding: 10px;
     text-align: center;
 }
-
 
 /* ✅ Table Links - Blue */
 td a {
@@ -191,4 +189,55 @@ footer {
 .footer-logo {
     width: 60px;
     height: 60px;
+}
+
+/* ✅ SEARCH PAGE FIXES */
+
+/* ✅ Resize Search Image */
+.cipher-image {
+    width: 70%; /* ✅ Adjust image width */
+    max-width: 600px; /* ✅ Prevents image from getting too big */
+    display: block;
+    margin: 20px auto; /* ✅ Centers the image */
+    transition: opacity 0.5s ease-in-out; /* ✅ Smooth transition effect */
+}
+
+/* ✅ Center Search Bar */
+.search-container {
+    width: 70%; /* ✅ Match image width */
+    max-width: 600px;
+    margin: -50px auto 20px auto; /* ✅ Moves search bar UP to overlay image */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ✅ Style Search Input */
+#searchQuery {
+    width: 80%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid black;
+    border-radius: 8px;
+}
+
+/* ✅ Style Search Button */
+.search-container button {
+    padding: 12px 20px;
+    font-size: 16px;
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.search-container button:hover {
+    background-color: #444;
+}
+
+/* ✅ Fade Image When Results Show */
+.search-results-visible .cipher-image {
+    opacity: 0.2; /* ✅ Fade effect when search is triggered */
 }
