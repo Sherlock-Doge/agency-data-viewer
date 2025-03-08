@@ -5,8 +5,8 @@ const BACKEND_URL = "https://ecfr-backend-service.onrender.com";
 async function fetchTitles() {
     try {
         console.log("📥 Fetching eCFR Titles...");
-        const response = await fetch(`${BACKEND_URL}/api/titles`);
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        const response = await fetch(${BACKEND_URL}/api/titles);
+        if (!response.ok) throw new Error(HTTP error! Status: ${response.status});
 
         const data = await response.json();
         console.log("✅ Titles Data:", data);
@@ -21,8 +21,8 @@ async function fetchTitles() {
 async function fetchAgencies() {
     try {
         console.log("📥 Fetching agency data...");
-        const response = await fetch(`${BACKEND_URL}/api/agencies`);
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        const response = await fetch(${BACKEND_URL}/api/agencies);
+        if (!response.ok) throw new Error(HTTP error! Status: ${response.status});
 
         const data = await response.json();
         console.log("✅ Agencies Data:", data);
@@ -36,24 +36,26 @@ async function fetchAgencies() {
 // 📌 Fetch Word Count for a Single Title (when "Generate" button is clicked)
 async function fetchSingleTitleWordCount(titleNumber, buttonElement) {
     try {
-        console.log(`📥 Fetching word count for Title ${titleNumber}...`);
+        console.log(📥 Fetching word count for Title ${titleNumber}...);
         buttonElement.textContent = "Fetching...";
         buttonElement.disabled = true;
 
+        // Display "This may take a few moments" message
         const statusText = document.createElement("span");
         statusText.textContent = " This may take a few moments...";
         statusText.style.color = "gray";
         buttonElement.parentElement.appendChild(statusText);
 
-        const response = await fetch(`${BACKEND_URL}/api/wordcount/${titleNumber}`);
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        const response = await fetch(${BACKEND_URL}/api/wordcount/${titleNumber});
+        if (!response.ok) throw new Error(HTTP error! Status: ${response.status});
 
         const data = await response.json();
-        console.log(`✅ Word Count for Title ${titleNumber}:`, data.wordCount);
+        console.log(✅ Word Count for Title ${titleNumber}:, data.wordCount);
 
+        // ✅ Update UI with fetched word count
         buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
     } catch (error) {
-        console.error(`🚨 Error fetching word count for Title ${titleNumber}:`, error);
+        console.error(🚨 Error fetching word count for Title ${titleNumber}:, error);
         buttonElement.textContent = "Retry";
         buttonElement.disabled = false;
     }
@@ -67,14 +69,14 @@ function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecen
     const recentAmendedTitleElement = document.getElementById("recentAmendedTitle");
 
     if (mostRecentTitle && mostRecentTitleName) {
-        recentAmendedTitleElement.href = `https://www.ecfr.gov/current/title-${mostRecentTitle.replace("Title ", "")}`;
-        recentAmendedTitleElement.textContent = `${mostRecentTitle} - ${mostRecentTitleName}`;
+        recentAmendedTitleElement.href = https://www.ecfr.gov/current/title-${mostRecentTitle.replace("Title ", "")};
+        recentAmendedTitleElement.textContent = ${mostRecentTitle} - ${mostRecentTitleName};
     } else {
         recentAmendedTitleElement.textContent = "N/A";
         recentAmendedTitleElement.removeAttribute("href");
     }
 
-    document.getElementById("recentAmendedDate").textContent = mostRecentDate ? `(${mostRecentDate})` : "(N/A)";
+    document.getElementById("recentAmendedDate").textContent = mostRecentDate ? (${mostRecentDate}) : "(N/A)";
 }
 
 // 📌 Main Function to Fetch and Populate Table
@@ -82,9 +84,10 @@ async function fetchData() {
     console.log("📥 Starting data fetch...");
     
     const tableBody = document.querySelector("#titlesTable tbody");
-    if (tableBody) tableBody.innerHTML = "";
+    tableBody.innerHTML = "";
 
     try {
+        // 📌 Fetch Titles & Agencies Only (No Auto Word Count)
         const [titles, agencies] = await Promise.all([
             fetchTitles(),
             fetchAgencies()
@@ -101,27 +104,30 @@ async function fetchData() {
 
         // 📌 Populate Table and find the most recently amended title
         titles.forEach(title => {
-            console.log(`🔍 Processing Title: ${title.number} - ${title.name}`);
+            console.log(🔍 Processing Title: ${title.number} - ${title.name});
 
-            const titleUrl = `https://www.ecfr.gov/current/title-${title.number}`;
+            const titleUrl = https://www.ecfr.gov/current/title-${title.number};
 
+            // ✅ Keep track of most recently amended title
             if (!mostRecentDate || (title.latest_amended_on && title.latest_amended_on > mostRecentDate)) {
                 mostRecentDate = title.latest_amended_on;
-                mostRecentTitle = `Title ${title.number}`;
+                mostRecentTitle = Title ${title.number};
                 mostRecentTitleName = title.name;
             }
 
-            let wordCountDisplay = `<button onclick="fetchSingleTitleWordCount(${title.number}, this)">Generate</button>`;
+            // ✅ Always show "Generate" button instead of checking wordCounts
+            let wordCountDisplay = <button onclick="fetchSingleTitleWordCount(${title.number}, this)">Generate</button>;
 
+            // ✅ Create Correctly Structured Table Row (Now Shows "Title X - Proper Name")
             const row = document.createElement("tr");
-            row.innerHTML = `
+            row.innerHTML = 
                 <td><a href="${titleUrl}" target="_blank">Title ${title.number} - ${title.name}</a></td>
                 <td>${title.up_to_date_as_of || "N/A"}</td>
                 <td>${title.latest_amended_on || "N/A"}</td>
                 <td>${wordCountDisplay}</td>
-            `;
+            ;
 
-            if (tableBody) tableBody.appendChild(row);
+            tableBody.appendChild(row);
         });
 
         updateScoreboard(
@@ -152,20 +158,22 @@ async function performSearch() {
         return;
     }
 
-    console.log(`🔍 Searching for: ${query}`);
+    console.log(🔍 Searching for: ${query});
     
+    // ✅ Fade Cipher Doge & Move Search Bar to the Top
     document.body.classList.add("search-results-visible");
     document.querySelector(".search-container").style.marginTop = "10px";
 
     resultsContainer.innerHTML = "<p>Loading results...</p>";
 
     try {
-        const response = await fetch(`https://www.ecfr.gov/api/search/v1/results?query=${encodeURIComponent(query)}`);
-        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        const response = await fetch(https://www.ecfr.gov/api/search/v1/results?query=${encodeURIComponent(query)});
+        if (!response.ok) throw new Error(HTTP error! Status: ${response.status});
 
         const data = await response.json();
         console.log("✅ Search Results:", data);
 
+        // ✅ Clear Results & Show New Ones
         resultsContainer.innerHTML = "";
         if (data.results.length === 0) {
             resultsContainer.innerHTML = "<p>No results found.</p>";
@@ -173,10 +181,10 @@ async function performSearch() {
             data.results.forEach((result, index) => {
                 const resultDiv = document.createElement("div");
                 resultDiv.classList.add("search-result");
-                resultDiv.innerHTML = `
-                    <p><strong>${index + 1}.</strong> <a href="https://www.ecfr.gov/${result.link}" target="_blank">${result.title || "No title available"}</a></p>
+                resultDiv.innerHTML = 
+                    <p><strong>${index + 1}.</strong> <a href="https://www.ecfr.gov/${result.link}" target="_blank">${result.title}</a></p>
                     <p>${result.description || "No description available."}</p>
-                `;
+                ;
                 resultsContainer.appendChild(resultDiv);
             });
         }
