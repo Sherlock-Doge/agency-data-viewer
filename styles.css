@@ -4,6 +4,8 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
+    position: relative;
+    min-height: 100vh; /* Ensure full height */
 }
 
 /* Header Styles */
@@ -181,18 +183,9 @@ footer {
     color: white;
     text-align: center;
     padding: 15px;
-}
-
-.footer-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-}
-
-.footer-logo {
-    width: 60px;
-    height: 60px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
 
 /* ✅ SEARCH PAGE FIXES */
@@ -209,9 +202,9 @@ footer {
 
 /* ✅ Center Search Bar */
 .search-container {
-    width: 70%; /* ✅ Match image width */
+    width: 70%;
     max-width: 600px;
-    margin: -50px auto 20px auto; /* ✅ Moves search bar UP to overlay image */
+    margin: -50px auto 20px auto; /* Centers search bar */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -221,7 +214,11 @@ footer {
 
 /* ✅ Move Search Bar Up When Search is Triggered */
 .search-results-visible .search-container {
-    margin-top: 10px; /* ✅ Moves search bar to just under the header */
+    position: absolute;
+    top: 80px; /* ✅ Moves search bar to just under the header */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
 }
 
 /* ✅ Style Search Input */
@@ -252,16 +249,14 @@ footer {
 #searchResults {
     display: none;
     position: absolute;
-    width: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.95);
+    width: 70%;
+    top: 150px; /* ✅ Places results below the search bar */
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.6); /* ✅ Transparent for Cipher visibility */
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     border-radius: 12px;
-    max-width: 80%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 /* ✅ Show Results Only When Needed */
