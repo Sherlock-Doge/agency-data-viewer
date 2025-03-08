@@ -135,43 +135,42 @@ header {
     gap: 5px;
 }
 
-/* ✅ Final Fix: Large Table (LT) - Thick Black Outer Border, Inner Gridlines */
+/* ✅ Final Fix: Large Table (LT) - Thick Black Outer Border, Sharp Inner Grid */
 table {
     width: 90%;
     margin: 40px auto;
-    border-collapse: separate; /* ✅ Allows rounded corners */
-    border-spacing: 0; /* ✅ Ensures proper grid alignment */
-    border: 4px solid black !important; /* ✅ Ensures thick black border */
-    border-radius: 10px; /* ✅ Applies rounded edges */
-    overflow: hidden; /* ✅ Prevents weird border overlap */
+    border-collapse: collapse; /* ✅ Fix: Ensures borders merge correctly */
+    border: 4px solid black; /* ✅ Fix: Thick outer border */
+    border-radius: 12px; /* ✅ Fix: Rounds only the outer edges */
+    overflow: hidden; /* ✅ Fix: Prevents weird column rounding */
     background-color: white;
 }
 
-/* Table Headers */
+/* ✅ Fix: Table Headers Stay Clean */
 th {
     background-color: black;
     color: white;
     padding: 12px;
     font-size: 18px;
-    border-bottom: 2px solid black; /* ✅ Keeps a clean divider */
+    border-bottom: 2px solid black; /* ✅ Clean Divider */
 }
 
-/* ✅ Fix: Inner Gridlines (Cell Borders) */
+/* ✅ Fix: Proper Inner Gridlines Without Rounded Edges */
 td, th {
-    border: 1px solid black !important; /* ✅ Restores inner grid lines */
+    border: 1px solid black; /* ✅ Inner grid lines */
     padding: 10px;
     text-align: center;
 }
 
-/* ✅ Fix: Ensure First & Last Row Stay Clean */
+/* ✅ Fix: Ensuring Borders Are Applied Correctly */
 tr:first-child th {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
 }
 
 tr:last-child td {
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
 }
 
 /* Table Links - Blue */
