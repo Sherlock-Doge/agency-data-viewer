@@ -4,6 +4,9 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensures the footer stays docked */
 }
 
 /* Header Styles */
@@ -175,26 +178,6 @@ a:visited {
     color: blue !important;
 }
 
-/* Footer */
-footer {
-    background-color: #0d0d0d;
-    color: white;
-    text-align: center;
-    padding: 15px;
-}
-
-.footer-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-}
-
-.footer-logo {
-    width: 60px;
-    height: 60px;
-}
-
 /* ✅ SEARCH PAGE FIXES */
 
 /* ✅ Resize & Round Corners on Cipher Image */
@@ -211,23 +194,17 @@ footer {
 .search-container {
     width: 70%;
     max-width: 600px;
-    margin: 20px auto;
+    margin: -50px auto 20px auto;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
-    transition: all 0.5s ease-in-out;
+    transition: margin-top 0.5s ease-in-out;
 }
 
-/* ✅ Move Search Bar & Results UP When Search is Triggered */
+/* ✅ Move Search Bar & Results Up When Search is Triggered */
 .search-results-visible .search-container {
-    position: absolute;
-    width: 100%;
-    max-width: 80%;
-    top: 90px; /* ✅ Sits right under the header bar */
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0 auto;
+    margin-top: 10px;
 }
 
 /* ✅ Style Search Input */
@@ -254,19 +231,18 @@ footer {
     background-color: #444;
 }
 
-/* ✅ Position Search Results Over Cipher, But Under Search Bar */
+/* ✅ Position Search Results Properly */
 #searchResults {
     display: none;
     position: absolute;
     width: 80%;
-    max-width: 800px;
-    background: rgba(255, 255, 255, 0.85);
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    border-radius: 12px;
     left: 50%;
-    top: 140px; /* ✅ Below search bar, over Cipher */
     transform: translateX(-50%);
+    top: calc(100px + 10px); /* Adjusted so it stays below the search bar */
+    background: transparent !important; /* ✅ Fully transparent results box */
+    padding: 20px;
+    box-shadow: none; /* ✅ Remove shadow so it's fully clear */
+    border-radius: 12px;
 }
 
 /* ✅ Show Results Only When Needed */
@@ -277,4 +253,28 @@ footer {
 /* ✅ Fade Image When Results Show */
 .search-results-visible .cipher-image {
     opacity: 0.2;
+}
+
+/* ✅ FIX FOOTER BEING MOVED */
+footer {
+    background-color: #0d0d0d;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: auto; /* ✅ Ensures footer stays at bottom */
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.footer-logo {
+    width: 60px;
+    height: 60px;
 }
