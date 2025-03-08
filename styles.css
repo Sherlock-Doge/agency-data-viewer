@@ -98,19 +98,6 @@ header {
     border-right: none;
 }
 
-/* ✅ Fix: Force Scoreboard Links (153, Title 47...) to Stay Green */
-.score-link {
-    color: #008f4c !important;  /* Dark Green */
-    font-size: 22px;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.score-link:hover {
-    text-decoration: underline;
-    color: #00ff99 !important; /* Neon Green Hover */
-}
-
 /* ✅ Fix: Ensure "Most Recently Amended" Layout */
 #recentAmendedWrapper {
     display: flex;
@@ -119,54 +106,73 @@ header {
     gap: 5px;
 }
 
-/* ✅ Fix: Large Table (LT) Proper Gridlines & Borders */
+/* ✅ Fix: Ensure "Total Agencies" Stays Green */
+#totalAgencies {
+    color: #008f4c !important;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+#totalAgencies:hover {
+    color: #00ff99 !important; /* Neon Green Hover */
+}
+
+/* ✅ Fix: Ensure Scoreboard Links Match */
+.score-link {
+    color: #008f4c !important;
+    font-size: 22px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.score-link:hover {
+    text-decoration: underline;
+    color: #00ff99 !important;
+}
+
+/* ✅ FINAL FIX: Large Table (LT) - Outer Thick Black Border with Rounded Corners */
 table {
     width: 90%;
     margin: 40px auto;
-    border-spacing: 0; /* ✅ Fix: Prevents gaps but allows proper radius */
-    border: 4px solid black; /* ✅ Thick Black Outer Border */
-    border-radius: 8px; /* ✅ New 0.5 radius */
+    border-collapse: separate; /* ✅ Ensures no double border */
+    border-spacing: 0; /* ✅ Removes gaps between cells */
+    border: 5px solid black; /* ✅ Thick black outer border */
+    border-radius: 12px; /* ✅ Ensures rounded corners only on the outside */
     background-color: white;
-    overflow: hidden; /* ✅ Ensures corners stay rounded */
+    overflow: hidden; /* ✅ Prevents weird overlapping */
 }
 
-/* ✅ Fix: Table Headers Stay Clean */
+/* ✅ Fix: Table Headers */
 th {
     background-color: black;
     color: white;
     padding: 12px;
     font-size: 18px;
-    border-bottom: 2px solid black;
+    border: 1px solid black; /* ✅ Ensures uniform gridlines */
 }
 
-/* ✅ Fix: Proper Inner Gridlines Without Rounded Edges */
+/* ✅ Fix: Inner Gridlines */
 td, th {
     border: 1px solid black; /* ✅ Inner grid lines */
     padding: 10px;
     text-align: center;
 }
 
-/* ✅ Fix: Outer Border Rounded Corners ONLY on the First and Last Row */
+/* ✅ Ensure Proper Rounded Corners (ONLY Outer Table) */
 table tr:first-child th:first-child {
-    border-top-left-radius: 8px;
+    border-top-left-radius: 12px;
 }
 
 table tr:first-child th:last-child {
-    border-top-right-radius: 8px;
+    border-top-right-radius: 12px;
 }
 
 table tr:last-child td:first-child {
-    border-bottom-left-radius: 8px;
+    border-bottom-left-radius: 12px;
 }
 
 table tr:last-child td:last-child {
-    border-bottom-right-radius: 8px;
-}
-
-/* ✅ Fix: Prevent Inner Rows from Getting Unwanted Rounded Borders */
-td:first-child,
-td:last-child {
-    border-radius: 0;
+    border-bottom-right-radius: 12px;
 }
 
 /* Table Links - Blue */
