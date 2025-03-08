@@ -62,7 +62,7 @@ header {
     height: 25px;
 }
 
-/* Scoreboard - Styled to Look Like a Real Scoreboard */
+/* Scoreboard - Cyber/Morpheus Green Look */
 .scoreboard {
     display: flex;
     justify-content: space-around; /* Ensures even spacing */
@@ -70,11 +70,11 @@ header {
     width: 70%; /* Slightly wider for a stronger presence */
     margin: 20px auto; /* Gives breathing room */
     padding: 20px;
-    background: #222; /* Darker background for contrast */
-    border: 5px solid #ffd700; /* Thick Gold Border */
+    background: #111; /* Darker background for cyber effect */
+    border: 5px solid #008f4c; /* Deep Green Border */
     border-radius: 12px;
     text-align: center;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); /* Subtle gold glow */
+    box-shadow: 0 0 15px rgba(0, 255, 153, 0.7); /* Neon Green Glow */
 }
 
 /* Each Scoreboard Section (Looks Like Score Panels) */
@@ -89,7 +89,7 @@ header {
     font-weight: bold;
     color: white; /* White text for scoreboard feel */
     text-transform: uppercase; /* Makes labels look official */
-    text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.3); /* Soft glow */
+    text-shadow: 2px 2px 5px rgba(0, 255, 153, 0.3); /* Soft neon glow */
     border-right: 3px solid rgba(255, 255, 255, 0.2); /* Vertical dividers */
 }
 
@@ -98,9 +98,9 @@ header {
     border-right: none;
 }
 
-/* Scoreboard Links (Numbers Look Bigger & Better) */
+/* Scoreboard Links (Numbers Look Bigger & Green) */
 .score-link {
-    color: #ffd700 !important; /* Gold for emphasis */
+    color: #00ff99 !important; /* Neon Green */
     font-size: 26px; /* Make the numbers pop */
     font-weight: bold;
     text-decoration: none;
