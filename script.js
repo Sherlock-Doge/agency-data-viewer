@@ -40,13 +40,17 @@ async function fetchSingleTitleWordCount(titleNumber, buttonElement) {
         buttonElement.textContent = "Fetching...";
         buttonElement.disabled = true;
 
+        const statusText = document.createElement("span");
+        statusText.textContent = " This may take a few moments...";
+        statusText.style.color = "gray";
+        buttonElement.parentElement.appendChild(statusText);
+
         const response = await fetch(`${BACKEND_URL}/api/wordcount/${titleNumber}`);
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const data = await response.json();
         console.log(`✅ Word Count for Title ${titleNumber}:`, data.wordCount);
 
-        // ✅ Update UI with fetched word count
         buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
     } catch (error) {
         console.error(`🚨 Error fetching word count for Title ${titleNumber}:`, error);
@@ -78,10 +82,9 @@ async function fetchData() {
     console.log("📥 Starting data fetch...");
     
     const tableBody = document.querySelector("#titlesTable tbody");
-    tableBody.innerHTML = "";
+    if (tableBody) tableBody.innerHTML = "";
 
     try {
-        // 📌 Fetch Titles & Agencies Only (No Auto Word Count)
         const [titles, agencies] = await Promise.all([
             fetchTitles(),
             fetchAgencies()
@@ -102,17 +105,14 @@ async function fetchData() {
 
             const titleUrl = `https://www.ecfr.gov/current/title-${title.number}`;
 
-            // ✅ Keep track of most recently amended title
             if (!mostRecentDate || (title.latest_amended_on && title.latest_amended_on > mostRecentDate)) {
                 mostRecentDate = title.latest_amended_on;
                 mostRecentTitle = `Title ${title.number}`;
                 mostRecentTitleName = title.name;
             }
 
-            // ✅ Always show "Generate" button instead of checking wordCounts
             let wordCountDisplay = `<button onclick="fetchSingleTitleWordCount(${title.number}, this)">Generate</button>`;
 
-            // ✅ Create Correctly Structured Table Row (Now Shows "Title X - Proper Name")
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td><a href="${titleUrl}" target="_blank">Title ${title.number} - ${title.name}</a></td>
@@ -121,7 +121,7 @@ async function fetchData() {
                 <td>${wordCountDisplay}</td>
             `;
 
-            tableBody.appendChild(row);
+            if (tableBody) tableBody.appendChild(row);
         });
 
         updateScoreboard(
@@ -141,12 +141,11 @@ async function fetchData() {
 // 📌 Start Fetching Data on Load
 fetchData();
 
-// ✅ eCFR SEARCH FUNCTION
+// ✅ eCFR SEARCH FUNCTION (NEW FEATURE)
 async function performSearch() {
     const query = document.getElementById("searchQuery").value.trim();
     const resultsContainer = document.getElementById("searchResults");
     const cipherImage = document.querySelector(".cipher-image");
-    const searchContainer = document.querySelector(".search-container");
 
     if (!query) {
         resultsContainer.innerHTML = "<p>Please enter a search term.</p>";
@@ -155,9 +154,8 @@ async function performSearch() {
 
     console.log(`🔍 Searching for: ${query}`);
     
-    // ✅ Move search bar to the top & fade Cipher Doge
     document.body.classList.add("search-results-visible");
-    searchContainer.style.marginTop = "10px";
+    document.querySelector(".search-container").style.marginTop = "10px";
 
     resultsContainer.innerHTML = "<p>Loading results...</p>";
 
@@ -168,16 +166,15 @@ async function performSearch() {
         const data = await response.json();
         console.log("✅ Search Results:", data);
 
-        // ✅ Clear Results & Show New Ones
         resultsContainer.innerHTML = "";
-        if (!data.results || data.results.length === 0) {
+        if (data.results.length === 0) {
             resultsContainer.innerHTML = "<p>No results found.</p>";
         } else {
             data.results.forEach((result, index) => {
                 const resultDiv = document.createElement("div");
                 resultDiv.classList.add("search-result");
                 resultDiv.innerHTML = `
-                    <p><strong>${index + 1}.</strong> <a href="https://www.ecfr.gov/${result.link}" target="_blank">${result.title || "No Title"}</a></p>
+                    <p><strong>${index + 1}.</strong> <a href="https://www.ecfr.gov/${result.link}" target="_blank">${result.title || "No title available"}</a></p>
                     <p>${result.description || "No description available."}</p>
                 `;
                 resultsContainer.appendChild(resultDiv);
