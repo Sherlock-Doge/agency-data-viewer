@@ -130,15 +130,15 @@ header {
     color: #00ff99 !important; /* Force all scoreboard links to match hover */
 }
 
-/* ✅ FINAL FIX: Large Table (LT) - Proper Borders, Clean Gridlines */
+/* ✅ SIMPLE & FINAL: Large Table (LT) */
 table {
     width: 90%;
     margin: 40px auto;
-    border-collapse: collapse; /* ✅ Merge all borders to prevent doubling */
-    border: 5px solid black; /* ✅ Thick black outer border */
-    border-radius: 12px; /* ✅ Rounded outer corners */
-    overflow: hidden; /* ✅ Ensures the radius applies properly */
+    border-collapse: collapse; /* ✅ Proper grid merging */
     background-color: white;
+    border: 5px solid black; /* ✅ Single thick outer border */
+    border-radius: 12px; /* ✅ Rounded outer edges only */
+    overflow: hidden; /* ✅ Ensures the rounded border applies correctly */
 }
 
 /* ✅ Header Row (Black with White Text) */
@@ -149,28 +149,11 @@ th {
     font-size: 18px;
 }
 
-/* ✅ Proper Inner Gridlines Without Rounded Corners */
+/* ✅ Inner Gridlines */
 td, th {
-    border: 1px solid black; /* ✅ Single inner border */
+    border: 1px solid black; /* ✅ Single inner grid */
     padding: 10px;
     text-align: center;
-}
-
-/* ✅ Final Fix: Outer Border with Rounded Corners */
-table tr:first-child th:first-child {
-    border-top-left-radius: 12px;
-}
-
-table tr:first-child th:last-child {
-    border-top-right-radius: 12px;
-}
-
-table tr:last-child td:first-child {
-    border-bottom-left-radius: 12px;
-}
-
-table tr:last-child td:last-child {
-    border-bottom-right-radius: 12px;
 }
 
 /* ✅ Table Links - Blue */
