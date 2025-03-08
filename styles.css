@@ -27,6 +27,12 @@ header {
     text-decoration: underline;
 }
 
+/* Ensure header links remain white after clicking */
+.header-link:visited,
+.header-link:active {
+    color: white !important;
+}
+
 /* Logo & Banner */
 .header-left {
     display: flex;
@@ -108,6 +114,16 @@ td a {
 }
 
 td a:hover {
+    text-decoration: underline;
+}
+
+/* Other links (general page links) remain blue */
+a {
+    color: blue; /* Default for all other links */
+    text-decoration: none;
+}
+
+a:hover {
     text-decoration: underline;
 }
 
