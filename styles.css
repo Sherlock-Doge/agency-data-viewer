@@ -269,6 +269,8 @@ footer {
     background: rgba(255, 255, 255, 0); /* ✅ Fully transparent */
     padding: 20px;
     border-radius: 12px;
+    overflow-y: auto;
+    max-height: 60vh; /* Ensures results don't overflow beyond the page */
 }
 
 /* ✅ Show Results Only When Needed */
@@ -279,4 +281,12 @@ footer {
 /* ✅ Fade Image When Results Show */
 .search-results-visible .cipher-image {
     opacity: 0.2;
+}
+
+/* ✅ Fix: Keep Body Content Scrollable but Lock Header/Footer */
+.main-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: calc(100vh - 130px); /* Adjusted to prevent overflow beyond page */
+    padding-bottom: 20px;
 }
