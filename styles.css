@@ -30,18 +30,15 @@ header {
     text-decoration: underline;
 }
 
-/* Ensure header links remain white after clicking */
 .header-link:visited,
 .header-link:active {
     color: white !important;
 }
 
-/* Explicitly enforce "eCFR Analyzer" link to be white */
 .header-title .header-link {
     color: white !important;
 }
 
-/* Logo & Banner */
 .header-left {
     display: flex;
     align-items: center;
@@ -53,19 +50,16 @@ header {
     height: 80px;
 }
 
-/* ✅ Fix: Ensure "Dashboard" Matches "eCFR Analyzer" Font Size */
 .header-center {
     color: white;
-    font-size: 32px; /* Matched to h1 */
+    font-size: 32px;
     font-weight: bold;
 }
 
-/* ✅ Fix: Equal Spacer Above & Below the Scoreboard */
 .spacer {
-    height: 40px; /* Ensures even spacing */
+    height: 40px;
 }
 
-/* ✅ Fix: Scoreboard - Black Border with Neon Glow */
 .scoreboard {
     display: flex;
     justify-content: space-around;
@@ -74,13 +68,12 @@ header {
     margin: 40px auto;
     padding: 20px;
     background: #111;
-    border: 5px solid black; /* Thick Black Border */
+    border: 5px solid black;
     border-radius: 12px;
     text-align: center;
     box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
 }
 
-/* Each Scoreboard Section */
 .score-item {
     display: flex;
     flex-direction: column;
@@ -96,12 +89,10 @@ header {
     border-right: 3px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Remove Divider for Last Item */
 .score-item:last-child {
     border-right: none;
 }
 
-/* ✅ Fix: Ensure "Most Recently Amended" Layout */
 #recentAmendedWrapper {
     display: flex;
     flex-direction: column;
@@ -109,7 +100,6 @@ header {
     gap: 5px;
 }
 
-/* ✅ Fix: Scoreboard Links to Green */
 #totalAgencies,
 #recentAmendedTitle {
     color: #008f4c !important;
@@ -117,13 +107,11 @@ header {
     font-weight: bold;
 }
 
-/* ✅ Fix: Hover State for Scoreboard Links */
 #totalAgencies:hover,
 #recentAmendedTitle:hover {
-    color: #00ff99 !important; /* Neon Green Hover */
+    color: #00ff99 !important;
 }
 
-/* ✅ Fix: Force All Scoreboard Links to Green */
 .score-link {
     color: #008f4c !important;
     font-size: 22px;
@@ -133,28 +121,25 @@ header {
 
 .score-link:hover {
     text-decoration: underline;
-    color: #00ff99 !important; /* Force all scoreboard links to match hover */
+    color: #00ff99 !important;
 }
 
-/* ✅ SIMPLE & FINAL: Large Table (LT) */
 table {
     width: 90%;
     margin: 40px auto;
-    border-collapse: separate; /* ✅ Keeps thick outer border */
-    border-spacing: 0; /* ✅ Prevents unwanted gaps */
+    border-collapse: separate;
+    border-spacing: 0;
     background-color: white;
-    border: 5px solid black; /* ✅ Thick outer black border */
-    border-radius: 12px; /* ✅ Rounded corners */
-    overflow: hidden; /* ✅ Ensures border-radius applies correctly */
+    border: 5px solid black;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
-/* ✅ Agencies Table Fix: Narrow Width & Center It */
 #agenciesTable {
-    width: 70% !important; /* ✅ Shrinks the table to prevent excess whitespace */
-    margin: 40px auto; /* ✅ Centers the table */
+    width: 70% !important;
+    margin: 40px auto;
 }
 
-/* ✅ Header Row (Black with White Text) */
 th {
     background-color: black;
     color: white;
@@ -162,14 +147,12 @@ th {
     font-size: 18px;
 }
 
-/* ✅ Inner Gridlines */
 td, th {
-    border: 1px solid black; /* ✅ Single inner grid */
+    border: 1px solid black;
     padding: 10px;
     text-align: center;
 }
 
-/* ✅ Table Links - Blue */
 td a {
     color: blue !important;
     text-decoration: none;
@@ -179,12 +162,11 @@ td a:hover {
     text-decoration: underline;
 }
 
-/* Prevent visited links from turning purple */
 a:visited {
     color: blue !important;
 }
 
-/* Footer (Fully Fixed & Permanent) */
+/* Footer */
 footer {
     background-color: #0d0d0d;
     color: white;
@@ -194,7 +176,6 @@ footer {
     width: 100%;
 }
 
-/* Footer Container */
 .footer-container {
     display: flex;
     justify-content: center;
@@ -231,13 +212,7 @@ footer {
     transition: margin-top 0.5s ease-in-out;
 }
 
-/* ✅ Move Search Bar Up When Search is Triggered */
-.search-results-visible .search-container {
-    position: absolute;
-    top: 100px;
-    left: 50%;
-    transform: translateX(-50%);
-}
+/* ✅ (REMOVED) Search Bar Upward Motion – Now search bar stays fixed */
 
 /* ✅ Style Search Input */
 #searchQuery {
@@ -272,11 +247,11 @@ footer {
     transform: translateX(-50%);
     width: 70%;
     max-width: 800px;
-    background: rgba(255, 255, 255, 0); /* ✅ Fully transparent */
+    background: rgba(255, 255, 255, 0);
     padding: 20px;
     border-radius: 12px;
     overflow-y: auto;
-    max-height: 60vh; /* Ensures results don't overflow beyond the page */
+    max-height: 60vh;
 }
 
 /* ✅ Show Results Only When Needed */
@@ -284,15 +259,15 @@ footer {
     display: block;
 }
 
-/* ✅ Fade Image When Results Show */
+/* ✅ Fade Image When Results Show - now stronger */
 .search-results-visible .cipher-image {
-    opacity: 0.2;
+    opacity: 0.05;
 }
 
-/* ✅ Fix: Keep Body Content Scrollable but Lock Header/Footer */
+/* ✅ Keep Body Scrollable, Lock Header/Footer */
 .main-content {
     flex-grow: 1;
     overflow-y: auto;
-    max-height: calc(100vh - 130px); /* Adjusted to prevent overflow beyond page */
+    max-height: calc(100vh - 130px);
     padding-bottom: 20px;
 }
