@@ -246,13 +246,13 @@ footer {
     transform: translateX(-50%);
     width: 95%;
     max-width: 1400px;
-    background: transparent; /* ✅ Fully transparent now */
+    background: rgba(255, 255, 255, 0.75); /* More transparent for Cipher */
     padding: 20px;
     border-radius: 12px;
-    max-height: 400px;
+    max-height: calc(100vh - 280px); /* Taller and dynamic */
     overflow-y: auto;
     z-index: 10;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* ✅ Optional soft outline */
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.25);
 }
 
 /* ✅ Show Results Box When Active */
