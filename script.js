@@ -157,6 +157,34 @@ async function performSearch() {
     }
 }
 
+// ✅ RESET SEARCH FUNCTION
+function resetSearch() {
+    document.getElementById("searchQuery").value = "";
+
+    const agencyFilter = document.getElementById("agencyFilter");
+    if (agencyFilter) agencyFilter.selectedIndex = 0;
+
+    const titleFilter = document.getElementById("titleFilter");
+    if (titleFilter) titleFilter.selectedIndex = 0;
+
+    const startDate = document.getElementById("startDate");
+    if (startDate) startDate.value = "";
+
+    const endDate = document.getElementById("endDate");
+    if (endDate) endDate.value = "";
+
+    const results = document.getElementById("searchResults");
+    if (results) {
+        results.innerHTML = "";
+        results.style.display = "none";
+    }
+
+    const suggestions = document.getElementById("searchSuggestions");
+    if (suggestions) suggestions.style.display = "none";
+
+    document.body.classList.remove("search-results-visible");
+}
+
 // ✅ REAL-TIME SEARCH SUGGESTIONS
 document.getElementById("searchQuery").addEventListener("input", async function () {
     const query = this.value.trim();
