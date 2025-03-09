@@ -148,6 +148,12 @@ table {
     overflow: hidden; /* ✅ Ensures border-radius applies correctly */
 }
 
+/* ✅ Agencies Table Fix: Narrow Width & Center It */
+#agenciesTable {
+    width: 70% !important; /* ✅ Shrinks the table to prevent excess whitespace */
+    margin: 40px auto; /* ✅ Centers the table */
+}
+
 /* ✅ Header Row (Black with White Text) */
 th {
     background-color: black;
