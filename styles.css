@@ -4,6 +4,9 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Header Styles */
@@ -175,17 +178,17 @@ a:visited {
     color: blue !important;
 }
 
-/* Footer (Fixed & Working) */
+/* Footer (Fully Fixed & Permanent) */
 footer {
     background-color: #0d0d0d;
     color: white;
     text-align: center;
     padding: 15px;
-    position: relative;
+    margin-top: auto;
     width: 100%;
-    bottom: 0;
 }
 
+/* Footer Container */
 .footer-container {
     display: flex;
     justify-content: center;
@@ -202,19 +205,19 @@ footer {
 
 /* ✅ Resize & Round Corners on Cipher Image */
 .cipher-image {
-    width: 70%; /* ✅ Adjust image width */
-    max-width: 600px; /* ✅ Prevents image from getting too big */
+    width: 70%;
+    max-width: 600px;
     display: block;
-    margin: 20px auto; /* ✅ Centers the image */
-    border-radius: 0.5rem; /* ✅ Rounded corners */
-    transition: opacity 0.5s ease-in-out; /* ✅ Smooth transition effect */
+    margin: 20px auto;
+    border-radius: 0.5rem;
+    transition: opacity 0.5s ease-in-out;
 }
 
-/* ✅ Center Search Bar */
+/* ✅ Search Bar Starts Centered */
 .search-container {
-    width: 70%; /* ✅ Match image width */
+    width: 70%;
     max-width: 600px;
-    margin: -50px auto 20px auto; /* ✅ Moves search bar UP to overlay image */
+    margin: -50px auto 20px auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -225,7 +228,7 @@ footer {
 /* ✅ Move Search Bar Up When Search is Triggered */
 .search-results-visible .search-container {
     position: absolute;
-    top: 100px; /* ✅ Positions the search bar just under the header */
+    top: 100px;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -258,7 +261,7 @@ footer {
 #searchResults {
     display: none;
     position: absolute;
-    top: 150px; /* ✅ Positions results just below the search bar */
+    top: 160px;
     left: 50%;
     transform: translateX(-50%);
     width: 70%;
@@ -275,5 +278,5 @@ footer {
 
 /* ✅ Fade Image When Results Show */
 .search-results-visible .cipher-image {
-    opacity: 0.2; /* ✅ Fade effect when search is triggered */
+    opacity: 0.2;
 }
