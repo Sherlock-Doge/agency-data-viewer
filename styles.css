@@ -18,7 +18,6 @@ header {
     justify-content: space-between;
 }
 
-/* Common Header Link Styling */
 .header-link {
     color: white !important;
     font-weight: bold;
@@ -188,9 +187,7 @@ footer {
     height: 60px;
 }
 
-/* ✅ SEARCH PAGE FIXES */
-
-/* ✅ Resize & Round Corners on Cipher Image */
+/* ✅ Cipher Image */
 .cipher-image {
     width: 70%;
     max-width: 600px;
@@ -200,21 +197,23 @@ footer {
     transition: opacity 0.5s ease-in-out;
 }
 
-/* ✅ Search Bar Starts Centered */
+/* ✅ Fade Cipher on Search */
+.search-results-visible .cipher-image {
+    opacity: 0.05;
+}
+
+/* ✅ Search Bar (Stays Fixed in Place) */
 .search-container {
     width: 70%;
     max-width: 600px;
-    margin: -50px auto 20px auto;
+    margin: 0 auto 20px auto;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
-    transition: margin-top 0.5s ease-in-out;
 }
 
-/* ✅ (REMOVED) Search Bar Upward Motion – Now search bar stays fixed */
-
-/* ✅ Style Search Input */
+/* ✅ Search Input Styling */
 #searchQuery {
     width: 80%;
     padding: 12px;
@@ -223,7 +222,7 @@ footer {
     border-radius: 8px;
 }
 
-/* ✅ Style Search Button */
+/* ✅ Search Button */
 .search-container button {
     padding: 12px 20px;
     font-size: 16px;
@@ -238,36 +237,45 @@ footer {
     background-color: #444;
 }
 
-/* ✅ Position Search Results to Appear Under Search Bar */
+/* ✅ Results Box ABOVE Search + Filters */
 #searchResults {
     display: none;
     position: absolute;
-    top: 160px;
+    top: 150px; /* Just beneath header */
     left: 50%;
     transform: translateX(-50%);
-    width: 70%;
-    max-width: 800px;
-    background: rgba(255, 255, 255, 0);
+    width: 90%; /* Can be wider than cipher */
+    max-width: 1000px;
+    background: rgba(255, 255, 255, 0.95);
     padding: 20px;
     border-radius: 12px;
+    max-height: 400px; /* This keeps results above filters */
     overflow-y: auto;
-    max-height: 60vh;
+    z-index: 10;
 }
 
-/* ✅ Show Results Only When Needed */
+/* ✅ Show Results Box When Active */
 .search-results-visible #searchResults {
     display: block;
 }
 
-/* ✅ Fade Image When Results Show - now stronger */
-.search-results-visible .cipher-image {
-    opacity: 0.05;
+/* ✅ Fixed Layout Underneath */
+.advanced-filters-wrapper {
+    width: 70%;
+    max-width: 800px;
+    margin: 10px auto;
+    text-align: center;
 }
 
-/* ✅ Keep Body Scrollable, Lock Header/Footer */
+#advancedFilters {
+    padding: 15px;
+    background: #f0f0f0;
+    border-radius: 8px;
+}
+
+/* ✅ Ensure Main Content Stays Scrollable, Filters Don't Shift */
 .main-content {
     flex-grow: 1;
     overflow-y: auto;
-    max-height: calc(100vh - 130px);
     padding-bottom: 20px;
 }
