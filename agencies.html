@@ -27,8 +27,8 @@
     <!-- Spacer -->
     <div class="spacer"></div>
 
-    <!-- Agencies Table -->
-    <table id="agencies-table">
+    <!-- Agencies Table (Updated ID for Proper CSS Targeting) -->
+    <table id="agenciesTable">
         <thead>
             <tr>
                 <th>Agency</th>
@@ -57,7 +57,7 @@
                 const data = await response.json();
                 console.log("✅ Agencies Data Loaded:", data);
 
-                const tableBody = document.querySelector("#agencies-table tbody");
+                const tableBody = document.querySelector("#agenciesTable tbody");
                 tableBody.innerHTML = ""; // Clear existing rows
 
                 if (!data.agencies || data.agencies.length === 0) {
@@ -95,7 +95,7 @@
 
             } catch (error) {
                 console.error("🚨 Error fetching agencies:", error);
-                document.querySelector("#agencies-table tbody").innerHTML = "<tr><td colspan='2'>Error loading agencies.</td></tr>";
+                document.querySelector("#agenciesTable tbody").innerHTML = "<tr><td colspan='2'>Error loading agencies.</td></tr>";
             }
         }
 
