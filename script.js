@@ -148,10 +148,8 @@ async function performSearch() {
             data.results.forEach((r, i) => {
                 const div = document.createElement("div");
                 div.classList.add("search-result");
-
                 const section = r.headings?.section || "No title";
                 const excerpt = r.full_text_excerpt || "No description available.";
-
                 div.innerHTML = `
                     <p><strong>${i + 1}.</strong> <a href="https://www.ecfr.gov/${r.link || ""}" target="_blank">${section}</a></p>
                     <p>${excerpt}</p>
@@ -170,17 +168,13 @@ function resetSearch() {
     document.getElementById("searchQuery").value = "";
     document.getElementById("startDate").value = "";
     document.getElementById("endDate").value = "";
-
     const resultsBox = document.getElementById("searchResults");
     resultsBox.innerHTML = "";
     resultsBox.style.display = "none";
-
     const suggestionBox = document.getElementById("searchSuggestions");
     suggestionBox.innerHTML = "";
     suggestionBox.style.display = "none";
-
     document.body.classList.remove("search-results-visible");
-
     populateDropdowns(); // FULL RESET
 }
 
@@ -284,7 +278,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
         const agencyName = agencyObj?.name;
         const relatedTitles = agencyTitleMap[agencyName] || [];
-
         titleFilter.innerHTML = `<option value="">-- All Titles --</option>`;
         cachedTitles.forEach(t => {
             if (relatedTitles.length === 0 || relatedTitles.includes(t.number)) {
@@ -296,3 +289,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 });
+
+// ✅ Word Count by Agency
+async function fetchAgencyWordCount(agencyName, buttonElement) {
+    try {
+        buttonElement.textContent = "Calculating...";
+        buttonElement.disabled = true;
+        const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${encodeURIComponent(agencyName)}`);
+        const data = await response.json();
+        buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
+    } catch (err) {
+        console.error("🚨 Agency Word Count Error:", err);
+        buttonElement.textContent = "Retry";
+        buttonElement.disabled = false;
+    }
+}
