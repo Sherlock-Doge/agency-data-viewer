@@ -8,7 +8,6 @@ let cachedAgencies = [];
 // 📌 Fetch Titles
 async function fetchTitles() {
     try {
-        console.log("📥 Fetching Titles from Backend...");
         const response = await fetch(`${BACKEND_URL}/api/titles`);
         const data = await response.json();
         cachedTitles = data.titles || [];
@@ -22,7 +21,6 @@ async function fetchTitles() {
 // 📌 Fetch Agencies
 async function fetchAgencies() {
     try {
-        console.log("📥 Fetching Agencies from Backend...");
         const response = await fetch(`${BACKEND_URL}/api/agencies`);
         const data = await response.json();
         cachedAgencies = data.agencies || [];
@@ -90,7 +88,7 @@ async function fetchData() {
             <td>${title.latest_amended_on || "N/A"}</td>
             <td><button onclick="fetchSingleTitleWordCount(${title.number}, this)">Generate</button></td>
         `;
-        if (tbody) tbody.appendChild(row);
+        tbody.appendChild(row);
     });
 
     updateScoreboard(titles.length, agencies.length, mostRecentTitle, mostRecentDate, mostRecentTitleName);
@@ -109,14 +107,13 @@ async function performSearch() {
     const resultsBox = document.getElementById("searchResults");
 
     const hasFilters = agency || title || startDate || endDate;
-
     if (!query && !hasFilters) {
         resultsBox.innerHTML = "<p>Please enter a search term or select filters.</p>";
         resultsBox.style.display = "block";
         return;
     }
 
-    console.log(`🔍 Searching for: ${query || "Filter-only search"}`);
+    console.log(`🔍 Searching via BACKEND: ${query || "[Filters only]"}`);
     document.body.classList.add("search-results-visible");
     resultsBox.innerHTML = "<p>Loading results...</p>";
     resultsBox.style.display = "block";
@@ -147,7 +144,7 @@ async function performSearch() {
             });
         }
     } catch (err) {
-        console.error("🚨 Search Error:", err);
+        console.error("🚨 Backend Search Error:", err);
         resultsBox.innerHTML = "<p>Error retrieving search results.</p>";
     }
 }
@@ -157,41 +154,21 @@ function resetSearch() {
     document.getElementById("searchQuery").value = "";
     document.getElementById("startDate").value = "";
     document.getElementById("endDate").value = "";
-    const results = document.getElementById("searchResults");
-    results.innerHTML = "";
-    results.style.display = "none";
+
+    const resultsBox = document.getElementById("searchResults");
+    resultsBox.innerHTML = "";
+    resultsBox.style.display = "none";
 
     const suggestionBox = document.getElementById("searchSuggestions");
     suggestionBox.innerHTML = "";
     suggestionBox.style.display = "none";
+
     document.body.classList.remove("search-results-visible");
 
-    // Restore dropdowns
-    const agencyFilter = document.getElementById("agencyFilter");
-    const titleFilter = document.getElementById("titleFilter");
-
-    if (agencyFilter) {
-        agencyFilter.innerHTML = `<option value="">-- All Agencies --</option>`;
-        cachedAgencies.forEach(a => {
-            const opt = document.createElement("option");
-            opt.value = a.slug || a.name.toLowerCase().replace(/\s+/g, "-");
-            opt.textContent = a.name;
-            agencyFilter.appendChild(opt);
-        });
-    }
-
-    if (titleFilter) {
-        titleFilter.innerHTML = `<option value="">-- All Titles --</option>`;
-        cachedTitles.forEach(t => {
-            const opt = document.createElement("option");
-            opt.value = t.number;
-            opt.textContent = `Title ${t.number}: ${t.name}`;
-            titleFilter.appendChild(opt);
-        });
-    }
+    populateDropdowns(); // FULL RESET of filters using cache
 }
 
-// ✅ Search Suggestions
+// ✅ Suggestions via Backend
 document.getElementById("searchQuery").addEventListener("input", async function () {
     const query = this.value.trim();
     const suggestionBox = document.getElementById("searchSuggestions");
@@ -201,11 +178,13 @@ document.getElementById("searchQuery").addEventListener("input", async function 
         return;
     }
 
+    console.log(`💬 Calling Backend Suggestions API: ${BACKEND_URL}/api/search/suggestions`);
+
     try {
-        console.log(`💬 Calling Backend Suggestions API: ${BACKEND_URL}/api/search/suggestions`);
         const res = await fetch(`${BACKEND_URL}/api/search/suggestions?query=${encodeURIComponent(query)}`);
         const data = await res.json();
         suggestionBox.innerHTML = "";
+
         if (data.suggestions && data.suggestions.length > 0) {
             suggestionBox.style.display = "block";
             data.suggestions.forEach(s => {
@@ -224,7 +203,7 @@ document.getElementById("searchQuery").addEventListener("input", async function 
             suggestionBox.style.display = "none";
         }
     } catch (err) {
-        console.error("🚨 Suggestions Error:", err);
+        console.error("🚨 Suggestion Fetch Error:", err);
         suggestionBox.style.display = "none";
     }
 });
@@ -237,44 +216,65 @@ document.getElementById("searchQuery").addEventListener("keypress", function (e)
     }
 });
 
+// ✅ Populate Filter Dropdowns
+function populateDropdowns() {
+    const agencyFilter = document.getElementById("agencyFilter");
+    const titleFilter = document.getElementById("titleFilter");
+
+    agencyFilter.innerHTML = `<option value="">-- All Agencies --</option>`;
+    cachedAgencies.forEach(a => {
+        const opt = document.createElement("option");
+        opt.value = a.slug || a.name.toLowerCase().replace(/\s+/g, "-");
+        opt.textContent = a.name;
+        agencyFilter.appendChild(opt);
+    });
+
+    titleFilter.innerHTML = `<option value="">-- All Titles --</option>`;
+    cachedTitles.forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t.number;
+        opt.textContent = `Title ${t.number}: ${t.name}`;
+        titleFilter.appendChild(opt);
+    });
+}
+
 // ✅ Relational Filtering
 document.addEventListener("DOMContentLoaded", async () => {
+    await fetchTitles();
+    await fetchAgencies();
+    populateDropdowns();
+
     const titleFilter = document.getElementById("titleFilter");
     const agencyFilter = document.getElementById("agencyFilter");
 
-    await fetchTitles();
-    await fetchAgencies();
-
-    resetSearch(); // populate full list first
-
-    // Title → Agencies
     titleFilter.addEventListener("change", () => {
-        const selected = titleFilter.value;
-        agencyFilter.innerHTML = '<option value="">-- All Agencies --</option>';
-        cachedAgencies.forEach(a => {
-            if (!selected || (a.titles && a.titles.includes(parseInt(selected)))) {
+        const selectedTitle = parseInt(titleFilter.value);
+        agencyFilter.innerHTML = `<option value="">-- All Agencies --</option>`;
+        cachedAgencies
+            .filter(a => a.titles && a.titles.includes(selectedTitle))
+            .forEach(a => {
                 const opt = document.createElement("option");
                 opt.value = a.slug || a.name.toLowerCase().replace(/\s+/g, "-");
                 opt.textContent = a.name;
                 agencyFilter.appendChild(opt);
-            }
-        });
+            });
     });
 
-    // Agency → Titles
     agencyFilter.addEventListener("change", () => {
         const selected = agencyFilter.value;
-        const selectedAgency = cachedAgencies.find(a => a.slug === selected || a.name.toLowerCase().replace(/\s+/g, "-") === selected);
-        titleFilter.innerHTML = '<option value="">-- All Titles --</option>';
+        const selectedAgency = cachedAgencies.find(a =>
+            a.slug === selected || a.name.toLowerCase().replace(/\s+/g, "-") === selected
+        );
+        titleFilter.innerHTML = `<option value="">-- All Titles --</option>`;
         if (selectedAgency && selectedAgency.titles) {
-            cachedTitles.forEach(t => {
-                if (selectedAgency.titles.includes(t.number)) {
+            cachedTitles
+                .filter(t => selectedAgency.titles.includes(t.number))
+                .forEach(t => {
                     const opt = document.createElement("option");
                     opt.value = t.number;
                     opt.textContent = `Title ${t.number}: ${t.name}`;
                     titleFilter.appendChild(opt);
-                }
-            });
+                });
         } else {
             cachedTitles.forEach(t => {
                 const opt = document.createElement("option");
