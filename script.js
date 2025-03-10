@@ -179,7 +179,6 @@ document.getElementById("searchQuery").addEventListener("input", async function 
     }
 
     console.log(`💬 Calling Backend Suggestions API: ${BACKEND_URL}/api/search/suggestions`);
-
     try {
         const res = await fetch(`${BACKEND_URL}/api/search/suggestions?query=${encodeURIComponent(query)}`);
         const data = await res.json();
