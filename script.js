@@ -1,12 +1,11 @@
-// ✅ Backend URL
 const BACKEND_URL = "https://ecfr-backend-service.onrender.com";
 
-// ✅ Cache for Dynamic Filtering
+// ✅ Cache
 let cachedTitles = [];
 let cachedAgencies = [];
-let agencyTitleMap = {};
 let masterTitles = [];
 let masterAgencies = [];
+let agencyTitleMap = {};
 
 // 📌 Fetch Titles
 async function fetchTitles() {
@@ -36,7 +35,7 @@ async function fetchAgencies() {
     }
 }
 
-// 📌 Fetch Agency-Title Mapping
+// 📌 Fetch Mapping
 async function fetchAgencyTitleMap() {
     try {
         const res = await fetch(`${BACKEND_URL}/api/agency-title-map`);
@@ -47,38 +46,46 @@ async function fetchAgencyTitleMap() {
     }
 }
 
-// 📌 Fetch Word Count
-async function fetchSingleTitleWordCount(titleNumber, buttonElement) {
+// 📌 Word Count
+async function fetchSingleTitleWordCount(titleNumber, btn) {
     try {
-        buttonElement.textContent = "Fetching...";
-        buttonElement.disabled = true;
+        btn.textContent = "Fetching...";
+        btn.disabled = true;
         const res = await fetch(`${BACKEND_URL}/api/wordcount/${titleNumber}`);
         const data = await res.json();
-        buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
+        btn.parentElement.innerHTML = data.wordCount.toLocaleString();
     } catch (e) {
         console.error("🚨 Word Count Error:", e);
-        buttonElement.textContent = "Retry";
-        buttonElement.disabled = false;
+        btn.textContent = "Retry";
+        btn.disabled = false;
     }
 }
 
 // 📌 Scoreboard
 function updateScoreboard(totalTitles, totalAgencies, recentTitle, recentDate, recentName) {
-    document.getElementById("totalTitles").textContent = totalTitles;
-    document.getElementById("totalAgencies").textContent = totalAgencies;
+    document.getElementById("totalTitles").textContent = totalTitles || "N/A";
+    document.getElementById("totalAgencies").textContent = totalAgencies || "N/A";
+
     const aTitle = document.getElementById("recentAmendedTitle");
     const aDate = document.getElementById("recentAmendedDate");
+
     if (aTitle && aDate) {
-        aTitle.href = recentTitle ? `https://www.ecfr.gov/current/title-${recentTitle.replace("Title ", "")}` : "#";
-        aTitle.textContent = recentTitle ? `${recentTitle} - ${recentName}` : "N/A";
+        if (recentTitle && recentName) {
+            aTitle.href = `https://www.ecfr.gov/current/title-${recentTitle.replace("Title ", "")}`;
+            aTitle.textContent = `${recentTitle} - ${recentName}`;
+        } else {
+            aTitle.href = "#";
+            aTitle.textContent = "N/A";
+        }
         aDate.textContent = recentDate ? `(${recentDate})` : "(N/A)";
     }
 }
 
-// 📌 Populate Table
+// 📌 Populate Dashboard Table
 async function fetchData() {
     const tbody = document.querySelector("#titlesTable tbody");
     if (tbody) tbody.innerHTML = "";
+
     const [titles, agencies] = await Promise.all([fetchTitles(), fetchAgencies()]);
 
     let mostRecentTitle = null, mostRecentDate = null, mostRecentTitleName = null;
@@ -101,7 +108,7 @@ async function fetchData() {
     updateScoreboard(titles.length, agencies.length, mostRecentTitle, mostRecentDate, mostRecentTitleName);
 }
 
-// ✅ Perform Search
+// 📌 Search
 async function performSearch() {
     const query = document.getElementById("searchQuery").value.trim();
     const agency = document.getElementById("agencyFilter").value;
@@ -139,11 +146,13 @@ async function performSearch() {
             data.results.forEach((r, i) => {
                 const div = document.createElement("div");
                 div.classList.add("search-result");
+
                 const section = r.headings?.section || "No title";
                 const excerpt = r.full_text_excerpt || "No description available.";
-                const safeLink = r.link ? `https://www.ecfr.gov/${r.link}` : "#";
+                const link = r.link ? `https://www.ecfr.gov/${r.link}` : "#";
+
                 div.innerHTML = `
-                    <p><strong>${i + 1}.</strong> <a href="${safeLink}" target="_blank">${section}</a></p>
+                    <p><strong>${i + 1}.</strong> <a href="${link}" target="_blank">${section}</a></p>
                     <p>${excerpt}</p>`;
                 resultsBox.appendChild(div);
             });
@@ -154,7 +163,7 @@ async function performSearch() {
     }
 }
 
-// ✅ Reset
+// 📌 Reset Search
 function resetSearch() {
     document.getElementById("searchQuery").value = "";
     document.getElementById("startDate").value = "";
@@ -162,8 +171,11 @@ function resetSearch() {
 
     document.getElementById("searchResults").innerHTML = "";
     document.getElementById("searchResults").style.display = "none";
-    document.getElementById("searchSuggestions").innerHTML = "";
-    document.getElementById("searchSuggestions").style.display = "none";
+
+    const suggestionBox = document.getElementById("searchSuggestions");
+    suggestionBox.innerHTML = "";
+    suggestionBox.style.display = "none";
+
     document.body.classList.remove("search-results-visible");
 
     cachedTitles = [...masterTitles];
@@ -171,43 +183,45 @@ function resetSearch() {
     populateDropdowns();
 }
 
-// ✅ Suggestions
+// 📌 Suggestions
 document.getElementById("searchQuery").addEventListener("input", async function () {
     const query = this.value.trim();
-    const suggestionBox = document.getElementById("searchSuggestions");
+    const box = document.getElementById("searchSuggestions");
     if (!query) {
-        suggestionBox.innerHTML = "";
-        suggestionBox.style.display = "none";
+        box.innerHTML = "";
+        box.style.display = "none";
         return;
     }
+
     try {
         const res = await fetch(`${BACKEND_URL}/api/search/suggestions?query=${encodeURIComponent(query)}`);
         const data = await res.json();
-        suggestionBox.innerHTML = "";
+        box.innerHTML = "";
+
         if (data.suggestions?.length > 0) {
-            suggestionBox.style.display = "block";
+            box.style.display = "block";
             data.suggestions.forEach(s => {
                 const div = document.createElement("div");
                 div.className = "suggestion-item";
                 div.textContent = s;
                 div.onclick = () => {
                     document.getElementById("searchQuery").value = s;
-                    suggestionBox.innerHTML = "";
-                    suggestionBox.style.display = "none";
+                    box.innerHTML = "";
+                    box.style.display = "none";
                     performSearch();
                 };
-                suggestionBox.appendChild(div);
+                box.appendChild(div);
             });
         } else {
-            suggestionBox.style.display = "none";
+            box.style.display = "none";
         }
     } catch (e) {
         console.error("🚨 Suggestion error:", e);
-        suggestionBox.style.display = "none";
+        box.style.display = "none";
     }
 });
 
-// ✅ Enter Key to Search
+// 📌 Enter Key Search
 document.getElementById("searchQuery").addEventListener("keypress", e => {
     if (e.key === "Enter") {
         e.preventDefault();
@@ -215,7 +229,7 @@ document.getElementById("searchQuery").addEventListener("keypress", e => {
     }
 });
 
-// ✅ Populate Filter Dropdowns
+// 📌 Populate Filters
 function populateDropdowns() {
     const agencyFilter = document.getElementById("agencyFilter");
     const titleFilter = document.getElementById("titleFilter");
@@ -237,7 +251,7 @@ function populateDropdowns() {
     });
 }
 
-// ✅ Relational Filter Sync
+// 📌 Relational Filters
 document.addEventListener("DOMContentLoaded", async () => {
     await Promise.all([fetchTitles(), fetchAgencies(), fetchAgencyTitleMap()]);
     populateDropdowns();
@@ -261,8 +275,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     agencyFilter.addEventListener("change", () => {
         const selectedSlug = agencyFilter.value;
-        const agencyObj = cachedAgencies.find(
-            a => a.slug === selectedSlug || a.name.toLowerCase().replace(/\s+/g, "-") === selectedSlug
+        const agencyObj = cachedAgencies.find(a =>
+            a.slug === selectedSlug || a.name.toLowerCase().replace(/\s+/g, "-") === selectedSlug
         );
         const agencyName = agencyObj?.name;
         const relTitles = agencyTitleMap[agencyName] || [];
@@ -276,4 +290,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
     });
+
+    fetchData();
 });
