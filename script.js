@@ -8,6 +8,7 @@ let cachedAgencies = [];
 // 📌 Fetch Titles
 async function fetchTitles() {
     try {
+        console.log("📥 Fetching Titles from Backend...");
         const response = await fetch(`${BACKEND_URL}/api/titles`);
         const data = await response.json();
         cachedTitles = data.titles || [];
@@ -21,6 +22,7 @@ async function fetchTitles() {
 // 📌 Fetch Agencies
 async function fetchAgencies() {
     try {
+        console.log("📥 Fetching Agencies from Backend...");
         const response = await fetch(`${BACKEND_URL}/api/agencies`);
         const data = await response.json();
         cachedAgencies = data.agencies || [];
@@ -34,6 +36,7 @@ async function fetchAgencies() {
 // 📌 Fetch Word Count
 async function fetchSingleTitleWordCount(titleNumber, buttonElement) {
     try {
+        console.log(`📥 Fetching Word Count for Title ${titleNumber}`);
         buttonElement.textContent = "Fetching...";
         buttonElement.disabled = true;
         const response = await fetch(`${BACKEND_URL}/api/wordcount/${titleNumber}`);
@@ -88,7 +91,7 @@ async function fetchData() {
             <td>${title.latest_amended_on || "N/A"}</td>
             <td><button onclick="fetchSingleTitleWordCount(${title.number}, this)">Generate</button></td>
         `;
-        if (tbody) tbody.appendChild(row);
+        tbody.appendChild(row);
     });
 
     updateScoreboard(titles.length, agencies.length, mostRecentTitle, mostRecentDate, mostRecentTitleName);
@@ -114,10 +117,10 @@ async function performSearch() {
         return;
     }
 
-    console.log(`🔍 Searching for: ${query || "Filter-only search"}`);
-    document.body.classList.add("search-results-visible");
+    console.log(`🔍 Calling Backend Search API: ${BACKEND_URL}/api/search`);
     resultsBox.innerHTML = "<p>Loading results...</p>";
     resultsBox.style.display = "block";
+    document.body.classList.add("search-results-visible");
 
     const url = new URL(`${BACKEND_URL}/api/search`);
     if (query) url.searchParams.append("query", query);
@@ -155,6 +158,7 @@ function resetSearch() {
     document.getElementById("searchQuery").value = "";
     document.getElementById("startDate").value = "";
     document.getElementById("endDate").value = "";
+
     const results = document.getElementById("searchResults");
     results.innerHTML = "";
     results.style.display = "none";
@@ -162,9 +166,10 @@ function resetSearch() {
     const suggestionBox = document.getElementById("searchSuggestions");
     suggestionBox.innerHTML = "";
     suggestionBox.style.display = "none";
+
     document.body.classList.remove("search-results-visible");
 
-    // Reset filters and repopulate
+    // Reset filters
     const agencyFilter = document.getElementById("agencyFilter");
     const titleFilter = document.getElementById("titleFilter");
 
@@ -199,6 +204,7 @@ document.getElementById("searchQuery").addEventListener("input", async function 
         return;
     }
 
+    console.log(`💬 Calling Backend Suggestions API: ${BACKEND_URL}/api/search/suggestions`);
     try {
         const res = await fetch(`${BACKEND_URL}/api/search/suggestions?query=${encodeURIComponent(query)}`);
         const data = await res.json();
@@ -242,7 +248,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await fetchTitles();
     await fetchAgencies();
 
-    // Populate filters on page load
     resetSearch();
 
     // Title → Agencies
