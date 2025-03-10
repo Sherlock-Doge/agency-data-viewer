@@ -1,6 +1,10 @@
 // ✅ Backend URL (Updated to new backend service)
 const BACKEND_URL = "https://ecfr-backend-service.onrender.com";
 
+// 📌 Store fetched data for dynamic filtering
+let cachedTitles = [];
+let cachedAgencies = [];
+
 // 📌 Fetch eCFR Titles from Backend
 async function fetchTitles() {
     try {
@@ -9,7 +13,8 @@ async function fetchTitles() {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
         console.log("✅ Titles Data:", data);
-        return data.titles || [];
+        cachedTitles = data.titles || [];
+        return cachedTitles;
     } catch (error) {
         console.error("🚨 Error fetching titles:", error);
         return [];
@@ -24,7 +29,8 @@ async function fetchAgencies() {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         const data = await response.json();
         console.log("✅ Agencies Data:", data);
-        return data.agencies || [];
+        cachedAgencies = data.agencies || [];
+        return cachedAgencies;
     } catch (error) {
         console.error("🚨 Error fetching agencies:", error);
         return [];
@@ -140,7 +146,7 @@ async function performSearch() {
     const url = new URL("https://www.ecfr.gov/api/search/v1/results");
     if (query) url.searchParams.append("query", query);
     if (agencyFilter) url.searchParams.append("agency_slugs[]", agencyFilter);
-    if (titleFilter) url.searchParams.append("title", titleFilter);
+    if (titleFilter) url.searchParams.append("title", titleFilter.replace(/\D/g, "")); // strip non-numeric
     if (startDate) url.searchParams.append("last_modified_on_or_after", startDate);
     if (endDate) url.searchParams.append("last_modified_on_or_before", endDate);
 
@@ -171,29 +177,22 @@ async function performSearch() {
 // ✅ RESET SEARCH FUNCTION
 function resetSearch() {
     document.getElementById("searchQuery").value = "";
-
     const agencyFilter = document.getElementById("agencyFilter");
-    if (agencyFilter) agencyFilter.selectedIndex = 0;
-
     const titleFilter = document.getElementById("titleFilter");
+    if (agencyFilter) agencyFilter.selectedIndex = 0;
     if (titleFilter) titleFilter.selectedIndex = 0;
-
-    const startDate = document.getElementById("startDate");
-    if (startDate) startDate.value = "";
-
-    const endDate = document.getElementById("endDate");
-    if (endDate) endDate.value = "";
-
+    document.getElementById("startDate").value = "";
+    document.getElementById("endDate").value = "";
     const results = document.getElementById("searchResults");
     if (results) {
         results.innerHTML = "";
         results.style.display = "none";
     }
-
     const suggestions = document.getElementById("searchSuggestions");
-    if (suggestions) suggestions.innerHTML = "";
-    if (suggestions) suggestions.style.display = "none";
-
+    if (suggestions) {
+        suggestions.innerHTML = "";
+        suggestions.style.display = "none";
+    }
     document.body.classList.remove("search-results-visible");
 }
 
@@ -206,7 +205,6 @@ document.getElementById("searchQuery").addEventListener("input", async function 
         suggestionBox.style.display = "none";
         return;
     }
-
     try {
         const response = await fetch(`https://www.ecfr.gov/api/search/v1/suggestions?query=${encodeURIComponent(query)}`);
         if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
@@ -241,4 +239,56 @@ document.getElementById("searchQuery").addEventListener("keypress", function (ev
         event.preventDefault();
         performSearch();
     }
+});
+
+// ✅ Dynamic Relational Filtering
+document.addEventListener("DOMContentLoaded", async () => {
+    const titles = await fetchTitles();
+    const agencies = await fetchAgencies();
+    const titleFilter = document.getElementById("titleFilter");
+    const agencyFilter = document.getElementById("agencyFilter");
+
+    // Populate Filters
+    titles.forEach(title => {
+        const opt = document.createElement("option");
+        opt.value = title.number;
+        opt.textContent = `Title ${title.number}: ${title.name}`;
+        titleFilter.appendChild(opt);
+    });
+
+    agencies.forEach(agency => {
+        const opt = document.createElement("option");
+        opt.value = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
+        opt.textContent = agency.name;
+        agencyFilter.appendChild(opt);
+    });
+
+    // Relational Filtering
+    titleFilter.addEventListener("change", () => {
+        const selected = titleFilter.value;
+        if (!selected) return;
+        agencyFilter.innerHTML = '<option value="">-- All Agencies --</option>';
+        agencies.filter(agency => agency.titles.includes(parseInt(selected)))
+                .forEach(agency => {
+                    const opt = document.createElement("option");
+                    opt.value = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
+                    opt.textContent = agency.name;
+                    agencyFilter.appendChild(opt);
+                });
+    });
+
+    agencyFilter.addEventListener("change", () => {
+        const selected = agencyFilter.value;
+        if (!selected) return;
+        const selectedAgency = agencies.find(a => a.slug === selected || a.name.toLowerCase().replace(/\s+/g, "-") === selected);
+        if (!selectedAgency) return;
+        titleFilter.innerHTML = '<option value="">-- All Titles --</option>';
+        titles.filter(title => selectedAgency.titles.includes(title.number))
+              .forEach(title => {
+                  const opt = document.createElement("option");
+                  opt.value = title.number;
+                  opt.textContent = `Title ${title.number}: ${title.name}`;
+                  titleFilter.appendChild(opt);
+              });
+    });
 });
