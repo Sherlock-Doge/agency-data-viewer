@@ -55,17 +55,24 @@ async function fetchSingleTitleWordCount(titleNumber, buttonElement) {
 
 // 📌 Update Scoreboard
 function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecentDate, mostRecentTitleName) {
-    document.getElementById("totalTitles").textContent = totalTitles;
-    document.getElementById("totalAgencies").textContent = totalAgencies > 0 ? totalAgencies : "N/A";
+    const totalTitlesElement = document.getElementById("totalTitles");
+    const totalAgenciesElement = document.getElementById("totalAgencies");
     const recentAmendedTitleElement = document.getElementById("recentAmendedTitle");
-    if (mostRecentTitle && mostRecentTitleName) {
-        recentAmendedTitleElement.href = `https://www.ecfr.gov/current/title-${mostRecentTitle.replace("Title ", "")}`;
-        recentAmendedTitleElement.textContent = `${mostRecentTitle} - ${mostRecentTitleName}`;
-    } else {
-        recentAmendedTitleElement.textContent = "N/A";
-        recentAmendedTitleElement.removeAttribute("href");
+    const recentAmendedDateElement = document.getElementById("recentAmendedDate");
+
+    if (totalTitlesElement) totalTitlesElement.textContent = totalTitles;
+    if (totalAgenciesElement) totalAgenciesElement.textContent = totalAgencies > 0 ? totalAgencies : "N/A";
+
+    if (recentAmendedTitleElement && recentAmendedDateElement) {
+        if (mostRecentTitle && mostRecentTitleName) {
+            recentAmendedTitleElement.href = `https://www.ecfr.gov/current/title-${mostRecentTitle.replace("Title ", "")}`;
+            recentAmendedTitleElement.textContent = `${mostRecentTitle} - ${mostRecentTitleName}`;
+        } else {
+            recentAmendedTitleElement.textContent = "N/A";
+            recentAmendedTitleElement.removeAttribute("href");
+        }
+        recentAmendedDateElement.textContent = mostRecentDate ? `(${mostRecentDate})` : "(N/A)";
     }
-    document.getElementById("recentAmendedDate").textContent = mostRecentDate ? `(${mostRecentDate})` : "(N/A)";
 }
 
 // 📌 Populate Table
@@ -117,14 +124,18 @@ async function performSearch() {
     const endDate = document.getElementById("endDate").value;
     const resultsContainer = document.getElementById("searchResults");
 
-    if (!query && !agencyFilter && !titleFilter && !startDate && !endDate) {
-        resultsContainer.innerHTML = "<p>Please enter a search term or select a filter.</p>";
+    const hasFilters = agencyFilter || titleFilter || startDate || endDate;
+
+    if (!query && !hasFilters) {
+        resultsContainer.innerHTML = "<p>Please enter a search term or select filters.</p>";
+        resultsContainer.style.display = "block";
         return;
     }
 
     console.log(`🔍 Searching for: ${query || "Filter-only search"}`);
     document.body.classList.add("search-results-visible");
     resultsContainer.innerHTML = "<p>Loading results...</p>";
+    resultsContainer.style.display = "block";
 
     const url = new URL("https://www.ecfr.gov/api/search/v1/results");
     if (query) url.searchParams.append("query", query);
@@ -160,10 +171,18 @@ async function performSearch() {
 // ✅ RESET SEARCH FUNCTION
 function resetSearch() {
     document.getElementById("searchQuery").value = "";
-    document.getElementById("agencyFilter").selectedIndex = 0;
-    document.getElementById("titleFilter").selectedIndex = 0;
-    document.getElementById("startDate").value = "";
-    document.getElementById("endDate").value = "";
+
+    const agencyFilter = document.getElementById("agencyFilter");
+    if (agencyFilter) agencyFilter.selectedIndex = 0;
+
+    const titleFilter = document.getElementById("titleFilter");
+    if (titleFilter) titleFilter.selectedIndex = 0;
+
+    const startDate = document.getElementById("startDate");
+    if (startDate) startDate.value = "";
+
+    const endDate = document.getElementById("endDate");
+    if (endDate) endDate.value = "";
 
     const results = document.getElementById("searchResults");
     if (results) {
@@ -172,10 +191,8 @@ function resetSearch() {
     }
 
     const suggestions = document.getElementById("searchSuggestions");
-    if (suggestions) {
-        suggestions.innerHTML = "";
-        suggestions.style.display = "none";
-    }
+    if (suggestions) suggestions.innerHTML = "";
+    if (suggestions) suggestions.style.display = "none";
 
     document.body.classList.remove("search-results-visible");
 }
