@@ -117,17 +117,17 @@ async function performSearch() {
     const endDate = document.getElementById("endDate").value;
     const resultsContainer = document.getElementById("searchResults");
 
-    if (!query) {
-        resultsContainer.innerHTML = "<p>Please enter a search term.</p>";
+    if (!query && !agencyFilter && !titleFilter && !startDate && !endDate) {
+        resultsContainer.innerHTML = "<p>Please enter a search term or select a filter.</p>";
         return;
     }
 
-    console.log(`🔍 Searching for: ${query}`);
+    console.log(`🔍 Searching for: ${query || "Filter-only search"}`);
     document.body.classList.add("search-results-visible");
     resultsContainer.innerHTML = "<p>Loading results...</p>";
 
     const url = new URL("https://www.ecfr.gov/api/search/v1/results");
-    url.searchParams.append("query", query);
+    if (query) url.searchParams.append("query", query);
     if (agencyFilter) url.searchParams.append("agency_slugs[]", agencyFilter);
     if (titleFilter) url.searchParams.append("title", titleFilter);
     if (startDate) url.searchParams.append("last_modified_on_or_after", startDate);
@@ -160,18 +160,10 @@ async function performSearch() {
 // ✅ RESET SEARCH FUNCTION
 function resetSearch() {
     document.getElementById("searchQuery").value = "";
-
-    const agencyFilter = document.getElementById("agencyFilter");
-    if (agencyFilter) agencyFilter.selectedIndex = 0;
-
-    const titleFilter = document.getElementById("titleFilter");
-    if (titleFilter) titleFilter.selectedIndex = 0;
-
-    const startDate = document.getElementById("startDate");
-    if (startDate) startDate.value = "";
-
-    const endDate = document.getElementById("endDate");
-    if (endDate) endDate.value = "";
+    document.getElementById("agencyFilter").selectedIndex = 0;
+    document.getElementById("titleFilter").selectedIndex = 0;
+    document.getElementById("startDate").value = "";
+    document.getElementById("endDate").value = "";
 
     const results = document.getElementById("searchResults");
     if (results) {
@@ -180,7 +172,10 @@ function resetSearch() {
     }
 
     const suggestions = document.getElementById("searchSuggestions");
-    if (suggestions) suggestions.style.display = "none";
+    if (suggestions) {
+        suggestions.innerHTML = "";
+        suggestions.style.display = "none";
+    }
 
     document.body.classList.remove("search-results-visible");
 }
