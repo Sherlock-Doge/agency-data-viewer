@@ -5,16 +5,19 @@ const BACKEND_URL = "https://ecfr-backend-service.onrender.com";
 let cachedTitles = [];
 let cachedAgencies = [];
 let agencyTitleMap = {};
+let masterTitles = [];
+let masterAgencies = [];
 
 // 📌 Fetch Titles
 async function fetchTitles() {
     try {
-        const response = await fetch(`${BACKEND_URL}/api/titles`);
-        const data = await response.json();
+        const res = await fetch(`${BACKEND_URL}/api/titles`);
+        const data = await res.json();
         cachedTitles = data.titles || [];
+        masterTitles = [...cachedTitles];
         return cachedTitles;
-    } catch (err) {
-        console.error("🚨 Error fetching titles:", err);
+    } catch (e) {
+        console.error("🚨 Error fetching titles:", e);
         return [];
     }
 }
@@ -22,12 +25,13 @@ async function fetchTitles() {
 // 📌 Fetch Agencies
 async function fetchAgencies() {
     try {
-        const response = await fetch(`${BACKEND_URL}/api/agencies`);
-        const data = await response.json();
+        const res = await fetch(`${BACKEND_URL}/api/agencies`);
+        const data = await res.json();
         cachedAgencies = data.agencies || [];
+        masterAgencies = [...cachedAgencies];
         return cachedAgencies;
-    } catch (err) {
-        console.error("🚨 Error fetching agencies:", err);
+    } catch (e) {
+        console.error("🚨 Error fetching agencies:", e);
         return [];
     }
 }
@@ -35,11 +39,11 @@ async function fetchAgencies() {
 // 📌 Fetch Agency-Title Mapping
 async function fetchAgencyTitleMap() {
     try {
-        const response = await fetch(`${BACKEND_URL}/api/agency-title-map`);
-        const data = await response.json();
+        const res = await fetch(`${BACKEND_URL}/api/agency-title-map`);
+        const data = await res.json();
         agencyTitleMap = data.map || {};
-    } catch (err) {
-        console.error("🚨 Error fetching agency-title map:", err);
+    } catch (e) {
+        console.error("🚨 Error fetching agency-title map:", e);
     }
 }
 
@@ -48,38 +52,30 @@ async function fetchSingleTitleWordCount(titleNumber, buttonElement) {
     try {
         buttonElement.textContent = "Fetching...";
         buttonElement.disabled = true;
-        const response = await fetch(`${BACKEND_URL}/api/wordcount/${titleNumber}`);
-        const data = await response.json();
+        const res = await fetch(`${BACKEND_URL}/api/wordcount/${titleNumber}`);
+        const data = await res.json();
         buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
-    } catch (err) {
-        console.error("🚨 Word Count Error:", err);
+    } catch (e) {
+        console.error("🚨 Word Count Error:", e);
         buttonElement.textContent = "Retry";
         buttonElement.disabled = false;
     }
 }
 
-// 📌 Update Scoreboard
-function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecentDate, mostRecentTitleName) {
-    const tTitles = document.getElementById("totalTitles");
-    const tAgencies = document.getElementById("totalAgencies");
-    const amendedTitle = document.getElementById("recentAmendedTitle");
-    const amendedDate = document.getElementById("recentAmendedDate");
-
-    if (tTitles) tTitles.textContent = totalTitles;
-    if (tAgencies) tAgencies.textContent = totalAgencies;
-    if (amendedTitle && amendedDate) {
-        if (mostRecentTitle && mostRecentTitleName) {
-            amendedTitle.href = `https://www.ecfr.gov/current/title-${mostRecentTitle.replace("Title ", "")}`;
-            amendedTitle.textContent = `${mostRecentTitle} - ${mostRecentTitleName}`;
-        } else {
-            amendedTitle.textContent = "N/A";
-            amendedTitle.removeAttribute("href");
-        }
-        amendedDate.textContent = mostRecentDate ? `(${mostRecentDate})` : "(N/A)";
+// 📌 Scoreboard
+function updateScoreboard(totalTitles, totalAgencies, recentTitle, recentDate, recentName) {
+    document.getElementById("totalTitles").textContent = totalTitles;
+    document.getElementById("totalAgencies").textContent = totalAgencies;
+    const aTitle = document.getElementById("recentAmendedTitle");
+    const aDate = document.getElementById("recentAmendedDate");
+    if (aTitle && aDate) {
+        aTitle.href = recentTitle ? `https://www.ecfr.gov/current/title-${recentTitle.replace("Title ", "")}` : "#";
+        aTitle.textContent = recentTitle ? `${recentTitle} - ${recentName}` : "N/A";
+        aDate.textContent = recentDate ? `(${recentDate})` : "(N/A)";
     }
 }
 
-// 📌 Populate Titles Table
+// 📌 Populate Table
 async function fetchData() {
     const tbody = document.querySelector("#titlesTable tbody");
     if (tbody) tbody.innerHTML = "";
@@ -89,7 +85,7 @@ async function fetchData() {
     titles.forEach(title => {
         const row = document.createElement("tr");
         const titleUrl = `https://www.ecfr.gov/current/title-${title.number}`;
-        if (!mostRecentDate || (title.latest_amended_on && title.latest_amended_on > mostRecentDate)) {
+        if (!mostRecentDate || (title.latest_amended_on > mostRecentDate)) {
             mostRecentDate = title.latest_amended_on;
             mostRecentTitle = `Title ${title.number}`;
             mostRecentTitleName = title.name;
@@ -98,16 +94,12 @@ async function fetchData() {
             <td><a href="${titleUrl}" target="_blank">Title ${title.number} - ${title.name}</a></td>
             <td>${title.up_to_date_as_of || "N/A"}</td>
             <td>${title.latest_amended_on || "N/A"}</td>
-            <td><button onclick="fetchSingleTitleWordCount(${title.number}, this)">Generate</button></td>
-        `;
+            <td><button onclick="fetchSingleTitleWordCount(${title.number}, this)">Generate</button></td>`;
         tbody.appendChild(row);
     });
 
     updateScoreboard(titles.length, agencies.length, mostRecentTitle, mostRecentDate, mostRecentTitleName);
 }
-
-// 📌 Start
-fetchData();
 
 // ✅ Perform Search
 async function performSearch() {
@@ -125,7 +117,6 @@ async function performSearch() {
         return;
     }
 
-    console.log(`🔍 Searching via BACKEND: ${query || "[Filters only]"}`);
     document.body.classList.add("search-results-visible");
     resultsBox.innerHTML = "<p>Loading results...</p>";
     resultsBox.style.display = "block";
@@ -148,43 +139,39 @@ async function performSearch() {
             data.results.forEach((r, i) => {
                 const div = document.createElement("div");
                 div.classList.add("search-result");
-
                 const section = r.headings?.section || "No title";
                 const excerpt = r.full_text_excerpt || "No description available.";
-
+                const safeLink = r.link ? `https://www.ecfr.gov/${r.link}` : "#";
                 div.innerHTML = `
-                    <p><strong>${i + 1}.</strong> <a href="https://www.ecfr.gov/${r.link || ""}" target="_blank">${section}</a></p>
-                    <p>${excerpt}</p>
-                `;
+                    <p><strong>${i + 1}.</strong> <a href="${safeLink}" target="_blank">${section}</a></p>
+                    <p>${excerpt}</p>`;
                 resultsBox.appendChild(div);
             });
         }
-    } catch (err) {
-        console.error("🚨 Backend Search Error:", err);
+    } catch (e) {
+        console.error("🚨 Search Error:", e);
         resultsBox.innerHTML = "<p>Error retrieving search results.</p>";
     }
 }
 
-// ✅ Reset Search
+// ✅ Reset
 function resetSearch() {
     document.getElementById("searchQuery").value = "";
     document.getElementById("startDate").value = "";
     document.getElementById("endDate").value = "";
 
-    const resultsBox = document.getElementById("searchResults");
-    resultsBox.innerHTML = "";
-    resultsBox.style.display = "none";
-
-    const suggestionBox = document.getElementById("searchSuggestions");
-    suggestionBox.innerHTML = "";
-    suggestionBox.style.display = "none";
-
+    document.getElementById("searchResults").innerHTML = "";
+    document.getElementById("searchResults").style.display = "none";
+    document.getElementById("searchSuggestions").innerHTML = "";
+    document.getElementById("searchSuggestions").style.display = "none";
     document.body.classList.remove("search-results-visible");
 
-    populateDropdowns(); // FULL RESET
+    cachedTitles = [...masterTitles];
+    cachedAgencies = [...masterAgencies];
+    populateDropdowns();
 }
 
-// ✅ Suggestions via Backend
+// ✅ Suggestions
 document.getElementById("searchQuery").addEventListener("input", async function () {
     const query = this.value.trim();
     const suggestionBox = document.getElementById("searchSuggestions");
@@ -193,14 +180,11 @@ document.getElementById("searchQuery").addEventListener("input", async function 
         suggestionBox.style.display = "none";
         return;
     }
-
-    console.log(`💬 Calling Backend Suggestions API: ${BACKEND_URL}/api/search/suggestions`);
     try {
         const res = await fetch(`${BACKEND_URL}/api/search/suggestions?query=${encodeURIComponent(query)}`);
         const data = await res.json();
         suggestionBox.innerHTML = "";
-
-        if (data.suggestions && data.suggestions.length > 0) {
+        if (data.suggestions?.length > 0) {
             suggestionBox.style.display = "block";
             data.suggestions.forEach(s => {
                 const div = document.createElement("div");
@@ -217,14 +201,14 @@ document.getElementById("searchQuery").addEventListener("input", async function 
         } else {
             suggestionBox.style.display = "none";
         }
-    } catch (err) {
-        console.error("🚨 Suggestion Fetch Error:", err);
+    } catch (e) {
+        console.error("🚨 Suggestion error:", e);
         suggestionBox.style.display = "none";
     }
 });
 
-// ✅ Enter Key = Search
-document.getElementById("searchQuery").addEventListener("keypress", function (e) {
+// ✅ Enter Key to Search
+document.getElementById("searchQuery").addEventListener("keypress", e => {
     if (e.key === "Enter") {
         e.preventDefault();
         performSearch();
@@ -253,21 +237,19 @@ function populateDropdowns() {
     });
 }
 
-// ✅ Relational Filtering
+// ✅ Relational Filter Sync
 document.addEventListener("DOMContentLoaded", async () => {
-    await fetchTitles();
-    await fetchAgencies();
-    await fetchAgencyTitleMap();
+    await Promise.all([fetchTitles(), fetchAgencies(), fetchAgencyTitleMap()]);
     populateDropdowns();
 
     const titleFilter = document.getElementById("titleFilter");
     const agencyFilter = document.getElementById("agencyFilter");
 
     titleFilter.addEventListener("change", () => {
-        const selectedTitle = parseInt(titleFilter.value);
+        const selected = parseInt(titleFilter.value);
         agencyFilter.innerHTML = `<option value="">-- All Agencies --</option>`;
         for (const [agencyName, titles] of Object.entries(agencyTitleMap)) {
-            if (titles.includes(selectedTitle)) {
+            if (titles.includes(selected)) {
                 const opt = document.createElement("option");
                 const slug = agencyName.toLowerCase().replace(/\s+/g, "-");
                 opt.value = slug;
@@ -278,16 +260,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     agencyFilter.addEventListener("change", () => {
-        const selectedAgencySlug = agencyFilter.value;
+        const selectedSlug = agencyFilter.value;
         const agencyObj = cachedAgencies.find(
-            a => a.slug === selectedAgencySlug || a.name.toLowerCase().replace(/\s+/g, "-") === selectedAgencySlug
+            a => a.slug === selectedSlug || a.name.toLowerCase().replace(/\s+/g, "-") === selectedSlug
         );
         const agencyName = agencyObj?.name;
-        const relatedTitles = agencyTitleMap[agencyName] || [];
-
+        const relTitles = agencyTitleMap[agencyName] || [];
         titleFilter.innerHTML = `<option value="">-- All Titles --</option>`;
         cachedTitles.forEach(t => {
-            if (relatedTitles.length === 0 || relatedTitles.includes(t.number)) {
+            if (relTitles.length === 0 || relTitles.includes(t.number)) {
                 const opt = document.createElement("option");
                 opt.value = t.number;
                 opt.textContent = `Title ${t.number}: ${t.name}`;
