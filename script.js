@@ -242,7 +242,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await fetchTitles();
     await fetchAgencies();
 
-    // Populate dropdowns
+    // Populate filters on page load
     resetSearch();
 
     // Title → Agencies
