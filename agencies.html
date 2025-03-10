@@ -1,3 +1,6 @@
+Here is the updated `agencies.html` with the added logging for debugging in the `fetchAgencyWordCount` function:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -105,12 +108,15 @@
 
         async function fetchAgencyWordCount(agency, buttonElement) {
             try {
+                console.log("📥 Fetching word count for agency:", agency);
                 buttonElement.textContent = "Fetching...";
                 buttonElement.disabled = true;
 
                 const slug = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
                 const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${slug}`);
                 const data = await response.json();
+
+                console.log("✅ Word Count Response:", data);
 
                 if (data.wordCount !== undefined) {
                     buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
@@ -129,3 +135,4 @@
 
 </body>
 </html>
+```
