@@ -14,9 +14,7 @@
             <img src="images/sherlock-doge-analyzer-.png" alt="Sherlock Doge Logo" class="header-logo">
             <h1 class="header-title"><a href="index.html" class="header-link">eCFR Analyzer</a></h1>
         </div>
-
         <h2 class="header-center">All eCFR Agencies</h2>
-
         <div class="header-right">
             <a href="index.html" class="header-link">Dashboard</a>
             <a href="agencies.html" class="header-link">Agencies</a>
@@ -49,13 +47,15 @@
     </footer>
 
     <script>
+        const BACKEND_URL = "https://ecfr-backend-service.onrender.com";
+
         async function fetchAgencies() {
             try {
                 console.log("📥 Fetching agency data...");
-                const response = await fetch("https://ecfr-backend-service.onrender.com/api/agencies");
+                const response = await fetch(`${BACKEND_URL}/api/agencies`);
                 if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
                 const data = await response.json();
-                console.log("✅ Agencies Data Loaded:", data);
+                console.log("✅ Agencies Data Loaded: ", data);
 
                 const tableBody = document.querySelector("#agenciesTable tbody");
                 tableBody.innerHTML = "";
@@ -68,13 +68,11 @@
                 data.agencies.forEach(agency => {
                     const row = document.createElement("tr");
 
-                    // Agency Name
                     const agencyCell = document.createElement("td");
                     agencyCell.textContent = agency.name;
 
-                    // Regulating Titles
                     const titlesCell = document.createElement("td");
-                    if (agency.cfr_references.length > 0) {
+                    if (agency.cfr_references?.length > 0) {
                         agency.cfr_references.forEach(ref => {
                             const link = document.createElement("a");
                             link.href = `https://www.ecfr.gov/current/title-${ref.title}/chapter-${ref.chapter || ""}`;
@@ -87,11 +85,10 @@
                         titlesCell.textContent = "No Titles Found";
                     }
 
-                    // Word Count Button
                     const wordCountCell = document.createElement("td");
                     const button = document.createElement("button");
                     button.textContent = "Generate";
-                    button.onclick = () => fetchAgencyWordCount(agency.name, button);
+                    button.onclick = () => fetchAgencyWordCount(agency, button);
                     wordCountCell.appendChild(button);
 
                     row.appendChild(agencyCell);
@@ -99,21 +96,27 @@
                     row.appendChild(wordCountCell);
                     tableBody.appendChild(row);
                 });
-
             } catch (error) {
                 console.error("🚨 Error fetching agencies:", error);
-                document.querySelector("#agenciesTable tbody").innerHTML = "<tr><td colspan='3'>Error loading agencies.</td></tr>";
+                document.querySelector("#agenciesTable tbody").innerHTML =
+                    "<tr><td colspan='3'>Error loading agencies.</td></tr>";
             }
         }
 
-        // Uses global script.js function
-        async function fetchAgencyWordCount(agencyName, buttonElement) {
+        async function fetchAgencyWordCount(agency, buttonElement) {
             try {
-                buttonElement.textContent = "Calculating...";
+                buttonElement.textContent = "Fetching...";
                 buttonElement.disabled = true;
-                const response = await fetch(`https://ecfr-backend-service.onrender.com/api/wordcount/agency/${encodeURIComponent(agencyName)}`);
+
+                const slug = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
+                const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${slug}`);
                 const data = await response.json();
-                buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
+
+                if (data.wordCount !== undefined) {
+                    buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
+                } else {
+                    throw new Error("No wordCount in response");
+                }
             } catch (err) {
                 console.error("🚨 Agency Word Count Error:", err);
                 buttonElement.textContent = "Retry";
