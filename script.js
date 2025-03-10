@@ -290,14 +290,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 });
 
-// ✅ Word Count by Agency
-async function fetchAgencyWordCount(agencyName, buttonElement) {
+// ✅ Word Count by Agency (HTML scrape-aware)
+async function fetchAgencyWordCount(agencySlugOrName, buttonElement) {
     try {
         buttonElement.textContent = "Calculating...";
         buttonElement.disabled = true;
-        const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${encodeURIComponent(agencyName)}`);
+
+        const agencySlug = agencySlugOrName.toLowerCase().replace(/\s+/g, "-");
+        const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${encodeURIComponent(agencySlug)}`);
         const data = await response.json();
-        buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
+
+        if (data.wordCount !== undefined) {
+            buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
+        } else {
+            console.warn("⚠️ No word count returned — fallback showing zero.");
+            buttonElement.parentElement.innerHTML = "0";
+        }
+
     } catch (err) {
         console.error("🚨 Agency Word Count Error:", err);
         buttonElement.textContent = "Retry";
