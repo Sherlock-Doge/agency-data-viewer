@@ -4,6 +4,7 @@ const BACKEND_URL = "https://ecfr-backend-service.onrender.com";
 // ✅ Cache for Dynamic Filtering
 let cachedTitles = [];
 let cachedAgencies = [];
+let agencyTitleMap = {};
 
 // 📌 Fetch Titles
 async function fetchTitles() {
@@ -28,6 +29,17 @@ async function fetchAgencies() {
     } catch (err) {
         console.error("🚨 Error fetching agencies:", err);
         return [];
+    }
+}
+
+// 📌 Fetch Agency-Title Mapping
+async function fetchAgencyTitleMap() {
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/agency-title-map`);
+        const data = await response.json();
+        agencyTitleMap = data.map || {};
+    } catch (err) {
+        console.error("🚨 Error fetching agency-title map:", err);
     }
 }
 
@@ -136,9 +148,13 @@ async function performSearch() {
             data.results.forEach((r, i) => {
                 const div = document.createElement("div");
                 div.classList.add("search-result");
+
+                const section = r.headings?.section || "No title";
+                const excerpt = r.full_text_excerpt || "No description available.";
+
                 div.innerHTML = `
-                    <p><strong>${i + 1}.</strong> <a href="https://www.ecfr.gov/${r.link}" target="_blank">${r.title || "No title"}</a></p>
-                    <p>${r.description || "No description available."}</p>
+                    <p><strong>${i + 1}.</strong> <a href="https://www.ecfr.gov/${r.link || ""}" target="_blank">${section}</a></p>
+                    <p>${excerpt}</p>
                 `;
                 resultsBox.appendChild(div);
             });
@@ -165,7 +181,7 @@ function resetSearch() {
 
     document.body.classList.remove("search-results-visible");
 
-    populateDropdowns(); // FULL RESET of filters using cache
+    populateDropdowns(); // FULL RESET
 }
 
 // ✅ Suggestions via Backend
@@ -241,6 +257,7 @@ function populateDropdowns() {
 document.addEventListener("DOMContentLoaded", async () => {
     await fetchTitles();
     await fetchAgencies();
+    await fetchAgencyTitleMap();
     populateDropdowns();
 
     const titleFilter = document.getElementById("titleFilter");
@@ -249,38 +266,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     titleFilter.addEventListener("change", () => {
         const selectedTitle = parseInt(titleFilter.value);
         agencyFilter.innerHTML = `<option value="">-- All Agencies --</option>`;
-        cachedAgencies
-            .filter(a => a.titles && a.titles.includes(selectedTitle))
-            .forEach(a => {
+        for (const [agencyName, titles] of Object.entries(agencyTitleMap)) {
+            if (titles.includes(selectedTitle)) {
                 const opt = document.createElement("option");
-                opt.value = a.slug || a.name.toLowerCase().replace(/\s+/g, "-");
-                opt.textContent = a.name;
+                const slug = agencyName.toLowerCase().replace(/\s+/g, "-");
+                opt.value = slug;
+                opt.textContent = agencyName;
                 agencyFilter.appendChild(opt);
-            });
+            }
+        }
     });
 
     agencyFilter.addEventListener("change", () => {
-        const selected = agencyFilter.value;
-        const selectedAgency = cachedAgencies.find(a =>
-            a.slug === selected || a.name.toLowerCase().replace(/\s+/g, "-") === selected
+        const selectedAgencySlug = agencyFilter.value;
+        const agencyObj = cachedAgencies.find(
+            a => a.slug === selectedAgencySlug || a.name.toLowerCase().replace(/\s+/g, "-") === selectedAgencySlug
         );
+        const agencyName = agencyObj?.name;
+        const relatedTitles = agencyTitleMap[agencyName] || [];
+
         titleFilter.innerHTML = `<option value="">-- All Titles --</option>`;
-        if (selectedAgency && selectedAgency.titles) {
-            cachedTitles
-                .filter(t => selectedAgency.titles.includes(t.number))
-                .forEach(t => {
-                    const opt = document.createElement("option");
-                    opt.value = t.number;
-                    opt.textContent = `Title ${t.number}: ${t.name}`;
-                    titleFilter.appendChild(opt);
-                });
-        } else {
-            cachedTitles.forEach(t => {
+        cachedTitles.forEach(t => {
+            if (relatedTitles.length === 0 || relatedTitles.includes(t.number)) {
                 const opt = document.createElement("option");
                 opt.value = t.number;
                 opt.textContent = `Title ${t.number}: ${t.name}`;
                 titleFilter.appendChild(opt);
-            });
-        }
+            }
+        });
     });
 });
