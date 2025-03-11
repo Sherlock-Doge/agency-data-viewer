@@ -40,7 +40,7 @@ async function fetchAgencyTitleMap() {
         agencyTitleMap = data.map || {};  // <-- This is where the mapping is set
         
         // Log after it's populated
-        console.log(agencyTitleMap);  // Log the populated map here
+        console.log("✅ Agency-Title Map fetched successfully:", agencyTitleMap);  // Log the populated map here
     } catch (err) {
         console.error("🚨 Error fetching agency-title map:", err);
     }
