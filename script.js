@@ -37,7 +37,10 @@ async function fetchAgencyTitleMap() {
     try {
         const response = await fetch(`${BACKEND_URL}/api/agency-title-map`);
         const data = await response.json();
-        agencyTitleMap = data.map || {};
+        agencyTitleMap = data.map || {};  // <-- This is where the mapping is set
+        
+        // Log after it's populated
+        console.log(agencyTitleMap);  // Log the populated map here
     } catch (err) {
         console.error("🚨 Error fetching agency-title map:", err);
     }
