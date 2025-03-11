@@ -249,30 +249,34 @@ function populateDropdowns() {
 }
 
 // ✅ Word Count by Agency (HTML scrape-aware with breakdown)
-async function fetchAgencyWordCount(agencySlugOrName, buttonElement) {
-    try {
-        buttonElement.textContent = "Calculating...";
-        buttonElement.disabled = true;
+async function fetchAgencyWordCount(agency, buttonElement) {
+  try {
+    console.log("📥 Fetching word count for agency:", agency);
+    buttonElement.textContent = "Fetching...";
+    buttonElement.disabled = true;
 
-        const agencySlug = agencySlugOrName.toLowerCase().replace(/\s+/g, "-");
-        const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${encodeURIComponent(agencySlug)}`);
-        const data = await response.json();
+    const slug = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
+    const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${encodeURIComponent(slug)}`);
+    const data = await response.json();
 
-        console.log("📊 Word Count Response:", data);
+    console.log("✅ Word Count Response:", data);
 
-        if (data.breakdown && Array.isArray(data.breakdown)) {
-            const lines = data.breakdown.map(item => `Title ${item.title} Chapter ${item.chapter}: ${item.words.toLocaleString()} words`);
-            lines.push(`Total: ${data.wordCount.toLocaleString()} words`);
-            buttonElement.parentElement.innerHTML = lines.join("<br>");
-        } else if (data.wordCount !== undefined) {
-            buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
-        } else {
-            console.warn("⚠️ No word count returned — fallback showing zero.");
-            buttonElement.parentElement.innerHTML = "0";
-        }
-    } catch (err) {
-        console.error("🚨 Agency Word Count Error:", err);
-        buttonElement.textContent = "Retry";
-        buttonElement.disabled = false;
+    if (data.breakdowns && Array.isArray(data.breakdowns)) {
+      const lines = data.breakdowns.map(item =>
+        `Title ${item.title}, Chapter ${item.chapter}: ${item.words.toLocaleString()} words`
+      );
+      lines.push(`Total: ${data.total.toLocaleString()} words`);
+      buttonElement.parentElement.innerHTML = lines.join("<br>");
+    } else if (data.total !== undefined) {
+      buttonElement.parentElement.innerHTML = data.total.toLocaleString();
+    } else {
+      throw new Error("No total word count in response");
     }
+
+  } catch (err) {
+    console.error("🚨 Agency Word Count Error:", err);
+    buttonElement.textContent = "Retry";
+    buttonElement.disabled = false;
+  }
 }
+
