@@ -111,26 +111,33 @@
 
         if (data.total !== undefined) {
           let breakdownHTML = "";
-
           if (Array.isArray(data.breakdowns)) {
-            breakdownHTML += data.breakdowns
-              .map(b => {
-                const title = b.title || "N/A";
-                const chapter = b.chapter || "N/A";
-                const count = (typeof b.wordCount === "number") ? b.wordCount.toLocaleString() : "N/A";
-                return `Title ${title}, Chapter ${chapter}: ${count}`;
-              })
-              .join("<br>");
+            data.breakdowns.forEach(b => {
+              const title = b.title || "N/A";
+              const chapter = b.chapter || "N/A";
+              const count = (typeof b.wordCount === "number") ? b.wordCount.toLocaleString() : "N/A";
+              console.log(`🔍 Breakdown: Title ${title}, Chapter ${chapter}, Count: ${count}`);
+              breakdownHTML += `Title ${title}, Chapter ${chapter}: ${count}<br>`;
+            });
           }
+
+          console.log(`🧮 TOTAL Word Count for ${agency.name}: ${data.total.toLocaleString()}`);
 
           breakdownHTML += `<br><strong>Total:</strong> ${data.total.toLocaleString()}`;
           cellElement.innerHTML = breakdownHTML;
+
+          if (data.total === 0) {
+            console.warn(`⚠️ ZERO word count returned for agency: ${agency.name}`);
+          }
         } else {
-          throw new Error("Missing total word count in response");
+          throw new Error("❌ Missing total word count in response object");
         }
       } catch (err) {
-        console.error("🚨 Agency Word Count Error:", err);
-        cellElement.innerHTML = "Error";
+        console.error("🚨 Agency Word Count Fetch Error:", err);
+        cellElement.innerHTML = "Error fetching word count";
+      } finally {
+        buttonElement.textContent = "Generate";
+        buttonElement.disabled = false;
       }
     }
 
