@@ -180,56 +180,61 @@ function resetSearch() {
 }
 
 // ✅ Suggestions via Backend
-document.getElementById("searchQuery").addEventListener("input", async function () {
-    const query = this.value.trim();
-    const suggestionBox = document.getElementById("searchSuggestions");
-    if (!query) {
-        suggestionBox.innerHTML = "";
-        suggestionBox.style.display = "none";
-        return;
-    }
+const searchQueryInput = document.getElementById("searchQuery");
+if (searchQueryInput) {
+    searchQueryInput.addEventListener("input", async function () {
+        const query = this.value.trim();
+        const suggestionBox = document.getElementById("searchSuggestions");
+        if (!query) {
+            suggestionBox.innerHTML = "";
+            suggestionBox.style.display = "none";
+            return;
+        }
 
-    console.log(`💬 Calling Backend Suggestions API: ${BACKEND_URL}/api/search/suggestions`);
-    try {
-        const res = await fetch(`${BACKEND_URL}/api/search/suggestions?query=${encodeURIComponent(query)}`);
-        const data = await res.json();
-        suggestionBox.innerHTML = "";
+        console.log(`💬 Calling Backend Suggestions API: ${BACKEND_URL}/api/search/suggestions`);
+        try {
+            const res = await fetch(`${BACKEND_URL}/api/search/suggestions?query=${encodeURIComponent(query)}`);
+            const data = await res.json();
+            suggestionBox.innerHTML = "";
 
-        if (data.suggestions && data.suggestions.length > 0) {
-            suggestionBox.style.display = "block";
-            data.suggestions.forEach(s => {
-                const div = document.createElement("div");
-                div.className = "suggestion-item";
-                div.textContent = s;
-                div.onclick = () => {
-                    document.getElementById("searchQuery").value = s;
-                    suggestionBox.innerHTML = "";
-                    suggestionBox.style.display = "none";
-                    performSearch();
-                };
-                suggestionBox.appendChild(div);
-            });
-        } else {
+            if (data.suggestions && data.suggestions.length > 0) {
+                suggestionBox.style.display = "block";
+                data.suggestions.forEach(s => {
+                    const div = document.createElement("div");
+                    div.className = "suggestion-item";
+                    div.textContent = s;
+                    div.onclick = () => {
+                        document.getElementById("searchQuery").value = s;
+                        suggestionBox.innerHTML = "";
+                        suggestionBox.style.display = "none";
+                        performSearch();
+                    };
+                    suggestionBox.appendChild(div);
+                });
+            } else {
+                suggestionBox.style.display = "none";
+            }
+        } catch (err) {
+            console.error("🚨 Suggestion Fetch Error:", err);
             suggestionBox.style.display = "none";
         }
-    } catch (err) {
-        console.error("🚨 Suggestion Fetch Error:", err);
-        suggestionBox.style.display = "none";
-    }
-});
+    });
 
-// ✅ Enter Key = Search
-document.getElementById("searchQuery").addEventListener("keypress", function (e) {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        performSearch();
-    }
-});
+    // ✅ Enter Key = Search
+    searchQueryInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            performSearch();
+        }
+    });
+}
 
 // ✅ Populate Filter Dropdowns
 function populateDropdowns() {
     const agencyFilter = document.getElementById("agencyFilter");
     const titleFilter = document.getElementById("titleFilter");
+
+    if (!agencyFilter || !titleFilter) return;
 
     agencyFilter.innerHTML = `<option value="">-- All Agencies --</option>`;
     cachedAgencies.forEach(a => {
@@ -250,33 +255,32 @@ function populateDropdowns() {
 
 // ✅ Word Count by Agency (HTML scrape-aware with breakdown)
 async function fetchAgencyWordCount(agency, buttonElement) {
-  try {
-    console.log("📥 Fetching word count for agency:", agency);
-    buttonElement.textContent = "Fetching...";
-    buttonElement.disabled = true;
+    try {
+        console.log("📥 Fetching word count for agency:", agency);
+        buttonElement.textContent = "Fetching...";
+        buttonElement.disabled = true;
 
-    const slug = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
-    const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${encodeURIComponent(slug)}`);
-    const data = await response.json();
+        const slug = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
+        const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${encodeURIComponent(slug)}`);
+        const data = await response.json();
 
-    console.log("✅ Word Count Response:", data);
+        console.log("✅ Word Count Response:", data);
 
-    if (data.breakdowns && Array.isArray(data.breakdowns)) {
-      const lines = data.breakdowns.map(item =>
-        `Title ${item.title}, Chapter ${item.chapter}: ${item.words.toLocaleString()} words`
-      );
-      lines.push(`Total: ${data.total.toLocaleString()} words`);
-      buttonElement.parentElement.innerHTML = lines.join("<br>");
-    } else if (data.total !== undefined) {
-      buttonElement.parentElement.innerHTML = data.total.toLocaleString();
-    } else {
-      throw new Error("No total word count in response");
+        if (data.breakdowns && Array.isArray(data.breakdowns)) {
+            const lines = data.breakdowns.map(item =>
+                `Title ${item.title}, Chapter ${item.chapter}: ${item.words.toLocaleString()}`
+            );
+            lines.push(`<strong>Total:</strong> ${data.total.toLocaleString()}`);
+            buttonElement.parentElement.innerHTML = lines.join("<br>");
+        } else if (data.total !== undefined) {
+            buttonElement.parentElement.innerHTML = data.total.toLocaleString();
+        } else {
+            throw new Error("No total word count in response");
+        }
+
+    } catch (err) {
+        console.error("🚨 Agency Word Count Error:", err);
+        buttonElement.textContent = "Retry";
+        buttonElement.disabled = false;
     }
-
-  } catch (err) {
-    console.error("🚨 Agency Word Count Error:", err);
-    buttonElement.textContent = "Retry";
-    buttonElement.disabled = false;
-  }
 }
-
