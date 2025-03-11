@@ -1,12 +1,18 @@
-// ✅ Backend URL
+// =========================================================
+// ✅ eCFR Analyzer - Frontend Script (Full Final Version)
+// =========================================================
+
+// 🔗 Backend Base URL
 const BACKEND_URL = "https://ecfr-backend-service.onrender.com";
 
-// ✅ Cache for Dynamic Filtering
+// 🧠 Cache Store (used for filter dropdowns and internal lookups)
 let cachedTitles = [];
 let cachedAgencies = [];
 let agencyTitleMap = {};
 
-// 📌 Fetch Titles
+// =========================================================
+// 📦 Fetch Title Metadata
+// =========================================================
 async function fetchTitles() {
     try {
         const response = await fetch(`${BACKEND_URL}/api/titles`);
@@ -19,7 +25,9 @@ async function fetchTitles() {
     }
 }
 
-// 📌 Fetch Agencies
+// =========================================================
+// 🏢 Fetch Agency Metadata
+// =========================================================
 async function fetchAgencies() {
     try {
         const response = await fetch(`${BACKEND_URL}/api/agencies`);
@@ -32,7 +40,9 @@ async function fetchAgencies() {
     }
 }
 
-// 📌 Fetch Agency-Title Mapping
+// =========================================================
+// 🗺️ Fetch Agency ↔ Title Mapping (if used in future filters)
+// =========================================================
 async function fetchAgencyTitleMap() {
     try {
         const response = await fetch(`${BACKEND_URL}/api/agency-title-map`);
@@ -44,7 +54,9 @@ async function fetchAgencyTitleMap() {
     }
 }
 
-// 📌 Fetch Word Count
+// =========================================================
+// 🔢 Fetch Word Count for Individual Title (Index Page)
+// =========================================================
 async function fetchSingleTitleWordCount(titleNumber, buttonElement) {
     try {
         buttonElement.textContent = "Fetching...";
@@ -59,7 +71,9 @@ async function fetchSingleTitleWordCount(titleNumber, buttonElement) {
     }
 }
 
-// 📌 Update Scoreboard
+// =========================================================
+// 📊 Update Scoreboard Section (Top of Index Page)
+// =========================================================
 function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecentDate, mostRecentTitleName) {
     const tTitles = document.getElementById("totalTitles");
     const tAgencies = document.getElementById("totalAgencies");
@@ -68,6 +82,7 @@ function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecen
 
     if (tTitles) tTitles.textContent = totalTitles;
     if (tAgencies) tAgencies.textContent = totalAgencies;
+
     if (amendedTitle && amendedDate) {
         if (mostRecentTitle && mostRecentTitleName) {
             amendedTitle.href = `https://www.ecfr.gov/current/title-${mostRecentTitle.replace("Title ", "")}`;
@@ -80,21 +95,27 @@ function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecen
     }
 }
 
-// 📌 Populate Titles Table
+// =========================================================
+// 📋 Populate Titles Table (Index Page Table Body)
+// =========================================================
 async function fetchData() {
     const tbody = document.querySelector("#titlesTable tbody");
     if (tbody) tbody.innerHTML = "";
+
     const [titles, agencies] = await Promise.all([fetchTitles(), fetchAgencies()]);
 
     let mostRecentTitle = null, mostRecentDate = null, mostRecentTitleName = null;
+
     titles.forEach(title => {
         const row = document.createElement("tr");
         const titleUrl = `https://www.ecfr.gov/current/title-${title.number}`;
+
         if (!mostRecentDate || (title.latest_amended_on && title.latest_amended_on > mostRecentDate)) {
             mostRecentDate = title.latest_amended_on;
             mostRecentTitle = `Title ${title.number}`;
             mostRecentTitleName = title.name;
         }
+
         row.innerHTML = `
             <td><a href="${titleUrl}" target="_blank">Title ${title.number} - ${title.name}</a></td>
             <td>${title.up_to_date_as_of || "N/A"}</td>
@@ -107,10 +128,12 @@ async function fetchData() {
     updateScoreboard(titles.length, agencies.length, mostRecentTitle, mostRecentDate, mostRecentTitleName);
 }
 
-// 📌 Start
+// 🚀 Auto-init on page load
 fetchData();
 
-// ✅ Perform Search
+// =========================================================
+// 🔍 Perform Search (Search Page Execution)
+// =========================================================
 async function performSearch() {
     const query = document.getElementById("searchQuery").value.trim();
     const agency = document.getElementById("agencyFilter").value;
@@ -164,7 +187,9 @@ async function performSearch() {
     }
 }
 
-// ✅ Reset Search
+// =========================================================
+// 🔁 Reset Search UI (Reset Button Action)
+// =========================================================
 function resetSearch() {
     document.getElementById("searchQuery").value = "";
     document.getElementById("startDate").value = "";
@@ -179,12 +204,15 @@ function resetSearch() {
     populateDropdowns();
 }
 
-// ✅ Suggestions via Backend
+// =========================================================
+// 💬 Live Search Suggestions from Backend
+// =========================================================
 const searchQueryInput = document.getElementById("searchQuery");
 if (searchQueryInput) {
     searchQueryInput.addEventListener("input", async function () {
         const query = this.value.trim();
         const suggestionBox = document.getElementById("searchSuggestions");
+
         if (!query) {
             suggestionBox.innerHTML = "";
             suggestionBox.style.display = "none";
@@ -192,6 +220,7 @@ if (searchQueryInput) {
         }
 
         console.log(`💬 Calling Backend Suggestions API: ${BACKEND_URL}/api/search/suggestions`);
+
         try {
             const res = await fetch(`${BACKEND_URL}/api/search/suggestions?query=${encodeURIComponent(query)}`);
             const data = await res.json();
@@ -220,7 +249,7 @@ if (searchQueryInput) {
         }
     });
 
-    // ✅ Enter Key = Search
+    // 🔍 Enter Key → Trigger Search
     searchQueryInput.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
             e.preventDefault();
@@ -229,7 +258,9 @@ if (searchQueryInput) {
     });
 }
 
-// ✅ Populate Filter Dropdowns
+// =========================================================
+// 📂 Populate Filter Dropdowns
+// =========================================================
 function populateDropdowns() {
     const agencyFilter = document.getElementById("agencyFilter");
     const titleFilter = document.getElementById("titleFilter");
@@ -253,7 +284,9 @@ function populateDropdowns() {
     });
 }
 
-// ✅ Word Count by Agency (HTML scrape-aware with breakdown)
+// =========================================================
+// ✍️ Fetch Word Count by Agency (New HTML Scrape Method)
+// =========================================================
 async function fetchAgencyWordCount(agency, buttonElement) {
     try {
         console.log("📥 Fetching word count for agency:", agency);
@@ -277,7 +310,6 @@ async function fetchAgencyWordCount(agency, buttonElement) {
         } else {
             throw new Error("No total word count in response");
         }
-
     } catch (err) {
         console.error("🚨 Agency Word Count Error:", err);
         buttonElement.textContent = "Retry";
