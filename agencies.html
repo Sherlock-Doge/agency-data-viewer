@@ -1,138 +1,138 @@
-Here is the updated `agencies.html` with the added logging for debugging in the `fetchAgencyWordCount` function:
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eCFR Agencies</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>eCFR Agencies</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-    <!-- Header -->
-    <header>
-        <div class="header-left">
-            <img src="images/sherlock-doge-analyzer-.png" alt="Sherlock Doge Logo" class="header-logo">
-            <h1 class="header-title"><a href="index.html" class="header-link">eCFR Analyzer</a></h1>
-        </div>
-        <h2 class="header-center">All eCFR Agencies</h2>
-        <div class="header-right">
-            <a href="index.html" class="header-link">Dashboard</a>
-            <a href="agencies.html" class="header-link">Agencies</a>
-            <a href="search.html" class="header-link">Search</a>
-        </div>
-    </header>
+  <!-- Header -->
+  <header>
+    <div class="header-left">
+      <img src="images/sherlock-doge-analyzer-.png" alt="Sherlock Doge Logo" class="header-logo" />
+      <h1 class="header-title"><a href="index.html" class="header-link">eCFR Analyzer</a></h1>
+    </div>
+    <h2 class="header-center">All eCFR Agencies</h2>
+    <div class="header-right">
+      <a href="index.html" class="header-link">Dashboard</a>
+      <a href="agencies.html" class="header-link">Agencies</a>
+      <a href="search.html" class="header-link">Search</a>
+    </div>
+  </header>
 
-    <!-- Spacer -->
-    <div class="spacer"></div>
+  <!-- Spacer -->
+  <div class="spacer"></div>
 
-    <!-- Agencies Table -->
-    <table id="agenciesTable">
-        <thead>
-            <tr>
-                <th>Agency</th>
-                <th>Regulating Titles & Chapters</th>
-                <th>Word Count</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+  <!-- Agencies Table -->
+  <table id="agenciesTable">
+    <thead>
+      <tr>
+        <th>Agency</th>
+        <th>Regulating Titles & Chapters</th>
+        <th>Word Count</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-container">
-            <p>© 2025 eCFR Analyzer</p>
-            <img src="images/morpheus.png" alt="Morpheus Logo" class="footer-logo">
-            <p>Sponsored by DOGE.</p>
-        </div>
-    </footer>
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <p>© 2025 eCFR Analyzer</p>
+      <img src="images/morpheus.png" alt="Morpheus Logo" class="footer-logo" />
+      <p>Sponsored by DOGE.</p>
+    </div>
+  </footer>
 
-    <script>
-        const BACKEND_URL = "https://ecfr-backend-service.onrender.com";
+  <script>
+    const BACKEND_URL = "https://ecfr-backend-service.onrender.com";
 
-        async function fetchAgencies() {
-            try {
-                console.log("📥 Fetching agency data...");
-                const response = await fetch(`${BACKEND_URL}/api/agencies`);
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                const data = await response.json();
-                console.log("✅ Agencies Data Loaded: ", data);
+    async function fetchAgencies() {
+      try {
+        console.log("📥 Fetching agency data...");
+        const response = await fetch(`${BACKEND_URL}/api/agencies`);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        const data = await response.json();
+        console.log("✅ Agencies Data Loaded: ", data);
 
-                const tableBody = document.querySelector("#agenciesTable tbody");
-                tableBody.innerHTML = "";
+        const tableBody = document.querySelector("#agenciesTable tbody");
+        tableBody.innerHTML = "";
 
-                if (!data.agencies || data.agencies.length === 0) {
-                    tableBody.innerHTML = "<tr><td colspan='3'>No agency data available.</td></tr>";
-                    return;
-                }
-
-                data.agencies.forEach(agency => {
-                    const row = document.createElement("tr");
-
-                    const agencyCell = document.createElement("td");
-                    agencyCell.textContent = agency.name;
-
-                    const titlesCell = document.createElement("td");
-                    if (agency.cfr_references?.length > 0) {
-                        agency.cfr_references.forEach(ref => {
-                            const link = document.createElement("a");
-                            link.href = `https://www.ecfr.gov/current/title-${ref.title}/chapter-${ref.chapter || ""}`;
-                            link.textContent = `Title ${ref.title}, Chapter ${ref.chapter || "N/A"}`;
-                            link.target = "_blank";
-                            titlesCell.appendChild(link);
-                            titlesCell.appendChild(document.createElement("br"));
-                        });
-                    } else {
-                        titlesCell.textContent = "No Titles Found";
-                    }
-
-                    const wordCountCell = document.createElement("td");
-                    const button = document.createElement("button");
-                    button.textContent = "Generate";
-                    button.onclick = () => fetchAgencyWordCount(agency, button);
-                    wordCountCell.appendChild(button);
-
-                    row.appendChild(agencyCell);
-                    row.appendChild(titlesCell);
-                    row.appendChild(wordCountCell);
-                    tableBody.appendChild(row);
-                });
-            } catch (error) {
-                console.error("🚨 Error fetching agencies:", error);
-                document.querySelector("#agenciesTable tbody").innerHTML =
-                    "<tr><td colspan='3'>Error loading agencies.</td></tr>";
-            }
+        if (!data.agencies || data.agencies.length === 0) {
+          tableBody.innerHTML = "<tr><td colspan='3'>No agency data available.</td></tr>";
+          return;
         }
 
-        async function fetchAgencyWordCount(agency, buttonElement) {
-            try {
-                console.log("📥 Fetching word count for agency:", agency);
-                buttonElement.textContent = "Fetching...";
-                buttonElement.disabled = true;
+        data.agencies.forEach((agency) => {
+          const row = document.createElement("tr");
 
-                const slug = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
-                const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${slug}`);
-                const data = await response.json();
+          const agencyCell = document.createElement("td");
+          agencyCell.textContent = agency.name;
 
-                console.log("✅ Word Count Response:", data);
+          const titlesCell = document.createElement("td");
+          if (agency.cfr_references?.length > 0) {
+            agency.cfr_references.forEach((ref) => {
+              const link = document.createElement("a");
+              link.href = `https://www.ecfr.gov/current/title-${ref.title}/chapter-${ref.chapter || ""}`;
+              link.textContent = `Title ${ref.title}, Chapter ${ref.chapter || "N/A"}`;
+              link.target = "_blank";
+              titlesCell.appendChild(link);
+              titlesCell.appendChild(document.createElement("br"));
+            });
+          } else {
+            titlesCell.textContent = "No Titles Found";
+          }
 
-                if (data.wordCount !== undefined) {
-                    buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
-                } else {
-                    throw new Error("No wordCount in response");
-                }
-            } catch (err) {
-                console.error("🚨 Agency Word Count Error:", err);
-                buttonElement.textContent = "Retry";
-                buttonElement.disabled = false;
-            }
+          const wordCountCell = document.createElement("td");
+          const button = document.createElement("button");
+          button.textContent = "Generate";
+          button.onclick = () => fetchAgencyWordCount(agency, button);
+          wordCountCell.appendChild(button);
+
+          row.appendChild(agencyCell);
+          row.appendChild(titlesCell);
+          row.appendChild(wordCountCell);
+          tableBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error("🚨 Error fetching agencies:", error);
+        document.querySelector("#agenciesTable tbody").innerHTML =
+          "<tr><td colspan='3'>Error loading agencies.</td></tr>";
+      }
+    }
+
+    async function fetchAgencyWordCount(agency, buttonElement) {
+      try {
+        console.log("📥 Fetching word count for agency:", agency);
+        buttonElement.textContent = "Fetching...";
+        buttonElement.disabled = true;
+
+        const slug = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
+        const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${encodeURIComponent(slug)}`);
+        const data = await response.json();
+
+        console.log("✅ Word Count Response:", data);
+
+        if (data.breakdown && Array.isArray(data.breakdown)) {
+          const lines = data.breakdown.map(item => `Title ${item.title}, Chapter ${item.chapter}: ${item.words.toLocaleString()} words`);
+          lines.push(`Total: ${data.wordCount.toLocaleString()} words`);
+          buttonElement.parentElement.innerHTML = lines.join("<br>");
+        } else if (data.wordCount !== undefined) {
+          buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
+        } else {
+          throw new Error("No wordCount in response");
         }
+      } catch (err) {
+        console.error("🚨 Agency Word Count Error:", err);
+        buttonElement.textContent = "Retry";
+        buttonElement.disabled = false;
+      }
+    }
 
-        document.addEventListener("DOMContentLoaded", fetchAgencies);
-    </script>
+    document.addEventListener("DOMContentLoaded", fetchAgencies);
+  </script>
 
 </body>
 </html>
-```
