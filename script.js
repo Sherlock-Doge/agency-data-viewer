@@ -37,10 +37,8 @@ async function fetchAgencyTitleMap() {
     try {
         const response = await fetch(`${BACKEND_URL}/api/agency-title-map`);
         const data = await response.json();
-        agencyTitleMap = data.map || {};  // <-- This is where the mapping is set
-        
-        // Log after it's populated
-        console.log("✅ Agency-Title Map fetched successfully:", agencyTitleMap);  // Log the populated map here
+        agencyTitleMap = data.map || {};
+        console.log("✅ Agency-Title Map fetched successfully:", agencyTitleMap);
     } catch (err) {
         console.error("🚨 Error fetching agency-title map:", err);
     }
@@ -178,7 +176,7 @@ function resetSearch() {
     suggestionBox.innerHTML = "";
     suggestionBox.style.display = "none";
     document.body.classList.remove("search-results-visible");
-    populateDropdowns(); // FULL RESET
+    populateDropdowns();
 }
 
 // ✅ Suggestions via Backend
@@ -250,50 +248,7 @@ function populateDropdowns() {
     });
 }
 
-// ✅ Relational Filtering
-document.addEventListener("DOMContentLoaded", async () => {
-    await fetchTitles();
-    await fetchAgencies();
-    await fetchAgencyTitleMap();
-    populateDropdowns();
-
-    const titleFilter = document.getElementById("titleFilter");
-    const agencyFilter = document.getElementById("agencyFilter");
-
-    titleFilter.addEventListener("change", () => {
-        const selectedTitle = parseInt(titleFilter.value);
-        agencyFilter.innerHTML = `<option value="">-- All Agencies --</option>`;
-        for (const [agencyName, titles] of Object.entries(agencyTitleMap)) {
-            if (titles.includes(selectedTitle)) {
-                const opt = document.createElement("option");
-                const slug = agencyName.toLowerCase().replace(/\s+/g, "-");
-                opt.value = slug;
-                opt.textContent = agencyName;
-                agencyFilter.appendChild(opt);
-            }
-        }
-    });
-
-    agencyFilter.addEventListener("change", () => {
-        const selectedAgencySlug = agencyFilter.value;
-        const agencyObj = cachedAgencies.find(
-            a => a.slug === selectedAgencySlug || a.name.toLowerCase().replace(/\s+/g, "-") === selectedAgencySlug
-        );
-        const agencyName = agencyObj?.name;
-        const relatedTitles = agencyTitleMap[agencyName] || [];
-        titleFilter.innerHTML = `<option value="">-- All Titles --</option>`;
-        cachedTitles.forEach(t => {
-            if (relatedTitles.length === 0 || relatedTitles.includes(t.number)) {
-                const opt = document.createElement("option");
-                opt.value = t.number;
-                opt.textContent = `Title ${t.number}: ${t.name}`;
-                titleFilter.appendChild(opt);
-            }
-        });
-    });
-});
-
-// ✅ Word Count by Agency (HTML scrape-aware)
+// ✅ Word Count by Agency (HTML scrape-aware with breakdown)
 async function fetchAgencyWordCount(agencySlugOrName, buttonElement) {
     try {
         buttonElement.textContent = "Calculating...";
@@ -303,13 +258,18 @@ async function fetchAgencyWordCount(agencySlugOrName, buttonElement) {
         const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${encodeURIComponent(agencySlug)}`);
         const data = await response.json();
 
-        if (data.wordCount !== undefined) {
+        console.log("📊 Word Count Response:", data);
+
+        if (data.breakdown && Array.isArray(data.breakdown)) {
+            const lines = data.breakdown.map(item => `Title ${item.title} Chapter ${item.chapter}: ${item.words.toLocaleString()} words`);
+            lines.push(`Total: ${data.wordCount.toLocaleString()} words`);
+            buttonElement.parentElement.innerHTML = lines.join("<br>");
+        } else if (data.wordCount !== undefined) {
             buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
         } else {
             console.warn("⚠️ No word count returned — fallback showing zero.");
             buttonElement.parentElement.innerHTML = "0";
         }
-
     } catch (err) {
         console.error("🚨 Agency Word Count Error:", err);
         buttonElement.textContent = "Retry";
