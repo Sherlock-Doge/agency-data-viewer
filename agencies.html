@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>eCFR Agencies</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
   <!-- Header -->
   <header>
     <div class="header-left">
-      <img src="images/sherlock-doge-analyzer-.png" alt="Sherlock Doge Logo" class="header-logo" />
+      <img src="images/sherlock-doge-analyzer-.png" alt="Sherlock Doge Logo" class="header-logo">
       <h1 class="header-title"><a href="index.html" class="header-link">eCFR Analyzer</a></h1>
     </div>
     <h2 class="header-center">All eCFR Agencies</h2>
@@ -41,7 +41,7 @@
   <footer>
     <div class="footer-container">
       <p>© 2025 eCFR Analyzer</p>
-      <img src="images/morpheus.png" alt="Morpheus Logo" class="footer-logo" />
+      <img src="images/morpheus.png" alt="Morpheus Logo" class="footer-logo">
       <p>Sponsored by DOGE.</p>
     </div>
   </footer>
@@ -65,7 +65,7 @@
           return;
         }
 
-        data.agencies.forEach((agency) => {
+        data.agencies.forEach(agency => {
           const row = document.createElement("tr");
 
           const agencyCell = document.createElement("td");
@@ -73,7 +73,7 @@
 
           const titlesCell = document.createElement("td");
           if (agency.cfr_references?.length > 0) {
-            agency.cfr_references.forEach((ref) => {
+            agency.cfr_references.forEach(ref => {
               const link = document.createElement("a");
               link.href = `https://www.ecfr.gov/current/title-${ref.title}/chapter-${ref.chapter || ""}`;
               link.textContent = `Title ${ref.title}, Chapter ${ref.chapter || "N/A"}`;
@@ -112,18 +112,20 @@
         const slug = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
         const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${encodeURIComponent(slug)}`);
         const data = await response.json();
-
         console.log("✅ Word Count Response:", data);
 
-        if (data.breakdown && Array.isArray(data.breakdown)) {
-          const lines = data.breakdown.map(item => `Title ${item.title}, Chapter ${item.chapter}: ${item.words.toLocaleString()} words`);
-          lines.push(`Total: ${data.wordCount.toLocaleString()} words`);
+        if (data.breakdowns && Array.isArray(data.breakdowns)) {
+          const lines = data.breakdowns.map(item =>
+            `Title ${item.title}, Chapter ${item.chapter}: ${item.words.toLocaleString()} words`
+          );
+          lines.push(`Total: ${data.total.toLocaleString()} words`);
           buttonElement.parentElement.innerHTML = lines.join("<br>");
-        } else if (data.wordCount !== undefined) {
-          buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
+        } else if (data.total !== undefined) {
+          buttonElement.parentElement.innerHTML = data.total.toLocaleString();
         } else {
-          throw new Error("No wordCount in response");
+          throw new Error("No total word count in response");
         }
+
       } catch (err) {
         console.error("🚨 Agency Word Count Error:", err);
         buttonElement.textContent = "Retry";
