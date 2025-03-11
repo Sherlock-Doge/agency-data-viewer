@@ -113,8 +113,12 @@
 
           if (Array.isArray(data.breakdowns)) {
             breakdownHTML += data.breakdowns
-              .filter(b => b.title && b.chapter && b.count !== undefined)
-              .map(b => `Title ${b.title}, Chapter ${b.chapter}: ${b.count.toLocaleString()}`)
+              .map(b => {
+                const title = b.title || "N/A";
+                const chapter = b.chapter || "N/A";
+                const count = (typeof b.count === "number") ? b.count.toLocaleString() : "N/A";
+                return `Title ${title}, Chapter ${chapter}: ${count}`;
+              })
               .join("<br>");
           }
 
