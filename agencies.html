@@ -114,8 +114,8 @@
           if (Array.isArray(data.breakdowns)) {
             breakdownHTML += data.breakdowns
               .map(b => {
-                const title = b.title || "N/A";
-                const chapter = b.chapter || "N/A";
+                const title = b.title || b.title_number || "N/A";
+                const chapter = b.chapter || b.chapter_number || "N/A";
                 const count = (typeof b.count === "number") ? b.count.toLocaleString() : "N/A";
                 return `Title ${title}, Chapter ${chapter}: ${count}`;
               })
