@@ -287,7 +287,8 @@ function populateDropdowns() {
 // =========================================================
 // ✍️ Fetch Word Count by Agency (New HTML Scrape Method)
 // =========================================================
-async function fetchAgencyWordCount(agency, buttonElement) {
+a// ✍️ Fetch Word Count by Agency (Final 3-parameter version)
+async function fetchAgencyWordCount(agency, cellElement, buttonElement) {
     try {
         console.log("📥 Fetching word count for agency:", agency);
         buttonElement.textContent = "🐇 Following the white rabbit...";
@@ -301,12 +302,12 @@ async function fetchAgencyWordCount(agency, buttonElement) {
 
         if (data.breakdowns && Array.isArray(data.breakdowns)) {
             const lines = data.breakdowns.map(item =>
-                `Title ${item.title}, Chapter ${item.chapter}: ${item.words.toLocaleString()}`
+                `Title ${item.title}, Chapter ${item.chapter}: ${item.wordCount.toLocaleString()}`
             );
             lines.push(`<strong>Total:</strong> ${data.total.toLocaleString()}`);
-            buttonElement.parentElement.innerHTML = lines.join("<br>");
+            cellElement.innerHTML = lines.join("<br>");
         } else if (data.total !== undefined) {
-            buttonElement.parentElement.innerHTML = data.total.toLocaleString();
+            cellElement.innerHTML = data.total.toLocaleString();
         } else {
             throw new Error("No total word count in response");
         }
@@ -316,3 +317,4 @@ async function fetchAgencyWordCount(agency, buttonElement) {
         buttonElement.disabled = false;
     }
 }
+
