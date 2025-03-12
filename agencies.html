@@ -6,6 +6,23 @@
   <title>eCFR Agencies</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <style>
+    #rabbitLoader {
+      display: none;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.2em;
+      margin: 20px auto;
+      color: #111;
+    }
+
+    #rabbitLoader img {
+      vertical-align: middle;
+      width: 26px;
+      height: 26px;
+      margin-left: 8px;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -22,6 +39,9 @@
   </header>
 
   <div class="spacer"></div>
+
+  <!-- 🐇 Rabbit Loading Message -->
+  <div id="rabbitLoader"><span>🐇 Following the white rabbit...</span></div>
 
   <table id="agenciesTable">
     <thead>
@@ -67,7 +87,7 @@
           return;
         }
 
-        // ✅ Sort alphabetically by agency name
+        // ✅ Alphabetize
         data.agencies.sort((a, b) => a.name.localeCompare(b.name));
 
         data.agencies.forEach((agency) => {
@@ -100,7 +120,6 @@
 
           const wordCountCell = document.createElement("td");
 
-          // ✅ Disable generate button for known empty content (but still show 0)
           if (agency.slug === "federal-procurement-regulations-system") {
             wordCountCell.innerHTML = `<span>Content blank (0)</span>`;
           } else {
@@ -124,12 +143,16 @@
 
     async function fetchAgencyWordCount(agency, cellElement, buttonElement) {
       try {
-        buttonElement.textContent = "⏳ Following the white rabbit...";
+        const loader = document.getElementById("rabbitLoader");
+        loader.style.display = "block";
+        buttonElement.textContent = "Fetching...";
         buttonElement.disabled = true;
 
         const slug = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
         const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${encodeURIComponent(slug)}`);
         const data = await response.json();
+
+        loader.style.display = "none";
 
         if (data.total !== undefined) {
           let breakdownHTML = "";
@@ -152,6 +175,7 @@
         }
       } catch (err) {
         console.error("🚨 Agency Word Count Error:", err);
+        document.getElementById("rabbitLoader").style.display = "none";
         cellElement.innerHTML = "Error";
       }
     }
