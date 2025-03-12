@@ -59,7 +59,7 @@ async function fetchAgencyTitleMap() {
 // =========================================================
 async function fetchSingleTitleWordCount(titleNumber, buttonElement) {
     try {
-        buttonElement.textContent = "Fetching...";
+        buttonElement.textContent = "🐇 Following the white rabbit...";
         buttonElement.disabled = true;
         const response = await fetch(`${BACKEND_URL}/api/wordcount/${titleNumber}`);
         const data = await response.json();
@@ -290,7 +290,7 @@ function populateDropdowns() {
 async function fetchAgencyWordCount(agency, buttonElement) {
     try {
         console.log("📥 Fetching word count for agency:", agency);
-        buttonElement.textContent = "Fetching...";
+        buttonElement.textContent = "🐇 Following the white rabbit...";
         buttonElement.disabled = true;
 
         const slug = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
