@@ -59,8 +59,14 @@ async function fetchAgencyTitleMap() {
 // =========================================================
 async function fetchSingleTitleWordCount(titleNumber, buttonElement) {
     try {
-        buttonElement.textContent = "🐇 Following the white rabbit...";
+        buttonElement.textContent = "🐇 Following the white ...";
         buttonElement.disabled = true;
+        buttonElement.style.opacity = "1";
+        buttonElement.style.backgroundColor = "#eee";
+        buttonElement.style.color = "#222";
+        buttonElement.style.fontWeight = "bold";
+        buttonElement.style.cursor = "not-allowed";
+        buttonElement.style.border = "1px solid #888";
         const response = await fetch(`${BACKEND_URL}/api/wordcount/${titleNumber}`);
         const data = await response.json();
         buttonElement.parentElement.innerHTML = data.wordCount.toLocaleString();
@@ -375,7 +381,12 @@ async function fetchAgencyWordCount(agency, cellElement, buttonElement) {
         console.log("📥 Fetching word count for agency:", agency);
         buttonElement.textContent = "🐇 Following the white rabbit...";
         buttonElement.disabled = true;
-
+        buttonElement.style.opacity = "1";
+        buttonElement.style.backgroundColor = "#eee";
+        buttonElement.style.color = "#222";
+        buttonElement.style.fontWeight = "bold";
+        buttonElement.style.cursor = "not-allowed";
+        buttonElement.style.border = "1px solid #888";
         const slug = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
         const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${encodeURIComponent(slug)}`);
         const data = await response.json();
