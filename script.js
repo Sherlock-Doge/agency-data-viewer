@@ -299,7 +299,7 @@ async function performSearch() {
     resultsBox.innerHTML = "<p>Loading results...</p>";
     resultsBox.style.display = "block";
 
-    const url = new URL(`${BACKEND_URL}/api/search/internal`);
+   const url = new URL(`${BACKEND_URL}/api/search/cyber-squirrel`);
     if (query) url.searchParams.append("query", query);
     if (agency) url.searchParams.append("agency_slugs[]", agency);
     if (title) url.searchParams.append("title", title);
