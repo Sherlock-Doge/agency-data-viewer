@@ -6,23 +6,6 @@
   <title>eCFR Agencies</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-  <style>
-    #rabbitLoader {
-      display: none;
-      text-align: center;
-      font-weight: bold;
-      font-size: 1.2em;
-      margin: 20px auto;
-      color: #111;
-    }
-
-    #rabbitLoader img {
-      vertical-align: middle;
-      width: 26px;
-      height: 26px;
-      margin-left: 8px;
-    }
-  </style>
 </head>
 <body>
   <header>
@@ -39,9 +22,6 @@
   </header>
 
   <div class="spacer"></div>
-
-  <!-- 🐇 Rabbit Loading Message -->
-  <div id="rabbitLoader"><span>🐇 Following the white rabbit...</span></div>
 
   <table id="agenciesTable">
     <thead>
@@ -62,6 +42,121 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script>
+    const BACKEND_URL = "https://ecfr-backend-service.onrender.com";
+
+    const subtitleUrlOverrides = {
+      "federal-procurement-regulations-system": { title: 41, subtitle: "A", url: "https://www.ecfr.gov/current/title-41/subtitle-A", label: "Title 41, Subtitle A" },
+      "federal-property-management-regulations-system": { title: 41, subtitle: "C", url: "https://www.ecfr.gov/current/title-41/subtitle-C", label: "Title 41, Subtitle C" },
+      "federal-travel-regulation-system": { title: 41, subtitle: "F", url: "https://www.ecfr.gov/current/title-41/subtitle-F", label: "Title 41, Subtitle F" },
+      "department-of-defense": { title: 32, subtitle: "A", url: "https://www.ecfr.gov/current/title-32/subtitle-A", label: "Title 32, Subtitle A" },
+      "department-of-health-and-human-services": { title: 45, subtitle: "A", url: "https://www.ecfr.gov/current/title-45/subtitle-A", label: "Title 45, Subtitle A" },
+      "office-of-management-and-budget": { title: 2, subtitle: "A", url: "https://www.ecfr.gov/current/title-2/subtitle-A", label: "Title 2, Subtitle A" }
+    };
+
+    async function fetchAgencies() {
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/agencies`);
+        const data = await response.json();
+
+        const tableBody = document.querySelector("#agenciesTable tbody");
+        tableBody.innerHTML = "";
+
+        if (!data.agencies || data.agencies.length === 0) {
+          tableBody.innerHTML = "<tr><td colspan='3'>No agency data available.</td></tr>";
+          return;
+        }
+
+        // ✅ Sort alphabetically by agency name
+        data.agencies.sort((a, b) => a.name.localeCompare(b.name));
+
+        data.agencies.forEach((agency) => {
+          const row = document.createElement("tr");
+
+          const agencyCell = document.createElement("td");
+          agencyCell.textContent = agency.name;
+
+          const titlesCell = document.createElement("td");
+
+          if (subtitleUrlOverrides[agency.slug]) {
+            const patch = subtitleUrlOverrides[agency.slug];
+            const link = document.createElement("a");
+            link.href = patch.url;
+            link.textContent = patch.label;
+            link.target = "_blank";
+            titlesCell.appendChild(link);
+          } else if (agency.cfr_references?.length > 0) {
+            agency.cfr_references.forEach((ref) => {
+              const link = document.createElement("a");
+              link.href = `https://www.ecfr.gov/current/title-${ref.title}/chapter-${ref.chapter || ""}`;
+              link.textContent = `Title ${ref.title}, Chapter ${ref.chapter || "N/A"}`;
+              link.target = "_blank";
+              titlesCell.appendChild(link);
+              titlesCell.appendChild(document.createElement("br"));
+            });
+          } else {
+            titlesCell.textContent = "No Titles Found";
+          }
+
+          const wordCountCell = document.createElement("td");
+
+          // ✅ Disable generate button for known empty content (but still show 0)
+          if (agency.slug === "federal-procurement-regulations-system") {
+            wordCountCell.innerHTML = `<span>Content blank (0)</span>`;
+          } else {
+            const button = document.createElement("button");
+            button.textContent = "Generate";
+            button.onclick = () => fetchAgencyWordCount(agency, wordCountCell, button);
+            wordCountCell.appendChild(button);
+          }
+
+          row.appendChild(agencyCell);
+          row.appendChild(titlesCell);
+          row.appendChild(wordCountCell);
+          tableBody.appendChild(row);
+        });
+      } catch (err) {
+        console.error("🚨 Error loading agencies:", err);
+        document.querySelector("#agenciesTable tbody").innerHTML =
+          "<tr><td colspan='3'>Error loading agencies.</td></tr>";
+      }
+    }
+
+    async function fetchAgencyWordCount(agency, cellElement, buttonElement) {
+      try {
+        buttonElement.textContent = "⏳ Following the white rabbit...";
+        buttonElement.disabled = true;
+
+        const slug = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
+        const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${encodeURIComponent(slug)}`);
+        const data = await response.json();
+
+        if (data.total !== undefined) {
+          let breakdownHTML = "";
+
+          if (Array.isArray(data.breakdowns)) {
+            breakdownHTML += data.breakdowns
+              .map(b => {
+                const title = b.title || "N/A";
+                const chapter = b.chapter || "N/A";
+                const count = (typeof b.wordCount === "number") ? b.wordCount.toLocaleString() : "N/A";
+                return `Title ${title}, Chapter ${chapter}: ${count}`;
+              })
+              .join("<br>");
+          }
+
+          breakdownHTML += `<br><strong>Total:</strong> ${data.total.toLocaleString()}`;
+          cellElement.innerHTML = breakdownHTML;
+        } else {
+          throw new Error("Missing total word count in response");
+        }
+      } catch (err) {
+        console.error("🚨 Agency Word Count Error:", err);
+        cellElement.innerHTML = "Error";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", fetchAgencies);
+  </script>
 </body>
 </html>
