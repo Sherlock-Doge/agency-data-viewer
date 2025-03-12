@@ -300,7 +300,7 @@ async function performSearch() {
     resultsBox.style.display = "block";
 
    const url = new URL(`${BACKEND_URL}/api/search/cyber-squirrel`);
-    if (query) url.searchParams.append("query", query);
+    if (query) url.searchParams.append("q", query); 
     if (agency) url.searchParams.append("agency_slugs[]", agency);
     if (title) url.searchParams.append("title", title);
     if (startDate) url.searchParams.append("last_modified_on_or_after", startDate);
