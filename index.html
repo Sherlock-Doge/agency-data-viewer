@@ -1,80 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eCFR Analyzer</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eCFR Analyzer</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <style>
+    #rabbitLoader {
+      display: none;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.2em;
+      margin: 20px auto;
+      color: #111;
+    }
+
+    #rabbitLoader img {
+      vertical-align: middle;
+      width: 26px;
+      height: 26px;
+      margin-left: 8px;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <header>
-        <div class="header-left">
-            <img src="images/sherlock-doge-analyzer-.png" alt="Sherlock Doge Logo" class="header-logo">
-            <h1 class="header-title">
-                <a href="index.html" class="header-link">eCFR Analyzer</a>
-            </h1>
-        </div>
-
-        <h2 class="header-center">Dashboard</h2>
-
-        <div class="header-right">
-            <a href="index.html" class="header-link">Dashboard</a>
-            <a href="agencies.html" class="header-link">Agencies</a>
-            <a href="search.html" class="header-link">Search</a>
-        </div>
-    </header>
-
-    <!-- Spacer to prevent header from touching scoreboard -->
-    <div class="spacer"></div>
-
-    <!-- Scoreboard Section -->
-    <div class="scoreboard">
-        <div class="score-item">
-            <strong>Total Titles:</strong>
-            <span id="totalTitles">N/A</span>
-        </div>
-        <div class="score-item">
-            <strong>Total Agencies:</strong> 
-            <a href="agencies.html" class="score-link"><span id="totalAgencies">N/A</span></a>
-        </div>
-        <div class="score-item">
-            <strong>Most Recently Amended:</strong>
-            <div id="recentAmendedWrapper">
-                <a id="recentAmendedTitle" class="score-link" href="#" target="_blank">N/A</a>
-                <span id="recentAmendedDate">(N/A)</span>
-            </div>
-        </div>
+  <!-- Header -->
+  <header>
+    <div class="header-left">
+      <img src="images/sherlock-doge-analyzer-.png" alt="Sherlock Doge Logo" class="header-logo">
+      <h1 class="header-title">
+        <a href="index.html" class="header-link">eCFR Analyzer</a>
+      </h1>
     </div>
 
-    <!-- Titles Table -->
-    <table id="titlesTable">
-        <thead>
-            <tr>
-                <th class="title-header">
-                    Title
-                    <br>
-                    <span class="table-header-cta">(Click below & navigate to eCFR sites)</span>
-                </th>
-                <th>Current as of</th>
-                <th>Last Amended</th>
-                <th>Word Count</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    <h2 class="header-center">Dashboard</h2>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-container">
-            <p>© 2025 eCFR Analyzer</p>
-            <img src="images/morpheus.png" alt="Morpheus Logo" class="footer-logo">
-            <p>Sponsored by DOGE.</p>
-        </div>
-    </footer>
+    <div class="header-right">
+      <a href="index.html" class="header-link">Dashboard</a>
+      <a href="agencies.html" class="header-link">Agencies</a>
+      <a href="search.html" class="header-link">Search</a>
+    </div>
+  </header>
 
-    <script src="script.js"></script>
+  <!-- Spacer to prevent header from touching scoreboard -->
+  <div class="spacer"></div>
+
+  <!-- Scoreboard Section -->
+  <div class="scoreboard">
+    <div class="score-item">
+      <strong>Total Titles:</strong>
+      <span id="totalTitles">N/A</span>
+    </div>
+    <div class="score-item">
+      <strong>Total Agencies:</strong> 
+      <a href="agencies.html" class="score-link"><span id="totalAgencies">N/A</span></a>
+    </div>
+    <div class="score-item">
+      <strong>Most Recently Amended:</strong>
+      <div id="recentAmendedWrapper">
+        <a id="recentAmendedTitle" class="score-link" href="#" target="_blank">N/A</a>
+        <span id="recentAmendedDate">(N/A)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rabbit Loading Indicator -->
+  <div id="rabbitLoader"><span>🐇 Following the white rabbit...</span></div>
+
+  <!-- Titles Table -->
+  <table id="titlesTable">
+    <thead>
+      <tr>
+        <th class="title-header">
+          Title
+          <br>
+          <span class="table-header-cta">(Click below & navigate to eCFR sites)</span>
+        </th>
+        <th>Current as of</th>
+        <th>Last Amended</th>
+        <th>Word Count</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <p>© 2025 eCFR Analyzer</p>
+      <img src="images/morpheus.png" alt="Morpheus Logo" class="footer-logo">
+      <p>Sponsored by DOGE.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Show rabbit indicator during word count fetch
+    const originalFetchSingleTitleWordCount = window.fetchSingleTitleWordCount;
+
+    window.fetchSingleTitleWordCount = async function(titleNumber, buttonElement) {
+      const rabbit = document.getElementById("rabbitLoader");
+      rabbit.style.display = "block";
+      try {
+        await originalFetchSingleTitleWordCount(titleNumber, buttonElement);
+      } finally {
+        rabbit.style.display = "none";
+      }
+    };
+  </script>
 </body>
 </html>
