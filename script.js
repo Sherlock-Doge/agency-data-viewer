@@ -277,7 +277,7 @@ if (window.location.pathname.includes("agencies.html")) {
 
 
 // =========================================================
-// 🔍 Perform Search (Search Page Execution)
+// 🛫 Cyber Squirrel Search Engine – Perform Internal Search
 // =========================================================
 async function performSearch() {
     const query = document.getElementById("searchQuery").value.trim();
@@ -294,12 +294,12 @@ async function performSearch() {
         return;
     }
 
-    console.log(`🔍 Searching via BACKEND: ${query || "[Filters only]"}`);
+    console.log(`🛫 Cyber Squirrel Internal Search → ${query || "[Filters only]"}`);
     document.body.classList.add("search-results-visible");
     resultsBox.innerHTML = "<p>Loading results...</p>";
     resultsBox.style.display = "block";
 
-    const url = new URL(`${BACKEND_URL}/api/search`);
+    const url = new URL(`${BACKEND_URL}/api/search/internal`);
     if (query) url.searchParams.append("query", query);
     if (agency) url.searchParams.append("agency_slugs[]", agency);
     if (title) url.searchParams.append("title", title);
@@ -317,20 +317,23 @@ async function performSearch() {
             data.results.forEach((r, i) => {
                 const div = document.createElement("div");
                 div.classList.add("search-result");
-                const section = r.headings?.section || "No title";
-                const excerpt = r.full_text_excerpt || "No description available.";
+                const section = r.section || r.title || "Untitled Result";
+                const excerpt = r.excerpt || "No description available.";
+                const link = r.url || "#";
+
                 div.innerHTML = `
-                    <p><strong>${i + 1}.</strong> <a href="https://www.ecfr.gov/${r.link || ""}" target="_blank">${section}</a></p>
+                    <p><strong>${i + 1}.</strong> <a href="${link}" target="_blank">${section}</a></p>
                     <p>${excerpt}</p>
                 `;
                 resultsBox.appendChild(div);
             });
         }
     } catch (err) {
-        console.error("🚨 Backend Search Error:", err);
+        console.error("🚨 Cyber Squirrel Search Error:", err);
         resultsBox.innerHTML = "<p>Error retrieving search results.</p>";
     }
 }
+
 
 // =========================================================
 // 🔁 Reset Search UI (Reset Button Action)
@@ -350,7 +353,7 @@ function resetSearch() {
 }
 
 // =========================================================
-// 💬 Live Search Suggestions from Backend
+// 💬 Live Search Suggestions from Backend (Enhanced Display)
 // =========================================================
 const searchQueryInput = document.getElementById("searchQuery");
 if (searchQueryInput) {
@@ -373,10 +376,19 @@ if (searchQueryInput) {
 
             if (data.suggestions && data.suggestions.length > 0) {
                 suggestionBox.style.display = "block";
+
                 data.suggestions.forEach(s => {
                     const div = document.createElement("div");
                     div.className = "suggestion-item";
-                    div.textContent = s;
+
+                    // Labeling suggestions intelligently
+                    let label = s;
+                    if (s.match(/^Title \d+/)) label = `📘 ${s}`;
+                    else if (s.match(/^§ \d/)) label = `🔖 Section: ${s}`;
+                    else if (cachedAgencies.some(a => a.name === s)) label = `🏛 Agency: ${s}`;
+                    else label = `🔍 ${s}`;
+
+                    div.textContent = label;
                     div.onclick = () => {
                         document.getElementById("searchQuery").value = s;
                         suggestionBox.innerHTML = "";
@@ -403,8 +415,9 @@ if (searchQueryInput) {
     });
 }
 
+
 // =========================================================
-// 📂 Populate Filter Dropdowns
+// 📂 Populate Filter Dropdowns (Alphabetized)
 // =========================================================
 function populateDropdowns() {
     const agencyFilter = document.getElementById("agencyFilter");
@@ -413,20 +426,24 @@ function populateDropdowns() {
     if (!agencyFilter || !titleFilter) return;
 
     agencyFilter.innerHTML = `<option value="">-- All Agencies --</option>`;
-    cachedAgencies.forEach(a => {
-        const opt = document.createElement("option");
-        opt.value = a.slug || a.name.toLowerCase().replace(/\s+/g, "-");
-        opt.textContent = a.name;
-        agencyFilter.appendChild(opt);
-    });
+    [...cachedAgencies]
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .forEach(a => {
+            const opt = document.createElement("option");
+            opt.value = a.slug || a.name.toLowerCase().replace(/\s+/g, "-");
+            opt.textContent = a.name;
+            agencyFilter.appendChild(opt);
+        });
 
     titleFilter.innerHTML = `<option value="">-- All Titles --</option>`;
-    cachedTitles.forEach(t => {
-        const opt = document.createElement("option");
-        opt.value = t.number;
-        opt.textContent = `Title ${t.number}: ${t.name}`;
-        titleFilter.appendChild(opt);
-    });
+    [...cachedTitles]
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .forEach(t => {
+            const opt = document.createElement("option");
+            opt.value = t.number;
+            opt.textContent = `Title ${t.number}: ${t.name}`;
+            titleFilter.appendChild(opt);
+        });
 }
 
 
