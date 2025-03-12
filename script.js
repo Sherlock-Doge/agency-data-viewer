@@ -143,13 +143,44 @@ if (document.querySelector("#titlesTable")) {
 // 🏢 Populate Agency Table (Agencies Page)
 // =========================================================
 
+// Subtitle Patch Overrides for known special-case agencies
 const subtitleUrlOverrides = {
-  "federal-procurement-regulations-system": { title: 41, subtitle: "A", url: "https://www.ecfr.gov/current/title-41/subtitle-A", label: "Title 41, Subtitle A" },
-  "federal-property-management-regulations-system": { title: 41, subtitle: "C", url: "https://www.ecfr.gov/current/title-41/subtitle-C", label: "Title 41, Subtitle C" },
-  "federal-travel-regulation-system": { title: 41, subtitle: "F", url: "https://www.ecfr.gov/current/title-41/subtitle-F", label: "Title 41, Subtitle F" },
-  "department-of-defense": { title: 32, subtitle: "A", url: "https://www.ecfr.gov/current/title-32/subtitle-A", label: "Title 32, Subtitle A" },
-  "department-of-health-and-human-services": { title: 45, subtitle: "A", url: "https://www.ecfr.gov/current/title-45/subtitle-A", label: "Title 45, Subtitle A" },
-  "office-of-management-and-budget": { title: 2, subtitle: "A", url: "https://www.ecfr.gov/current/title-2/subtitle-A", label: "Title 2, Subtitle A" }
+  "federal-procurement-regulations-system": {
+    title: 41,
+    subtitle: "A",
+    url: "https://www.ecfr.gov/current/title-41/subtitle-A",
+    label: "Title 41, Subtitle A"
+  },
+  "federal-property-management-regulations-system": {
+    title: 41,
+    subtitle: "C",
+    url: "https://www.ecfr.gov/current/title-41/subtitle-C",
+    label: "Title 41, Subtitle C"
+  },
+  "federal-travel-regulation-system": {
+    title: 41,
+    subtitle: "F",
+    url: "https://www.ecfr.gov/current/title-41/subtitle-F",
+    label: "Title 41, Subtitle F"
+  },
+  "department-of-defense": {
+    title: 32,
+    subtitle: "A",
+    url: "https://www.ecfr.gov/current/title-32/subtitle-A",
+    label: "Title 32, Subtitle A"
+  },
+  "department-of-health-and-human-services": {
+    title: 45,
+    subtitle: "A",
+    url: "https://www.ecfr.gov/current/title-45/subtitle-A",
+    label: "Title 45, Subtitle A"
+  },
+  "office-of-management-and-budget": {
+    title: 2,
+    subtitle: "A",
+    url: "https://www.ecfr.gov/current/title-2/subtitle-A",
+    label: "Title 2, Subtitle A"
+  }
 };
 
 async function fetchAgenciesTableAndRender() {
@@ -161,18 +192,21 @@ async function fetchAgenciesTableAndRender() {
     tableBody.innerHTML = "";
 
     if (!data.agencies || data.agencies.length === 0) {
-      tableBody.innerHTML = "<tr><td colspan='3'>No agency data available.</td></tr>";
+      tableBody.innerHTML = "<tr><td colspan='4'>No agency data available.</td></tr>";
       return;
     }
 
+    // Alphabetize agencies by name
     data.agencies.sort((a, b) => a.name.localeCompare(b.name));
 
     data.agencies.forEach((agency) => {
       const row = document.createElement("tr");
 
+      // Column 1: Agency Name
       const agencyCell = document.createElement("td");
       agencyCell.textContent = agency.name;
 
+      // Column 2: CFR Titles / Chapters / Subtitle Link Patch
       const titlesCell = document.createElement("td");
       if (subtitleUrlOverrides[agency.slug]) {
         const patch = subtitleUrlOverrides[agency.slug];
@@ -194,32 +228,53 @@ async function fetchAgenciesTableAndRender() {
         titlesCell.textContent = "No Titles Found";
       }
 
+      // Column 3: Standard Word Count Button
       const wordCountCell = document.createElement("td");
       if (agency.slug === "federal-procurement-regulations-system") {
         wordCountCell.innerHTML = `<span>Content blank (0)</span>`;
       } else {
         const button = document.createElement("button");
         button.textContent = "Generate";
-        button.addEventListener("click", () => fetchAgencyWordCount(agency, wordCountCell, button));
+        button.style.opacity = "1"; // Ensure visibility on click
+        button.addEventListener("click", () =>
+          fetchAgencyWordCount(agency, wordCountCell, button)
+        );
         wordCountCell.appendChild(button);
       }
 
+      // Column 4: Fast Word Count Button (New Fast Endpoint)
+      const fastCountCell = document.createElement("td");
+      if (agency.slug === "federal-procurement-regulations-system") {
+        fastCountCell.innerHTML = `<span>Content blank (0)</span>`;
+      } else {
+        const fastButton = document.createElement("button");
+        fastButton.textContent = "Generate (Fast)";
+        fastButton.style.opacity = "1";
+        fastButton.addEventListener("click", () =>
+          fetchAgencyWordCountFast(agency, fastCountCell, fastButton)
+        );
+        fastCountCell.appendChild(fastButton);
+      }
+
+      // Append all columns to row
       row.appendChild(agencyCell);
       row.appendChild(titlesCell);
       row.appendChild(wordCountCell);
+      row.appendChild(fastCountCell);
       tableBody.appendChild(row);
     });
   } catch (err) {
     console.error("🚨 Error loading agencies:", err);
     document.querySelector("#agenciesTable tbody").innerHTML =
-      "<tr><td colspan='3'>Error loading agencies.</td></tr>";
+      "<tr><td colspan='4'>Error loading agencies.</td></tr>";
   }
 }
 
-// Auto-run only on agencies.html
+// ✅ Auto-run this block only on agencies.html
 if (window.location.pathname.includes("agencies.html")) {
   document.addEventListener("DOMContentLoaded", fetchAgenciesTableAndRender);
 }
+
 
 // =========================================================
 // 🔍 Perform Search (Search Page Execution)
@@ -410,4 +465,41 @@ async function fetchAgencyWordCount(agency, cellElement, buttonElement) {
         buttonElement.disabled = false;
     }
 }
+
+//⚡ Fast Fetch Word Count by Agency
+async function fetchAgencyWordCountFast(agency, cellElement, buttonElement) {
+  try {
+    console.log("⚡ Fetching FAST word count for agency:", agency.name);
+    buttonElement.textContent = "⚡ Calculating...";
+    buttonElement.disabled = true;
+    buttonElement.style.opacity = "1";
+    buttonElement.style.backgroundColor = "#eee";
+    buttonElement.style.color = "#222";
+    buttonElement.style.fontWeight = "bold";
+    buttonElement.style.cursor = "not-allowed";
+    buttonElement.style.border = "1px solid #888";
+
+    const slug = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
+    const response = await fetch(`${BACKEND_URL}/api/wordcount/agency-fast/${encodeURIComponent(slug)}`);
+    const data = await response.json();
+
+    console.log("✅ FAST Word Count Response:", data);
+
+    if (data.breakdowns && Array.isArray(data.breakdowns)) {
+      const lines = data.breakdowns.map(item =>
+        `Title ${item.title}, Chapter ${item.chapter}: ${item.wordCount.toLocaleString()}`
+      );
+      lines.push(`<strong>Total:</strong> ${data.total.toLocaleString()}`);
+      cellElement.innerHTML = lines.join("<br>");
+    } else if (data.total !== undefined) {
+      cellElement.innerHTML = data.total.toLocaleString();
+    } else {
+      throw new Error("No total word count in response");
+    }
+  } catch (err) {
+    console.error("🚨 FAST word count failed:", err);
+    cellElement.innerHTML = "Error";
+  }
+}
+
 
