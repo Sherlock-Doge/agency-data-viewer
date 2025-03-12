@@ -132,6 +132,88 @@ async function fetchData() {
 fetchData();
 
 // =========================================================
+// 🏢 Populate Agency Table (Agencies Page)
+// =========================================================
+
+const subtitleUrlOverrides = {
+  "federal-procurement-regulations-system": { title: 41, subtitle: "A", url: "https://www.ecfr.gov/current/title-41/subtitle-A", label: "Title 41, Subtitle A" },
+  "federal-property-management-regulations-system": { title: 41, subtitle: "C", url: "https://www.ecfr.gov/current/title-41/subtitle-C", label: "Title 41, Subtitle C" },
+  "federal-travel-regulation-system": { title: 41, subtitle: "F", url: "https://www.ecfr.gov/current/title-41/subtitle-F", label: "Title 41, Subtitle F" },
+  "department-of-defense": { title: 32, subtitle: "A", url: "https://www.ecfr.gov/current/title-32/subtitle-A", label: "Title 32, Subtitle A" },
+  "department-of-health-and-human-services": { title: 45, subtitle: "A", url: "https://www.ecfr.gov/current/title-45/subtitle-A", label: "Title 45, Subtitle A" },
+  "office-of-management-and-budget": { title: 2, subtitle: "A", url: "https://www.ecfr.gov/current/title-2/subtitle-A", label: "Title 2, Subtitle A" }
+};
+
+async function fetchAgenciesTableAndRender() {
+  try {
+    const response = await fetch(`${BACKEND_URL}/api/agencies`);
+    const data = await response.json();
+
+    const tableBody = document.querySelector("#agenciesTable tbody");
+    tableBody.innerHTML = "";
+
+    if (!data.agencies || data.agencies.length === 0) {
+      tableBody.innerHTML = "<tr><td colspan='3'>No agency data available.</td></tr>";
+      return;
+    }
+
+    data.agencies.sort((a, b) => a.name.localeCompare(b.name));
+
+    data.agencies.forEach((agency) => {
+      const row = document.createElement("tr");
+
+      const agencyCell = document.createElement("td");
+      agencyCell.textContent = agency.name;
+
+      const titlesCell = document.createElement("td");
+      if (subtitleUrlOverrides[agency.slug]) {
+        const patch = subtitleUrlOverrides[agency.slug];
+        const link = document.createElement("a");
+        link.href = patch.url;
+        link.textContent = patch.label;
+        link.target = "_blank";
+        titlesCell.appendChild(link);
+      } else if (agency.cfr_references?.length > 0) {
+        agency.cfr_references.forEach((ref) => {
+          const link = document.createElement("a");
+          link.href = `https://www.ecfr.gov/current/title-${ref.title}/chapter-${ref.chapter || ""}`;
+          link.textContent = `Title ${ref.title}, Chapter ${ref.chapter || "N/A"}`;
+          link.target = "_blank";
+          titlesCell.appendChild(link);
+          titlesCell.appendChild(document.createElement("br"));
+        });
+      } else {
+        titlesCell.textContent = "No Titles Found";
+      }
+
+      const wordCountCell = document.createElement("td");
+      if (agency.slug === "federal-procurement-regulations-system") {
+        wordCountCell.innerHTML = `<span>Content blank (0)</span>`;
+      } else {
+        const button = document.createElement("button");
+        button.textContent = "Generate";
+        button.addEventListener("click", () => fetchAgencyWordCount(agency, wordCountCell, button));
+        wordCountCell.appendChild(button);
+      }
+
+      row.appendChild(agencyCell);
+      row.appendChild(titlesCell);
+      row.appendChild(wordCountCell);
+      tableBody.appendChild(row);
+    });
+  } catch (err) {
+    console.error("🚨 Error loading agencies:", err);
+    document.querySelector("#agenciesTable tbody").innerHTML =
+      "<tr><td colspan='3'>Error loading agencies.</td></tr>";
+  }
+}
+
+// Auto-run only on agencies.html
+if (window.location.pathname.includes("agencies.html")) {
+  document.addEventListener("DOMContentLoaded", fetchAgenciesTableAndRender);
+}
+
+// =========================================================
 // 🔍 Perform Search (Search Page Execution)
 // =========================================================
 async function performSearch() {
