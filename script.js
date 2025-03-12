@@ -366,10 +366,8 @@ function populateDropdowns() {
     });
 }
 
-// =========================================================
-// ✍️ Fetch Word Count by Agency (New HTML Scrape Method)
-// =========================================================
-a// ✍️ Fetch Word Count by Agency (Final 3-parameter version)
+
+// ✍️ Fetch Word Count by Agency (Final 3-parameter version)
 async function fetchAgencyWordCount(agency, cellElement, buttonElement) {
     try {
         console.log("📥 Fetching word count for agency:", agency);
