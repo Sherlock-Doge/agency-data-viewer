@@ -60,6 +60,7 @@ async function fetchAgencyTitleMap() {
 async function fetchSingleTitleWordCount(titleNumber, buttonElement) {
     try {
         buttonElement.textContent = "🐇 Following the white ...";
+        buttonElement.style.minWidth = "180px";
         buttonElement.disabled = true;
         buttonElement.style.opacity = "1";
         buttonElement.style.backgroundColor = "#eee";
