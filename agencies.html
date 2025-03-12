@@ -122,39 +122,6 @@
       }
     }
 
-  async function fetchAgencyWordCount(agency, cellElement, buttonElement) {
-  try {
-    buttonElement.disabled = true;
-
-    const slug = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
-    const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${encodeURIComponent(slug)}`);
-    const data = await response.json();
-
-    if (data.total !== undefined) {
-      let breakdownHTML = "";
-
-      if (Array.isArray(data.breakdowns)) {
-        breakdownHTML += data.breakdowns
-          .map(b => {
-            const title = b.title || "N/A";
-            const chapter = b.chapter || "N/A";
-            const count = (typeof b.wordCount === "number") ? b.wordCount.toLocaleString() : "N/A";
-            return `Title ${title}, Chapter ${chapter}: ${count}`;
-          })
-          .join("<br>");
-      }
-
-      breakdownHTML += `<br><strong>Total:</strong> ${data.total.toLocaleString()}`;
-      cellElement.innerHTML = breakdownHTML;
-    } else {
-      throw new Error("Missing total word count in response");
-    }
-  } catch (err) {
-    console.error("🚨 Agency Word Count Error:", err);
-    cellElement.innerHTML = "Error";
-  }
-}
-
 document.addEventListener("DOMContentLoaded", fetchAgencies);
 
   </script>
