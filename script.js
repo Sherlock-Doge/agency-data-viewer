@@ -128,8 +128,10 @@ async function fetchData() {
     updateScoreboard(titles.length, agencies.length, mostRecentTitle, mostRecentDate, mostRecentTitleName);
 }
 
-// 🚀 Auto-init on page load
-fetchData();
+// 🚀 Auto-init for index.html only (prevents crash on other pages)
+if (document.querySelector("#titlesTable")) {
+    fetchData();
+}
 
 // =========================================================
 // 🏢 Populate Agency Table (Agencies Page)
