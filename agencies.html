@@ -6,21 +6,6 @@
   <title>eCFR Agencies</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-  <style>
-    #logPanel {
-      margin: 20px auto;
-      width: 90%;
-      max-width: 1000px;
-      padding: 10px;
-      background-color: #f9f9f9;
-      border: 1px solid #ccc;
-      font-family: monospace;
-      font-size: 0.9em;
-      max-height: 200px;
-      overflow-y: auto;
-      white-space: pre-wrap;
-    }
-  </style>
 </head>
 <body>
   <header>
@@ -57,25 +42,22 @@
     </div>
   </footer>
 
-  <div id="logPanel"><strong>📝 Word Count Logs:</strong><br></div>
-
   <script>
     const BACKEND_URL = "https://ecfr-backend-service.onrender.com";
 
-    function logMessage(msg) {
-      const panel = document.getElementById("logPanel");
-      const time = new Date().toLocaleTimeString();
-      panel.innerHTML += `[${time}] ${msg}<br>`;
-      panel.scrollTop = panel.scrollHeight;
-      console.log(msg);
-    }
+    const subtitleUrlOverrides = {
+      "federal-procurement-regulations-system": { title: 41, subtitle: "A", url: "https://www.ecfr.gov/current/title-41/subtitle-A", label: "Title 41, Subtitle A" },
+      "federal-property-management-regulations-system": { title: 41, subtitle: "C", url: "https://www.ecfr.gov/current/title-41/subtitle-C", label: "Title 41, Subtitle C" },
+      "federal-travel-regulation-system": { title: 41, subtitle: "F", url: "https://www.ecfr.gov/current/title-41/subtitle-F", label: "Title 41, Subtitle F" },
+      "department-of-defense": { title: 32, subtitle: "A", url: "https://www.ecfr.gov/current/title-32/subtitle-A", label: "Title 32, Subtitle A" },
+      "department-of-health-and-human-services": { title: 45, subtitle: "A", url: "https://www.ecfr.gov/current/title-45/subtitle-A", label: "Title 45, Subtitle A" },
+      "office-of-management-and-budget": { title: 2, subtitle: "A", url: "https://www.ecfr.gov/current/title-2/subtitle-A", label: "Title 2, Subtitle A" }
+    };
 
     async function fetchAgencies() {
       try {
-        logMessage("📥 Fetching agency data...");
         const response = await fetch(`${BACKEND_URL}/api/agencies`);
         const data = await response.json();
-        logMessage("✅ Agencies Data Loaded");
 
         const tableBody = document.querySelector("#agenciesTable tbody");
         tableBody.innerHTML = "";
@@ -85,6 +67,9 @@
           return;
         }
 
+        // ✅ Sort alphabetically by agency name
+        data.agencies.sort((a, b) => a.name.localeCompare(b.name));
+
         data.agencies.forEach((agency) => {
           const row = document.createElement("tr");
 
@@ -92,7 +77,15 @@
           agencyCell.textContent = agency.name;
 
           const titlesCell = document.createElement("td");
-          if (agency.cfr_references?.length > 0) {
+
+          if (subtitleUrlOverrides[agency.slug]) {
+            const patch = subtitleUrlOverrides[agency.slug];
+            const link = document.createElement("a");
+            link.href = patch.url;
+            link.textContent = patch.label;
+            link.target = "_blank";
+            titlesCell.appendChild(link);
+          } else if (agency.cfr_references?.length > 0) {
             agency.cfr_references.forEach((ref) => {
               const link = document.createElement("a");
               link.href = `https://www.ecfr.gov/current/title-${ref.title}/chapter-${ref.chapter || ""}`;
@@ -106,10 +99,16 @@
           }
 
           const wordCountCell = document.createElement("td");
-          const button = document.createElement("button");
-          button.textContent = "Generate";
-          button.onclick = () => fetchAgencyWordCount(agency, wordCountCell, button);
-          wordCountCell.appendChild(button);
+
+          // ✅ Disable generate button for known empty content (but still show 0)
+          if (agency.slug === "federal-procurement-regulations-system") {
+            wordCountCell.innerHTML = `<span>Content blank (0)</span>`;
+          } else {
+            const button = document.createElement("button");
+            button.textContent = "Generate";
+            button.onclick = () => fetchAgencyWordCount(agency, wordCountCell, button);
+            wordCountCell.appendChild(button);
+          }
 
           row.appendChild(agencyCell);
           row.appendChild(titlesCell);
@@ -118,7 +117,6 @@
         });
       } catch (err) {
         console.error("🚨 Error loading agencies:", err);
-        logMessage("❌ Error loading agencies.");
         document.querySelector("#agenciesTable tbody").innerHTML =
           "<tr><td colspan='3'>Error loading agencies.</td></tr>";
       }
@@ -126,14 +124,12 @@
 
     async function fetchAgencyWordCount(agency, cellElement, buttonElement) {
       try {
-        logMessage(`📥 Fetching word count for: ${agency.name}`);
-        buttonElement.textContent = "Fetching...";
+        buttonElement.textContent = "⏳ Following the white rabbit...";
         buttonElement.disabled = true;
 
         const slug = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
         const response = await fetch(`${BACKEND_URL}/api/wordcount/agency/${encodeURIComponent(slug)}`);
         const data = await response.json();
-        logMessage(`✅ Word Count Fetched: ${data.total.toLocaleString()} words for ${agency.name}`);
 
         if (data.total !== undefined) {
           let breakdownHTML = "";
@@ -157,7 +153,6 @@
       } catch (err) {
         console.error("🚨 Agency Word Count Error:", err);
         cellElement.innerHTML = "Error";
-        logMessage(`❌ Word count failed for ${agency.name}`);
       }
     }
 
