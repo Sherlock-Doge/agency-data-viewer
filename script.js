@@ -277,7 +277,7 @@ if (window.location.pathname.includes("agencies.html")) {
 
 
 // =========================================================
-// 🛫 Cyber Squirrel Search Engine – Perform Internal Search
+// 🛫 Cyber Squirrel Search Engine – Perform Internal Search (Upgraded Final Form)
 // =========================================================
 async function performSearch() {
   const query = document.getElementById("searchQuery").value.trim();
@@ -314,15 +314,15 @@ async function performSearch() {
     if (!data.results || data.results.length === 0) {
       resultsBox.innerHTML = "<p>No results found.</p>";
     } else {
-      // ✅ Optional Bonus: Show total match count
+      // ✅ Total match count
       resultsBox.innerHTML = `<p><em>${data.results.length} matches found.</em></p>`;
 
-      // ✅ Clean search result rendering block
+      // ✅ Section rendering block
       data.results.forEach((r, i) => {
         const div = document.createElement("div");
         div.classList.add("search-result");
 
-        const section = r.section || "Section";
+        const section = r.section || r.title || "Section";
         const heading = r.heading || "";
         let excerpt = r.excerpt || "No description available.";
         if (query) {
@@ -334,7 +334,7 @@ async function performSearch() {
 
         div.innerHTML = `
           <p><strong>${i + 1}. <a href="${link}" target="_blank">${section}</a></strong></p>
-          <p><strong>${heading}</strong></p>
+          ${heading ? `<p><strong>${heading}</strong></p>` : ""}
           <p>${excerpt}</p>
         `;
         resultsBox.appendChild(div);
