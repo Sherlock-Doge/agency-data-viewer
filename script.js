@@ -587,17 +587,18 @@ function resetSearch() {
         agencyFilter.appendChild(opt);
       });
   
-    titleFilter.innerHTML = `<option value="">-- All Titles --</option>`;
+   titleFilter.innerHTML = `<option value="">-- All Titles --</option>`;
     [...cachedTitles]
-      .sort((a, b) => a.name.localeCompare(b.name))
+      .sort((a, b) => a.number - b.number)  // ← ✅ This line fixes it
       .forEach(t => {
-        const opt = document.createElement("option");
-        opt.value = t.number;
-        opt.textContent = `Title ${t.number}: ${t.name}`;
-        titleFilter.appendChild(opt);
+          const opt = document.createElement("option");
+          opt.value = t.number;
+          opt.textContent = `Title ${t.number}: ${t.name}`;
+          titleFilter.appendChild(opt);
       });
   }
-  
+
+
   // =========================================================
   // ✍️ Fetch Word Count by Agency
   // =========================================================
