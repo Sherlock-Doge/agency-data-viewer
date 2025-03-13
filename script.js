@@ -415,9 +415,26 @@ document.addEventListener("DOMContentLoaded", () => {
   alphabetizeAgenciesDropdown();
   loadVersionHistory();
   showSearchBanner();
+
   const stopBtn = document.getElementById("stopSearchBtn");
   if (stopBtn) stopBtn.addEventListener("click", stopSearch);
+
+  const searchBtn = document.getElementById("searchButton");
+  if (searchBtn) searchBtn.addEventListener("click", performSearch);
+
+  const resetBtn = document.getElementById("resetButton");
+  if (resetBtn) resetBtn.addEventListener("click", resetSearch);
+
+  const toggleFiltersBtn = document.getElementById("toggleFiltersButton");
+  if (toggleFiltersBtn) toggleFiltersBtn.addEventListener("click", toggleAdvancedFilters);
 });
+
+function toggleAdvancedFilters() {
+  const filters = document.getElementById("advancedFilters");
+  if (filters) {
+    filters.style.display = filters.style.display === "none" ? "block" : "none";
+  }
+}
 
 
 // =========================================================
