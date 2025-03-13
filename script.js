@@ -442,11 +442,15 @@ function toggleAdvancedFilters() {
 // =========================================================
 function resetSearch() {
     document.getElementById("searchQuery").value = "";
-    document.getElementById("startDate")?.value = "";
-    document.getElementById("endDate")?.value = "";
 
-    const versionHistory = document.getElementById("versionHistory");
-    if (versionHistory) versionHistory.selectedIndex = 0;
+    const startDate = document.getElementById("startDate");
+    if (startDate) startDate.value = "";
+
+    const endDate = document.getElementById("endDate");
+    if (endDate) endDate.value = "";
+
+    const versionDropdown = document.getElementById("versionDropdown");
+    if (versionDropdown) versionDropdown.selectedIndex = 0;
 
     const agencyFilter = document.getElementById("agencyFilter");
     if (agencyFilter) agencyFilter.selectedIndex = 0;
