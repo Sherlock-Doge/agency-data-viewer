@@ -427,25 +427,32 @@ function resetSearch() {
     document.getElementById("searchQuery").value = "";
     document.getElementById("startDate")?.value = "";
     document.getElementById("endDate")?.value = "";
-    document.getElementById("versionHistory")?.selectedIndex = 0;
-    document.getElementById("agencyFilter")?.selectedIndex = 0;
-    document.getElementById("titleFilter")?.selectedIndex = 0;
-  
+
+    const versionHistory = document.getElementById("versionHistory");
+    if (versionHistory) versionHistory.selectedIndex = 0;
+
+    const agencyFilter = document.getElementById("agencyFilter");
+    if (agencyFilter) agencyFilter.selectedIndex = 0;
+
+    const titleFilter = document.getElementById("titleFilter");
+    if (titleFilter) titleFilter.selectedIndex = 0;
+
     const resultsBox = document.getElementById("searchResults");
     if (resultsBox) {
-      resultsBox.innerHTML = "";
-      resultsBox.style.display = "none";
+        resultsBox.innerHTML = "";
+        resultsBox.style.display = "none";
     }
-  
+
     const suggestionBox = document.getElementById("searchSuggestions");
     if (suggestionBox) {
-      suggestionBox.innerHTML = "";
-      suggestionBox.style.display = "none";
+        suggestionBox.innerHTML = "";
+        suggestionBox.style.display = "none";
     }
-  
+
     document.body.classList.remove("search-results-visible");
     populateDropdowns();
-  }
+}
+
   
   // =========================================================
   // 💬 Live Search Suggestions from Backend (Enhanced Display)
