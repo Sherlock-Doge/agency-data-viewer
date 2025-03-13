@@ -324,7 +324,12 @@ async function performSearch() {
 
         const section = r.section || "Section";
         const heading = r.heading || "";
-        const excerpt = r.excerpt || "No excerpt available.";
+        let excerpt = r.excerpt || "No description available.";
+        if (query) {
+          const regex = new RegExp(`(${query})`, "gi");
+          excerpt = excerpt.replace(regex, "<mark>$1</mark>");
+        }
+
         const link = r.link || "#";
 
         div.innerHTML = `
