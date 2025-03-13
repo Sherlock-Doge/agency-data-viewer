@@ -253,7 +253,7 @@ footer {
     background: transparent; /* ✅ Fully transparent */
     padding: 20px;
     border-radius: 12px;
-    max-height: 450px; /* Taller than before */
+    max-height: 650px; /* Taller than before */
     overflow-y: auto;
     z-index: 2; /* Below search bar + filters */
 }
