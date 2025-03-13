@@ -272,11 +272,7 @@ const subtitleUrlOverrides = {
     }
   }
   
-  // ✅ Auto-run this block only on agencies.html
-  if (window.location.pathname.includes("agencies.html")) {
-    document.addEventListener("DOMContentLoaded", fetchAgenciesTableAndRender);
-  }
-  
+   
   // =========================================================
 // 🛫 Cyber Squirrel Search Engine – Full Upgrade Final Version
 // =========================================================
@@ -419,31 +415,41 @@ function showSearchBanner() {
   }
 }
 
-// ✅ On Page Load Initialization (Search Page Only)
-document.addEventListener("DOMContentLoaded", () => {
-  alphabetizeAgenciesDropdown();
-  loadVersionHistory();
-  showSearchBanner();
+// ✅ On Page Load Initialization (Scoped per Page)
+document.addEventListener("DOMContentLoaded", async () => {
+  const isSearchPage = window.location.pathname.includes("search.html");
+  const isAgenciesPage = window.location.pathname.includes("agencies.html");
+  const isIndexPage = window.location.pathname.includes("index.html");
 
-  const stopBtn = document.getElementById("stopSearchBtn");
-  if (stopBtn) stopBtn.addEventListener("click", stopSearch);
+  if (isSearchPage) {
+    await fetchTitles();
+    await fetchAgencies();
+    populateDropdowns();
+    alphabetizeAgenciesDropdown();
+    loadVersionHistory();
+    showSearchBanner();
 
-  const searchBtn = document.getElementById("searchButton");
-  if (searchBtn) searchBtn.addEventListener("click", performSearch);
+    const stopBtn = document.getElementById("stopSearchBtn");
+    if (stopBtn) stopBtn.addEventListener("click", stopSearch);
 
-  const resetBtn = document.getElementById("resetButton");
-  if (resetBtn) resetBtn.addEventListener("click", resetSearch);
+    const searchBtn = document.getElementById("searchButton");
+    if (searchBtn) searchBtn.addEventListener("click", performSearch);
 
-  const toggleFiltersBtn = document.getElementById("toggleFiltersButton");
-  if (toggleFiltersBtn) toggleFiltersBtn.addEventListener("click", toggleAdvancedFilters);
-});
+    const resetBtn = document.getElementById("resetButton");
+    if (resetBtn) resetBtn.addEventListener("click", resetSearch);
 
-function toggleAdvancedFilters() {
-  const filters = document.getElementById("advancedFilters");
-  if (filters) {
-    filters.style.display = filters.style.display === "none" ? "block" : "none";
+    const toggleFiltersBtn = document.getElementById("toggleFiltersButton");
+    if (toggleFiltersBtn) toggleFiltersBtn.addEventListener("click", toggleAdvancedFilters);
   }
-}
+
+  if (isAgenciesPage) {
+    fetchAgenciesTableAndRender();
+  }
+
+  if (isIndexPage) {
+    fetchData();
+  }
+});
 
 
 // =========================================================
