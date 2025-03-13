@@ -415,6 +415,15 @@ function showSearchBanner() {
   }
 }
 
+//Advanced Filter activation
+function toggleAdvancedFilters() {
+  const filters = document.getElementById("advancedFilters");
+  if (filters) {
+    filters.style.display = filters.style.display === "none" ? "block" : "none";
+  }
+}
+
+
 // ✅ On Page Load Initialization (Scoped per Page)
 document.addEventListener("DOMContentLoaded", async () => {
   const isSearchPage = window.location.pathname.includes("search.html");
@@ -583,7 +592,7 @@ function resetSearch() {
   }
   
   // =========================================================
-  // ✍️ Fetch Standard Word Count by Agency
+  // ✍️ Fetch Word Count by Agency
   // =========================================================
   async function fetchAgencyWordCount(agency, cellElement, buttonElement) {
     try {
@@ -621,41 +630,4 @@ function resetSearch() {
     }
   }
   
-  // =========================================================
-  // ⚡ Fetch Fast Word Count by Agency
-  // =========================================================
-  async function fetchAgencyWordCountFast(agency, cellElement, buttonElement) {
-    try {
-      console.log("⚡ Fetching FAST word count for agency:", agency.name);
-      buttonElement.textContent = "⚡ Calculating...";
-      buttonElement.disabled = true;
-      buttonElement.style.opacity = "1";
-      buttonElement.style.backgroundColor = "#eee";
-      buttonElement.style.color = "#222";
-      buttonElement.style.fontWeight = "bold";
-      buttonElement.style.cursor = "not-allowed";
-      buttonElement.style.border = "1px solid #888";
-  
-      const slug = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
-      const response = await fetch(`${BACKEND_URL}/api/wordcount/agency-fast/${encodeURIComponent(slug)}`);
-      const data = await response.json();
-  
-      console.log("✅ FAST Word Count Response:", data);
-  
-      if (data.breakdowns && Array.isArray(data.breakdowns)) {
-        const lines = data.breakdowns.map(item =>
-          `Title ${item.title}, Chapter ${item.chapter}: ${item.wordCount.toLocaleString()}`
-        );
-        lines.push(`<strong>Total:</strong> ${data.total.toLocaleString()}`);
-        cellElement.innerHTML = lines.join("<br>");
-      } else if (data.total !== undefined) {
-        cellElement.innerHTML = data.total.toLocaleString();
-      } else {
-        throw new Error("No total word count in response");
-      }
-    } catch (err) {
-      console.error("🚨 FAST word count failed:", err);
-      cellElement.innerHTML = "Error";
-    }
-  }
   
