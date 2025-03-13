@@ -249,11 +249,11 @@ footer {
     left: 50%;
     transform: translateX(-50%);
     width: 96%; /* Much wider */
-    max-width: 1600px;
+    max-width: 1800px;
     background: transparent; /* ✅ Fully transparent */
     padding: 20px;
     border-radius: 12px;
-    max-height: 650px; /* Taller than before */
+    max-height: 750px; /* Taller than before */
     overflow-y: auto;
     z-index: 2; /* Below search bar + filters */
 }
