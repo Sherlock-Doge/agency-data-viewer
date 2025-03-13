@@ -280,58 +280,65 @@ if (window.location.pathname.includes("agencies.html")) {
 // 🛫 Cyber Squirrel Search Engine – Perform Internal Search
 // =========================================================
 async function performSearch() {
-    const query = document.getElementById("searchQuery").value.trim();
-    const agency = document.getElementById("agencyFilter").value;
-    const title = document.getElementById("titleFilter").value;
-    const startDate = document.getElementById("startDate").value;
-    const endDate = document.getElementById("endDate").value;
-    const resultsBox = document.getElementById("searchResults");
+  const query = document.getElementById("searchQuery").value.trim();
+  const agency = document.getElementById("agencyFilter").value;
+  const title = document.getElementById("titleFilter").value;
+  const startDate = document.getElementById("startDate").value;
+  const endDate = document.getElementById("endDate").value;
+  const resultsBox = document.getElementById("searchResults");
 
-    const hasFilters = agency || title || startDate || endDate;
-    if (!query && !hasFilters) {
-        resultsBox.innerHTML = "<p>Please enter a search term or select filters.</p>";
-        resultsBox.style.display = "block";
-        return;
-    }
-
-    console.log(`🛫 Cyber Squirrel Internal Search → ${query || "[Filters only]"}`);
-    document.body.classList.add("search-results-visible");
-    resultsBox.innerHTML = "<p>Loading results...</p>";
+  const hasFilters = agency || title || startDate || endDate;
+  if (!query && !hasFilters) {
+    resultsBox.innerHTML = "<p>Please enter a search term or select filters.</p>";
     resultsBox.style.display = "block";
+    return;
+  }
 
-   const url = new URL(`${BACKEND_URL}/api/search/cyber-squirrel`);
-    if (query) url.searchParams.append("q", query); 
-    if (agency) url.searchParams.append("agency_slugs[]", agency);
-    if (title) url.searchParams.append("title", title);
-    if (startDate) url.searchParams.append("last_modified_on_or_after", startDate);
-    if (endDate) url.searchParams.append("last_modified_on_or_before", endDate);
+  console.log(`🛫 Cyber Squirrel Internal Search → ${query || "[Filters only]"}`);
+  document.body.classList.add("search-results-visible");
+  resultsBox.innerHTML = "<p>Loading results...</p>";
+  resultsBox.style.display = "block";
 
-    try {
-        const res = await fetch(url.toString());
-        const data = await res.json();
-        resultsBox.innerHTML = "";
+  const url = new URL(`${BACKEND_URL}/api/search/cyber-squirrel`);
+  if (query) url.searchParams.append("q", query);
+  if (agency) url.searchParams.append("agency_slugs[]", agency);
+  if (title) url.searchParams.append("title", title);
+  if (startDate) url.searchParams.append("last_modified_on_or_after", startDate);
+  if (endDate) url.searchParams.append("last_modified_on_or_before", endDate);
 
-        if (!data.results || data.results.length === 0) {
-            resultsBox.innerHTML = "<p>No results found.</p>";
-        } else {
-            data.results.forEach((r, i) => {
-                const div = document.createElement("div");
-                div.classList.add("search-result");
-                const section = r.section || r.title || "Untitled Result";
-                const excerpt = r.excerpt || "No description available.";
-                const link = r.url || "#";
+  try {
+    const res = await fetch(url.toString());
+    const data = await res.json();
+    resultsBox.innerHTML = "";
 
-                div.innerHTML = `
-                    <p><strong>${i + 1}.</strong> <a href="${link}" target="_blank">${section}</a></p>
-                    <p>${excerpt}</p>
-                `;
-                resultsBox.appendChild(div);
-            });
-        }
-    } catch (err) {
-        console.error("🚨 Cyber Squirrel Search Error:", err);
-        resultsBox.innerHTML = "<p>Error retrieving search results.</p>";
+    if (!data.results || data.results.length === 0) {
+      resultsBox.innerHTML = "<p>No results found.</p>";
+    } else {
+      // ✅ Optional Bonus: Show total match count
+      resultsBox.innerHTML = `<p><em>${data.results.length} matches found.</em></p>`;
+
+      // ✅ Clean search result rendering block
+      data.results.forEach((r, i) => {
+        const div = document.createElement("div");
+        div.classList.add("search-result");
+
+        const section = r.section || "Section";
+        const heading = r.heading || "";
+        const excerpt = r.excerpt || "No excerpt available.";
+        const link = r.link || "#";
+
+        div.innerHTML = `
+          <p><strong>${i + 1}. <a href="${link}" target="_blank">${section}</a></strong></p>
+          <p><strong>${heading}</strong></p>
+          <p>${excerpt}</p>
+        `;
+        resultsBox.appendChild(div);
+      });
     }
+  } catch (err) {
+    console.error("🚨 Cyber Squirrel Search Error:", err);
+    resultsBox.innerHTML = "<p>Error retrieving search results.</p>";
+  }
 }
 
 
