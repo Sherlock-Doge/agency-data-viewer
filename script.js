@@ -372,26 +372,35 @@ function stopSearch() {
   if (abortController) abortController.abort();
 }
 
-// 📆 Load Historical Versions Dropdown (Version History)
+// 📆 Load Version History Dropdown
 async function loadVersionHistory() {
   try {
-    const res = await fetch(`${BACKEND_URL}/api/versioner/v1/titles.json`);
+    const res = await fetch(`${BACKEND_URL}/api/titles`);
     const data = await res.json();
-    const uniqueDates = [...new Set(data.map(t => t.latest_issue_date || t.up_to_date_as_of).filter(Boolean))];
-    uniqueDates.sort((a, b) => b.localeCompare(a)); // descending newest first
+    const uniqueDates = [...new Set(
+      (data.titles || [])
+        .map(t => t.latest_issue_date || t.up_to_date_as_of)
+        .filter(Boolean)
+    )];
 
-    const dropdown = document.getElementById("versionHistory");
-    dropdown.innerHTML = `<option value="">Select Historical Version</option>`;
+    uniqueDates.sort((a, b) => b.localeCompare(a)); // newest first
+
+    const dropdown = document.getElementById("versionDropdown");
+    if (!dropdown) return;
+
+    dropdown.innerHTML = `<option value="">-- Latest Version --</option>`;
     uniqueDates.forEach(date => {
       const opt = document.createElement("option");
       opt.value = date;
       opt.textContent = `Version from ${date}`;
       dropdown.appendChild(opt);
     });
+
   } catch (err) {
     console.error("Failed to load version history:", err);
   }
 }
+
 
 // 🔡 Alphabetize Agency Dropdown
 function alphabetizeAgenciesDropdown() {
