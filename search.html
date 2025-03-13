@@ -1,161 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>eCFR Search</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>eCFR Search</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
 </head>
 <body>
 
-    <!-- Header -->
-    <header>
-        <div class="header-left">
-            <img src="images/sherlock-doge-analyzer-.png" alt="Sherlock Doge Logo" class="header-logo">
-            <h1 class="header-title"><a href="index.html" class="header-link">eCFR Analyzer</a></h1>
-        </div>
-
-        <h2 class="header-center">Search the eCFR</h2>
-
-        <div class="header-right">
-            <a href="index.html" class="header-link">Dashboard</a>
-            <a href="agencies.html" class="header-link">Agencies</a>
-            <a href="search.html" class="header-link">Search</a>
-        </div>
-    </header>
-
-    <!-- Spacer -->
-    <div class="spacer"></div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Cipher Image -->
-        <img src="images/cipher-doge.png" alt="Cipher Doge" class="cipher-image" id="cipherImage">
-
-        <!-- Search Bar + Reset -->
-        <div class="search-container">
-            <input type="text" id="searchQuery" placeholder="Enter search term...">
-            <button onclick="performSearch()">Search</button>
-            <button onclick="resetSearch()" style="padding: 12px 16px; font-size: 16px; background-color: #888; color: white; border: none; border-radius: 8px; cursor: pointer;">Reset</button>
-        </div>
-
-        <!-- 🔍 Real-time Suggestions -->
-        <div id="searchSuggestions" style="display: none; width: 70%; margin: 0 auto; max-width: 600px; background: #fff; border: 1px solid #ccc; border-radius: 8px; z-index: 999; position: relative;"></div>
-
-        <!-- ⚙️ Advanced Filters -->
-        <div style="width: 70%; max-width: 800px; margin: 10px auto; text-align: center;">
-            <button onclick="toggleAdvancedFilters()" style="padding: 8px 16px; margin-bottom: 10px;">Advanced Filters ⬇️</button>
-
-            <div id="advancedFilters" style="display: none; padding: 15px; background: #f0f0f0; border-radius: 8px;">
-                <div style="margin-bottom: 10px;">
-                    <label for="agencyFilter"><strong>Filter by Agency:</strong></label>
-                    <select id="agencyFilter">
-                        <option value="">-- All Agencies --</option>
-                    </select>
-                </div>
-
-                <div style="margin-bottom: 10px;">
-                    <label for="titleFilter"><strong>Filter by Title:</strong></label>
-                    <select id="titleFilter">
-                        <option value="">-- All Titles --</option>
-                    </select>
-                </div>
-
-                <div style="margin-bottom: 10px;">
-                    <label for="startDate"><strong>Start Date:</strong></label>
-                    <input type="date" id="startDate">
-                    <label for="endDate" style="margin-left: 20px;"><strong>End Date:</strong></label>
-                    <input type="date" id="endDate">
-                </div>
-            </div>
-        </div>
-
-        <!-- Results Container -->
-        <div id="searchResults"></div>
+  <!-- Header -->
+  <header>
+    <div class="header-left">
+      <img src="images/sherlock-doge-analyzer-.png" alt="Sherlock Doge Logo" class="header-logo"/>
+      <h1 class="header-title">
+        <a href="index.html" class="header-link">eCFR Analyzer</a>
+      </h1>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-container">
-            <p>© 2025 eCFR Analyzer</p>
-            <img src="images/morpheus.png" alt="Morpheus Logo" class="footer-logo">
-            <p>Sponsored by DOGE.</p>
+    <h2 class="header-center">Search the eCFR</h2>
+
+    <div class="header-right">
+      <a href="index.html" class="header-link">Dashboard</a>
+      <a href="agencies.html" class="header-link">Agencies</a>
+      <a href="search.html" class="header-link">Search</a>
+    </div>
+  </header>
+
+  <!-- Spacer -->
+  <div class="spacer"></div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Cipher Image -->
+    <img src="images/cipher-doge.png" alt="Cipher Doge" class="cipher-image" id="cipherImage" />
+
+    <!-- Search Bar + Reset -->
+    <div class="search-container">
+      <input type="text" id="searchQuery" placeholder="Enter search term..." />
+      <button id="searchButton">Search</button>
+      <button id="resetButton" style="padding: 12px 16px; font-size: 16px; background-color: #888; color: white; border: none; border-radius: 8px; cursor: pointer;">Reset</button>
+    </div>
+
+    <!-- 🔍 Real-time Suggestions -->
+    <div id="searchSuggestions" style="display: none; width: 70%; margin: 0 auto; max-width: 600px; background: #fff; border: 1px solid #ccc; border-radius: 8px; z-index: 999; position: relative;"></div>
+
+    <!-- ⚙️ Advanced Filters -->
+    <div style="width: 70%; max-width: 800px; margin: 10px auto; text-align: center;">
+      <button id="toggleFiltersButton" style="padding: 8px 16px; margin-bottom: 10px;">Advanced Filters ⬇️</button>
+
+      <div id="advancedFilters" style="display: none; padding: 15px; background: #f0f0f0; border-radius: 8px;">
+        <div style="margin-bottom: 10px;">
+          <label for="agencyFilter"><strong>Filter by Agency:</strong></label>
+          <select id="agencyFilter">
+            <option value="">-- All Agencies --</option>
+          </select>
         </div>
-    </footer>
 
-    <!-- Scripts -->
-    <script src="script.js"></script>
-    <script>
-        // ⚙️ Toggle Advanced Filter Visibility
-        function toggleAdvancedFilters() {
-            const filters = document.getElementById("advancedFilters");
-            filters.style.display = (filters.style.display === "none") ? "block" : "none";
-        }
+        <div style="margin-bottom: 10px;">
+          <label for="titleFilter"><strong>Filter by Title:</strong></label>
+          <select id="titleFilter">
+            <option value="">-- All Titles --</option>
+          </select>
+        </div>
 
-        // ⚙️ Auto-Populate Dropdowns
-        async function populateFilters() {
-            try {
-                const agenciesResponse = await fetch("https://ecfr-backend-service.onrender.com/api/agencies");
-                const agenciesData = await agenciesResponse.json();
-                const agencySelect = document.getElementById("agencyFilter");
+        <div style="margin-bottom: 10px;">
+          <label for="versionDropdown"><strong>Version History:</strong></label>
+          <select id="versionDropdown">
+            <option value="">-- Latest Version --</option>
+          </select>
+        </div>
+      </div>
+    </div>
 
-                if (agenciesData.agencies && agenciesData.agencies.length > 0) {
-                    agenciesData.agencies.forEach(agency => {
-                        const option = document.createElement("option");
-                        option.value = agency.slug || agency.name.toLowerCase().replace(/\s+/g, "-");
-                        option.textContent = agency.name;
-                        agencySelect.appendChild(option);
-                    });
-                }
+    <!-- Results Container -->
+    <div id="searchResults"></div>
+  </div>
 
-                const titlesResponse = await fetch("https://ecfr-backend-service.onrender.com/api/titles");
-                const titlesData = await titlesResponse.json();
-                const titleSelect = document.getElementById("titleFilter");
+  <!-- Footer -->
+  <footer>
+    <div class="footer-container">
+      <p>© 2025 eCFR Analyzer</p>
+      <img src="images/morpheus.png" alt="Morpheus Logo" class="footer-logo"/>
+      <p>Sponsored by DOGE.</p>
+    </div>
+  </footer>
 
-                if (titlesData.titles && titlesData.titles.length > 0) {
-                    titlesData.titles.forEach(title => {
-                        const option = document.createElement("option");
-                        option.value = title.number;
-                        option.textContent = `Title ${title.number}: ${title.name}`;
-                        titleSelect.appendChild(option);
-                    });
-                }
-            } catch (error) {
-                console.error("🚨 Error loading filters:", error);
-            }
-        }
-
-        // ✅ RESET SEARCH FUNCTION
-        function resetSearch() {
-            document.getElementById("searchQuery").value = "";
-
-            const agencyFilter = document.getElementById("agencyFilter");
-            if (agencyFilter) agencyFilter.selectedIndex = 0;
-
-            const titleFilter = document.getElementById("titleFilter");
-            if (titleFilter) titleFilter.selectedIndex = 0;
-
-            const startDate = document.getElementById("startDate");
-            if (startDate) startDate.value = "";
-
-            const endDate = document.getElementById("endDate");
-            if (endDate) endDate.value = "";
-
-            const results = document.getElementById("searchResults");
-            if (results) {
-                results.innerHTML = "";
-                results.style.display = "none";
-            }
-
-            const suggestions = document.getElementById("searchSuggestions");
-            if (suggestions) suggestions.style.display = "none";
-
-            document.body.classList.remove("search-results-visible");
-        }
-
-        document.addEventListener("DOMContentLoaded", populateFilters);
-    </script>
-
+  <!-- External JS -->
+  <script src="script.js"></script>
 </body>
 </html>
