@@ -277,53 +277,65 @@ if (window.location.pathname.includes("agencies.html")) {
 
 
 // =========================================================
-// 🛫 Cyber Squirrel Search Engine – Perform Internal Search (Upgraded Final Form)
+// 🛫 Cyber Squirrel Search Engine – Full Upgrade Final Version
 // =========================================================
+
+let abortController = null;
+
 async function performSearch() {
   const query = document.getElementById("searchQuery").value.trim();
   const agency = document.getElementById("agencyFilter").value;
   const title = document.getElementById("titleFilter").value;
-  const startDate = document.getElementById("startDate").value;
-  const endDate = document.getElementById("endDate").value;
+  const version = document.getElementById("versionHistory")?.value || null;
   const resultsBox = document.getElementById("searchResults");
 
-  const hasFilters = agency || title || startDate || endDate;
+  const hasFilters = agency || title || version;
   if (!query && !hasFilters) {
     resultsBox.innerHTML = "<p>Please enter a search term or select filters.</p>";
     resultsBox.style.display = "block";
     return;
   }
 
+  // 🚫 If version selected but no agency or title — exit early
+  if (version && !agency && !title) {
+    resultsBox.innerHTML = "<p>Please select a Title or Agency when using Version History.</p>";
+    return;
+  }
+
   console.log(`🛫 Cyber Squirrel Internal Search → ${query || "[Filters only]"}`);
   document.body.classList.add("search-results-visible");
-  resultsBox.innerHTML = "<p>Loading results...</p>";
+  resultsBox.innerHTML = `<p><strong>Following the white rabbit...</strong></p><div class="loader-rabbit"></div>`;
   resultsBox.style.display = "block";
+
+  // 🛑 Set up abort controller
+  if (abortController) abortController.abort();
+  abortController = new AbortController();
 
   const url = new URL(`${BACKEND_URL}/api/search/cyber-squirrel`);
   if (query) url.searchParams.append("q", query);
   if (agency) url.searchParams.append("agency_slugs[]", agency);
   if (title) url.searchParams.append("title", title);
-  if (startDate) url.searchParams.append("last_modified_on_or_after", startDate);
-  if (endDate) url.searchParams.append("last_modified_on_or_before", endDate);
+  if (version) url.searchParams.append("issueDate", version);
 
   try {
-    const res = await fetch(url.toString());
+    const res = await fetch(url.toString(), { signal: abortController.signal });
     const data = await res.json();
     resultsBox.innerHTML = "";
 
     if (!data.results || data.results.length === 0) {
       resultsBox.innerHTML = "<p>No results found.</p>";
     } else {
-      // ✅ Total match count
       resultsBox.innerHTML = `<p><em>${data.results.length} matches found.</em></p>`;
 
-      // ✅ Section rendering block
       data.results.forEach((r, i) => {
         const div = document.createElement("div");
         div.classList.add("search-result");
 
         const section = r.section || r.title || "Section";
         const heading = r.heading || "";
+        const matchType = r.matchType || "";
+        const issueDate = r.issueDate || "";
+
         let excerpt = r.excerpt || "No description available.";
         if (query) {
           const regex = new RegExp(`(${query})`, "gi");
@@ -335,16 +347,76 @@ async function performSearch() {
         div.innerHTML = `
           <p><strong>${i + 1}. <a href="${link}" target="_blank">${section}</a></strong></p>
           ${heading ? `<p><strong>${heading}</strong></p>` : ""}
+          ${matchType ? `<p><em>Match Type: ${matchType}</em></p>` : ""}
+          ${issueDate ? `<p><em>Version: ${issueDate}</em></p>` : ""}
           <p>${excerpt}</p>
         `;
         resultsBox.appendChild(div);
       });
     }
   } catch (err) {
-    console.error("🚨 Cyber Squirrel Search Error:", err);
-    resultsBox.innerHTML = "<p>Error retrieving search results.</p>";
+    if (err.name === "AbortError") {
+      console.warn("🛑 Search aborted by user.");
+      resultsBox.innerHTML = "<p><em>Search was stopped.</em></p>";
+    } else {
+      console.error("🚨 Cyber Squirrel Search Error:", err);
+      resultsBox.innerHTML = "<p>Error retrieving search results.</p>";
+    }
   }
 }
+
+// 🛑 Stop Search Button Handler
+function stopSearch() {
+  if (abortController) abortController.abort();
+}
+
+// 📆 Load Version History Dropdown
+async function loadVersionHistory() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/api/versioner/v1/titles.json`);
+    const data = await res.json();
+    const uniqueDates = [...new Set(data.map(t => t.latest_issue_date || t.up_to_date_as_of).filter(Boolean))];
+    uniqueDates.sort((a, b) => b.localeCompare(a)); // newest first
+
+    const dropdown = document.getElementById("versionHistory");
+    dropdown.innerHTML = `<option value="">Select Historical Version</option>`;
+    uniqueDates.forEach(date => {
+      const opt = document.createElement("option");
+      opt.value = date;
+      opt.textContent = `Version from ${date}`;
+      dropdown.appendChild(opt);
+    });
+  } catch (err) {
+    console.error("Failed to load version history:", err);
+  }
+}
+
+// 🔡 Alphabetize Agency Dropdown
+function alphabetizeAgenciesDropdown() {
+  const agencySelect = document.getElementById("agencyFilter");
+  const options = Array.from(agencySelect.options).filter(o => o.value);
+  options.sort((a, b) => a.text.localeCompare(b.text));
+  agencySelect.innerHTML = `<option value="">Select Agency</option>`;
+  options.forEach(o => agencySelect.appendChild(o));
+}
+
+// 🧠 UX Prompt Message
+function showSearchBanner() {
+  const banner = document.getElementById("searchBanner");
+  if (banner) {
+    banner.innerHTML = `<p><em>Search by keyword, title, agency, or dig into Historical Versions.</em></p>`;
+  }
+}
+
+// ✅ On Page Load
+document.addEventListener("DOMContentLoaded", () => {
+  alphabetizeAgenciesDropdown();
+  loadVersionHistory();
+  showSearchBanner();
+
+  const stopBtn = document.getElementById("stopSearchBtn");
+  if (stopBtn) stopBtn.addEventListener("click", stopSearch);
+});
 
 
 // =========================================================
