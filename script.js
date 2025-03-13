@@ -302,8 +302,15 @@ async function performSearch() {
 
   console.log(`🛫 Cyber Squirrel Internal Search → ${query || "[Filters only]"}`);
   document.body.classList.add("search-results-visible");
-  resultsBox.innerHTML = `<p><strong>Following the white rabbit...</strong></p><div class="loader-rabbit"></div>`;
+  resultsBox.innerHTML = `<p><strong>Looks like you took the red pill - this rabbit hole goes deep...</strong></p><div class="loader-rabbit"></div>`;
   resultsBox.style.display = "block";
+
+  // ✅ Hide old suggestions immediately
+  const suggestionBox = document.getElementById("searchSuggestions");
+  if (suggestionBox) {
+    suggestionBox.innerHTML = "";
+    suggestionBox.style.display = "none";
+  }
 
   // 🛑 Setup Abort Controller for canceling search
   if (abortController) abortController.abort();
