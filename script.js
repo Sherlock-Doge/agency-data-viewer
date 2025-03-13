@@ -307,17 +307,7 @@ async function performSearch() {
     Looks like you took the red pill — this rabbit hole goes deep...
   </p>
 
-  <!-- Spinner Loader -->
-  <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
-    <div style="
-      border: 8px solid #f3f3f3;
-      border-top: 8px solid #4caf50;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      animation: spin 1.1s linear infinite;
-    "></div>
-  </div>
+
 
   <!-- Matrix Flicker Loader -->
   <div style="display: flex; justify-content: center; margin-top: 20px;">
@@ -331,11 +321,7 @@ async function performSearch() {
   </div>
 
   <style>
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
+   
     .matrix-loader {
       display: flex;
       gap: 4px;
