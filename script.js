@@ -302,8 +302,67 @@ async function performSearch() {
 
   console.log(`🛫 Cyber Squirrel Internal Search → ${query || "[Filters only]"}`);
   document.body.classList.add("search-results-visible");
-  resultsBox.innerHTML = `<p><strong>Looks like you took the red pill - this rabbit hole goes deep...</strong></p><div class="loader-rabbit"></div>`;
-  resultsBox.style.display = "block";
+  resultsBox.innerHTML = `
+  <p style="text-align:center; font-size: 1.1em; font-weight: bold; margin-bottom: 10px;">
+    Looks like you took the red pill — this rabbit hole goes deep...
+  </p>
+
+  <!-- Spinner Loader -->
+  <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 20px;">
+    <div style="
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #4caf50;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1.1s linear infinite;
+    "></div>
+  </div>
+
+  <!-- Matrix Flicker Loader -->
+  <div style="display: flex; justify-content: center; margin-top: 20px;">
+    <div class="matrix-loader">
+      <div class="matrix-bar"></div>
+      <div class="matrix-bar"></div>
+      <div class="matrix-bar"></div>
+      <div class="matrix-bar"></div>
+      <div class="matrix-bar"></div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .matrix-loader {
+      display: flex;
+      gap: 4px;
+    }
+
+    .matrix-bar {
+      width: 6px;
+      height: 40px;
+      background-color: #00ff00;
+      animation: matrixPulse 1.2s infinite ease-in-out;
+    }
+
+    .matrix-bar:nth-child(1) { animation-delay: 0s; }
+    .matrix-bar:nth-child(2) { animation-delay: 0.2s; }
+    .matrix-bar:nth-child(3) { animation-delay: 0.4s; }
+    .matrix-bar:nth-child(4) { animation-delay: 0.6s; }
+    .matrix-bar:nth-child(5) { animation-delay: 0.8s; }
+
+    @keyframes matrixPulse {
+      0%, 100% { transform: scaleY(0.4); opacity: 0.3; }
+      50% { transform: scaleY(1.3); opacity: 1; }
+    }
+  </style>
+`;
+
+resultsBox.style.display = "block";
+
 
   // ✅ Hide old suggestions immediately
   const suggestionBox = document.getElementById("searchSuggestions");
