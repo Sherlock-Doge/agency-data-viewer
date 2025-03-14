@@ -533,7 +533,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       });
     }
-
+  }
 
   if (isAgenciesPage) {
     fetchAgenciesTableAndRender();
