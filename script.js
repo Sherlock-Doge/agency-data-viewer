@@ -353,62 +353,49 @@ function hideMatrixLoader() {
     const res = await fetch(url.toString(), { signal: abortController.signal });
     const data = await res.json();
 
-    // ✅ Clear loader, start fresh
-    resultsBox.innerHTML = "";
+  // ✅ Clear loader, start fresh
+resultsBox.innerHTML = "";
 
-     // ✅ Show results or fallback message
-  if (!data.results || data.results.length === 0) {
-    resultsBox.innerHTML = "<p>No results found.</p>";
-  } else {
-    resultsBox.innerHTML = `<p><em>${data.results.length} matches found.</em></p>`;
+// ✅ Show results or fallback message
+if (!data.results || data.results.length === 0) {
+  resultsBox.innerHTML = "<p>No results found.</p>";
+} else {
+  resultsBox.innerHTML = `<p><em>${data.results.length} matches found.</em></p>`;
 
-    data.results.forEach((r, i) => {
-      const div = document.createElement("div");
-      div.classList.add("search-result");
+  data.results.forEach((r, i) => {
+    const div = document.createElement("div");
+    div.classList.add("search-result");
 
-      const section = r.section || r.title || "Section";
-      const heading = r.heading || "";
-      const matchType = r.matchType || "";
-      const issueDate = r.issueDate || "";
+    const section = r.section || r.title || "Section";
+    const heading = r.heading || "";
+    const matchType = r.matchType || "";
+    const issueDate = r.issueDate || "";
 
-      let excerpt = r.excerpt || "No description available.";
-      if (query) {
-        const regex = new RegExp(`(${query})`, "gi");
-        excerpt = excerpt.replace(regex, "<mark>$1</mark>");
-      }
-
-      const link = r.link || "#";
-
-      div.innerHTML = `
-        <p><strong>${i + 1}. <a href="${link}" target="_blank">${section}</a></strong></p>
-        ${heading ? `<p><strong>${heading}</strong></p>` : ""}
-        ${matchType ? `<p><em>Match Type: ${matchType}</em></p>` : ""}
-        ${issueDate ? `<p><em>Version: ${issueDate}</em></p>` : ""}
-        <p>${excerpt}</p>
-      `;
-      resultsBox.appendChild(div);
-    });
-  }
-
-  // ALWAYS hide loader after rendering completes
-  hideMatrixLoader();
-
-
-        const link = r.link || "#";
-
-        div.innerHTML = `
-          <p><strong>${i + 1}. <a href="${link}" target="_blank">${section}</a></strong></p>
-          ${heading ? `<p><strong>${heading}</strong></p>` : ""}
-          ${matchType ? `<p><em>Match Type: ${matchType}</em></p>` : ""}
-          ${issueDate ? `<p><em>Version: ${issueDate}</em></p>` : ""}
-          <p>${excerpt}</p>
-        `;
-        resultsBox.appendChild(div);
-      });
+    let excerpt = r.excerpt || "No description available.";
+    if (query) {
+      const regex = new RegExp(`(${query})`, "gi");
+      excerpt = excerpt.replace(regex, "<mark>$1</mark>");
     }
 
-    // ✅ Hide Abort Button after success
-    if (abortBtn) abortBtn.style.display = "none";
+    const link = r.link || "#";
+
+    div.innerHTML = `
+      <p><strong>${i + 1}. <a href="${link}" target="_blank">${section}</a></strong></p>
+      ${heading ? `<p><strong>${heading}</strong></p>` : ""}
+      ${matchType ? `<p><em>Match Type: ${matchType}</em></p>` : ""}
+      ${issueDate ? `<p><em>Version: ${issueDate}</em></p>` : ""}
+      <p>${excerpt}</p>
+    `;
+    resultsBox.appendChild(div);
+  });
+}
+
+// ALWAYS hide loader after rendering completes
+hideMatrixLoader();
+
+// Hide Abort Button after success
+if (abortBtn) abortBtn.style.display = "none";
+
 
   } catch (err) {
     if (err.name === "AbortError") {
@@ -419,7 +406,7 @@ function hideMatrixLoader() {
       resultsBox.innerHTML = "<p>Error retrieving search results.</p>";
     }
 
-    // ✅ Hide Abort Button after failure or cancel
+    //  Hide Abort Button after failure or cancel
     if (abortBtn) abortBtn.style.display = "none";
   }
 }
@@ -697,7 +684,7 @@ function resetSearch() {
   
    titleFilter.innerHTML = `<option value="">-- All Titles --</option>`;
     [...cachedTitles]
-      .sort((a, b) => a.number - b.number)  // ← ✅ This line fixes it
+      .sort((a, b) => a.number - b.number) 
       .forEach(t => {
           const opt = document.createElement("option");
           opt.value = t.number;
