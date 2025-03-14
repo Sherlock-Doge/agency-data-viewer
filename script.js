@@ -281,54 +281,29 @@ async function performSearch() {
   const title = document.getElementById("titleFilter").value;
   const version = document.getElementById("versionHistory")?.value || null;
   const resultsBox = document.getElementById("searchResults");
+  const matrixAlert = document.getElementById("matrixAlert"); // ✅ Reference to Matrix alert block
 
   // ⚠️ Require at least a query or filter
   const hasFilters = agency || title || version;
 
-  // ⚠ Matrix-style Empty Search Warning
+  // ⚠ Matrix-style Empty Search Warning (handled via #matrixAlert in HTML now)
   if (!query && !hasFilters) {
-    resultsBox.innerHTML = `
-      <div style="
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 10;
-        padding: 14px;
-        background-color: black;
-        border: 2px solid #00ff00;
-        color: #00ff00;
-        font-family: 'Courier New', monospace;
-        font-size: 1.1em;
-        text-align: center;
-        width: 90%;
-        max-width: 600px;
-        border-radius: 8px;
-        animation: flickerGlow 1.2s infinite alternate;
-      ">
-        ⚠ SYSTEM MESSAGE: Please enter a search term and/or select filters.
-      </div>
-
-      <style>
-        @keyframes flickerGlow {
-          0% { opacity: 0.6; text-shadow: 0 0 4px #00ff00; }
-          100% { opacity: 1; text-shadow: 0 0 10px #00ff00; }
-        }
-      </style>
-    `;
-    resultsBox.style.display = "block";
+    if (matrixAlert) matrixAlert.style.display = "block";
+    resultsBox.style.display = "none"; // hide standard results container
     return;
   }
 
-  
-// 🔍 Informational Guidance for Version Search
-if (version && !agency && !title) {
-  const alertBox = document.getElementById("searchValidationAlert");
-  if (alertBox) {
-    alertBox.textContent = "💡 Tip: Selecting a Title or Agency improves search accuracy when using Historical Versions.";
-    alertBox.style.display = "block";
+  // ✅ BONUS: Hide Matrix alert if previously shown
+  if (matrixAlert) matrixAlert.style.display = "none";
+
+  // 🔍 Informational Guidance for Version Search
+  if (version && !agency && !title) {
+    const alertBox = document.getElementById("searchValidationAlert");
+    if (alertBox) {
+      alertBox.textContent = "💡 Tip: Selecting a Title or Agency improves search accuracy when using Historical Versions.";
+      alertBox.style.display = "block";
+    }
   }
-}
 
   // 🧠 Start Logging + Show Loading UI
   console.log(`🛫 Cyber Squirrel Internal Search → ${query || "[Filters only]"}`);
@@ -454,6 +429,7 @@ if (version && !agency && !title) {
     if (abortBtn) abortBtn.style.display = "none";
   }
 }
+
 
 // =========================================================
 // 🛑 Abort Button Handler
