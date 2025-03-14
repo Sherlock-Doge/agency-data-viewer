@@ -273,7 +273,6 @@ footer {
 }
 
 /*  Advanced Filters Section (Wrapper + Filter Box + Toggle Button) */
-
 .advanced-filters-wrapper {
   display: none; /* Hidden by default */
   margin-top: 20px;
@@ -287,10 +286,17 @@ footer {
   
 }
 
+/*  Start hidden, fade in when .visible is toggled on */
 #advancedFilters {
-  padding: 15px;
-  background: #f0f0f0;
-  border-radius: 8px;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/*  Active visible state (triggered via JS toggle) */
+#advancedFilters.visible {
+  display: block;
+  opacity: 1;
 }
 
 /* Spacing between drop downs */
