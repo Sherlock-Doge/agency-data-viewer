@@ -71,7 +71,7 @@ header {
     border: 5px solid black;
     border-radius: 12px;
     text-align: center;
-    box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
+    box-shadow: 0 0 15px rgba(106, 255, 204, 1.00);
 }
 
 .score-item {
@@ -254,7 +254,7 @@ footer {
   color: white;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
+  box-shadow: 0 0 15px rgba(106, 255, 204, 1.00);
   z-index: 9999;
   display: none; /* default hidden */
 }
