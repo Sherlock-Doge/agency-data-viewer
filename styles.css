@@ -290,7 +290,7 @@ footer {
   overflow: hidden;
   opacity: 0;
   transition: max-height 0.4s ease, opacity 0.3s ease;
-  margin-top: 2.5px;
+  margin-top: 0px;
   padding: 2px;
   background-color: #f5f5f5;
   border-radius: 10px;
