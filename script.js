@@ -282,37 +282,41 @@ async function performSearch() {
   const version = document.getElementById("versionHistory")?.value || null;
   const resultsBox = document.getElementById("searchResults");
 
+  // ⚠️ Require at least a query or filter
+  const hasFilters = agency || title || version;
+
+  // ⚠ Matrix-style Empty Search Warning
   if (!query && !hasFilters) {
-  resultsBox.innerHTML = `
-    <div style="
-      padding: 14px;
-      margin: 20px auto;
-      background-color: black;
-      border: 2px solid #00ff00;
-      color: #00ff00;
-      font-family: 'Courier New', monospace;
-      font-size: 1.1em;
-      text-align: center;
-      max-width: 600px;
-      border-radius: 8px;
-      animation: flickerGlow 1.2s infinite alternate;
-    ">
-      ⚠ SYSTEM MESSAGE: Please enter a search term and/or select filters.
-    </div>
+    resultsBox.innerHTML = `
+      <div style="
+        padding: 14px;
+        margin: 20px auto;
+        background-color: black;
+        border: 2px solid #00ff00;
+        color: #00ff00;
+        font-family: 'Courier New', monospace;
+        font-size: 1.1em;
+        text-align: center;
+        max-width: 600px;
+        border-radius: 8px;
+        animation: flickerGlow 1.2s infinite alternate;
+      ">
+        ⚠ SYSTEM MESSAGE: Please enter a search term and/or select filters.
+      </div>
 
-    <style>
-      @keyframes flickerGlow {
-        0% { opacity: 0.6; text-shadow: 0 0 4px #00ff00; }
-        100% { opacity: 1; text-shadow: 0 0 10px #00ff00; }
-      }
-    </style>
-  `;
-  resultsBox.style.display = "block";
-  return;
-}
+      <style>
+        @keyframes flickerGlow {
+          0% { opacity: 0.6; text-shadow: 0 0 4px #00ff00; }
+          100% { opacity: 1; text-shadow: 0 0 10px #00ff00; }
+        }
+      </style>
+    `;
+    resultsBox.style.display = "block";
+    return;
+  }
 
-
-  // 🔍 Informational Guidance for Version Search
+  
+// 🔍 Informational Guidance for Version Search
 if (version && !agency && !title) {
   const alertBox = document.getElementById("searchValidationAlert");
   if (alertBox) {
