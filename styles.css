@@ -185,6 +185,11 @@ footer {
     gap: 15px;
 }
 
+.footer-spacer {
+  height: 80px;
+  width: 100%;
+}
+
 .footer-logo {
     width: 60px;
     height: 60px;
