@@ -459,15 +459,6 @@ function showSearchBanner() {
   }
 }
 
-// Advanced Filter activation – correct target: #advancedFilters
-function toggleAdvancedFilters() {
-  const wrapper = document.getElementById("advancedFilters");
-  if (wrapper) {
-    const isVisible = wrapper.style.display === "block";
-    wrapper.style.display = isVisible ? "none" : "block";
-  }
-}
-
 
 // On Page Load Initialization (Scoped per Page)
 
