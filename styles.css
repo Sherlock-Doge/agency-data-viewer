@@ -263,7 +263,7 @@ footer {
   z-index: 2;
   display: none;
   overflow-y: auto;
-  max-height: 600px;               
+  max-height: 75vh;               
   pointer-events: auto;
 }
 
@@ -396,11 +396,13 @@ footer {
 
 /* Matrix Loader Container - center like Matrix Alert */
 .matrix-loader-container {
-  position: absolute;
-  top: 55%;
+  position: fixed;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.4s ease;  
 }
 
 .matrix-loader {
