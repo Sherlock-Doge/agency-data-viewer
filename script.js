@@ -356,26 +356,43 @@ function hideMatrixLoader() {
     // ✅ Clear loader, start fresh
     resultsBox.innerHTML = "";
 
-    // ✅ Show results or fallback message
-    if (!data.results || data.results.length === 0) {
-      resultsBox.innerHTML = "<p>No results found.</p>";
-    } else {
-      resultsBox.innerHTML = `<p><em>${data.results.length} matches found.</em></p>`;
+     // ✅ Show results or fallback message
+  if (!data.results || data.results.length === 0) {
+    resultsBox.innerHTML = "<p>No results found.</p>";
+  } else {
+    resultsBox.innerHTML = `<p><em>${data.results.length} matches found.</em></p>`;
 
-      data.results.forEach((r, i) => {
-        const div = document.createElement("div");
-        div.classList.add("search-result");
+    data.results.forEach((r, i) => {
+      const div = document.createElement("div");
+      div.classList.add("search-result");
 
-        const section = r.section || r.title || "Section";
-        const heading = r.heading || "";
-        const matchType = r.matchType || "";
-        const issueDate = r.issueDate || "";
+      const section = r.section || r.title || "Section";
+      const heading = r.heading || "";
+      const matchType = r.matchType || "";
+      const issueDate = r.issueDate || "";
 
-        let excerpt = r.excerpt || "No description available.";
-        if (query) {
-          const regex = new RegExp(`(${query})`, "gi");
-          excerpt = excerpt.replace(regex, "<mark>$1</mark>");
-        }
+      let excerpt = r.excerpt || "No description available.";
+      if (query) {
+        const regex = new RegExp(`(${query})`, "gi");
+        excerpt = excerpt.replace(regex, "<mark>$1</mark>");
+      }
+
+      const link = r.link || "#";
+
+      div.innerHTML = `
+        <p><strong>${i + 1}. <a href="${link}" target="_blank">${section}</a></strong></p>
+        ${heading ? `<p><strong>${heading}</strong></p>` : ""}
+        ${matchType ? `<p><em>Match Type: ${matchType}</em></p>` : ""}
+        ${issueDate ? `<p><em>Version: ${issueDate}</em></p>` : ""}
+        <p>${excerpt}</p>
+      `;
+      resultsBox.appendChild(div);
+    });
+  }
+
+  // ALWAYS hide loader after rendering completes
+  hideMatrixLoader();
+
 
         const link = r.link || "#";
 
