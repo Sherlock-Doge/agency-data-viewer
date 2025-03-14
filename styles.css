@@ -257,9 +257,9 @@ footer {
   transform: translateX(-50%);
   width: 95vw;                  
   max-width: 1400px;            
-  height: auto%;                 
+  height: 98%;     
   background: rgba(0, 0, 0, .1); 
-  color: white;
+  color: #000;
   padding: 24px;
   border-radius: 12px;
   box-shadow: 0 0 25px rgba(0, 255, 30, 1);
@@ -291,7 +291,7 @@ footer {
   opacity: 0;
   transition: max-height 0.4s ease, opacity 0.3s ease;
   margin-top: 0px;
-  padding: 2px;
+  padding: 0px;
   background-color: #f5f5f5;
   border-radius: 10px;
   max-width: 600px;
@@ -302,14 +302,23 @@ footer {
 
 /* When toggled ON */
 .advanced-filters-wrapper.visible {
-  max-height: 1000px;  /* just large enough to cover content */
+  max-height: 1000px;
   opacity: 1;
 }
 
-/* Spacing between drop downs */
+/* Spacing between each filter block */
 #advancedFilters > div {
-  margin-bottom: 15px;
+  margin-bottom: 18px;
+  text-align: center;              
 }
+
+/* Stack label ABOVE select and center them */
+#advancedFilters label,
+#advancedFilters select {
+  display: block;
+  margin: 0 auto;                  
+}
+
 
 #versionGuidanceTip {
   margin-top: 8px; /* adds breathing room */
@@ -406,6 +415,13 @@ footer {
   text-align: left;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 5px 10px;
+}
+
+#searchResults > p:first-child {
+  color: #000;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px; /* ✔ controls spacing ABOVE the loader */
 }
 
 
