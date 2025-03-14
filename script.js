@@ -273,7 +273,7 @@ const subtitleUrlOverrides = {
   }
   
    
-  // =========================================================
+// =========================================================
 // 🛫 Cyber Squirrel Search Engine – Full Upgrade Final Version
 // =========================================================
 
@@ -287,6 +287,7 @@ async function performSearch() {
   const version = document.getElementById("versionHistory")?.value || null;
   const resultsBox = document.getElementById("searchResults");
 
+  // ⚠️ Require at least a query or filter
   const hasFilters = agency || title || version;
   if (!query && !hasFilters) {
     resultsBox.innerHTML = "<p>Please enter a search term or select filters.</p>";
@@ -294,61 +295,58 @@ async function performSearch() {
     return;
   }
 
-  // 🧠 Enforce Historical Version logic
+  // ⚠️ Require Title or Agency if Version selected
   if (version && !agency && !title) {
     resultsBox.innerHTML = "<p>Please select a Title or Agency when using Version History.</p>";
     return;
   }
 
+  // 🧠 Start Logging + Show Loading UI
   console.log(`🛫 Cyber Squirrel Internal Search → ${query || "[Filters only]"}`);
   document.body.classList.add("search-results-visible");
+
   resultsBox.innerHTML = `
-  <p style="text-align:center; font-size: 1.1em; font-weight: bold; margin-bottom: 10px;">
-    Looks like you took the red pill — this rabbit hole goes deep...
-  </p>
+    <p style="text-align:center; font-size: 1.1em; font-weight: bold; margin-bottom: 10px;">
+      Looks like you took the red pill — this rabbit hole goes deep...
+    </p>
 
-
-
-  <!-- Matrix Flicker Loader -->
-  <div style="display: flex; justify-content: center; margin-top: 20px;">
-    <div class="matrix-loader">
-      <div class="matrix-bar"></div>
-      <div class="matrix-bar"></div>
-      <div class="matrix-bar"></div>
-      <div class="matrix-bar"></div>
-      <div class="matrix-bar"></div>
+    <!-- Matrix Flicker Loader -->
+    <div style="display: flex; justify-content: center; margin-top: 20px;">
+      <div class="matrix-loader">
+        <div class="matrix-bar"></div>
+        <div class="matrix-bar"></div>
+        <div class="matrix-bar"></div>
+        <div class="matrix-bar"></div>
+        <div class="matrix-bar"></div>
+      </div>
     </div>
-  </div>
 
-  <style>
-   
-    .matrix-loader {
-      display: flex;
-      gap: 4px;
-    }
+    <style>
+      .matrix-loader {
+        display: flex;
+        gap: 4px;
+      }
 
-    .matrix-bar {
-      width: 6px;
-      height: 40px;
-      background-color: #00ff00;
-      animation: matrixPulse 1.2s infinite ease-in-out;
-    }
+      .matrix-bar {
+        width: 6px;
+        height: 40px;
+        background-color: #00ff00;
+        animation: matrixPulse 1.2s infinite ease-in-out;
+      }
 
-    .matrix-bar:nth-child(1) { animation-delay: 0s; }
-    .matrix-bar:nth-child(2) { animation-delay: 0.2s; }
-    .matrix-bar:nth-child(3) { animation-delay: 0.4s; }
-    .matrix-bar:nth-child(4) { animation-delay: 0.6s; }
-    .matrix-bar:nth-child(5) { animation-delay: 0.8s; }
+      .matrix-bar:nth-child(1) { animation-delay: 0s; }
+      .matrix-bar:nth-child(2) { animation-delay: 0.2s; }
+      .matrix-bar:nth-child(3) { animation-delay: 0.4s; }
+      .matrix-bar:nth-child(4) { animation-delay: 0.6s; }
+      .matrix-bar:nth-child(5) { animation-delay: 0.8s; }
 
-    @keyframes matrixPulse {
-      0%, 100% { transform: scaleY(0.4); opacity: 0.3; }
-      50% { transform: scaleY(1.3); opacity: 1; }
-    }
-  </style>
-`;
-
-resultsBox.style.display = "block";
-
+      @keyframes matrixPulse {
+        0%, 100% { transform: scaleY(0.4); opacity: 0.3; }
+        50% { transform: scaleY(1.3); opacity: 1; }
+      }
+    </style>
+  `;
+  resultsBox.style.display = "block";
 
   // ✅ Hide old suggestions immediately
   const suggestionBox = document.getElementById("searchSuggestions");
@@ -357,10 +355,15 @@ resultsBox.style.display = "block";
     suggestionBox.style.display = "none";
   }
 
-  // 🛑 Setup Abort Controller for canceling search
+  // 🔴 Show Abort Search Button when search starts
+  const abortBtn = document.getElementById("stopSearchBtn");
+  if (abortBtn) abortBtn.style.display = "inline-block";
+
+  // 🛑 Setup Abort Controller
   if (abortController) abortController.abort();
   abortController = new AbortController();
 
+  // 🔗 Construct backend request URL
   const url = new URL(`${BACKEND_URL}/api/search/cyber-squirrel`);
   if (query) url.searchParams.append("q", query);
   if (agency) url.searchParams.append("agency_slugs[]", agency);
@@ -370,8 +373,9 @@ resultsBox.style.display = "block";
   try {
     const res = await fetch(url.toString(), { signal: abortController.signal });
     const data = await res.json();
-    resultsBox.innerHTML = "";
+    resultsBox.innerHTML = ""; // Clear loader
 
+    // ✅ Show results or empty message
     if (!data.results || data.results.length === 0) {
       resultsBox.innerHTML = "<p>No results found.</p>";
     } else {
@@ -404,6 +408,10 @@ resultsBox.style.display = "block";
         resultsBox.appendChild(div);
       });
     }
+
+    // ✅ Hide Abort Button after success
+    if (abortBtn) abortBtn.style.display = "none";
+
   } catch (err) {
     if (err.name === "AbortError") {
       console.warn("🛑 Search aborted by user.");
@@ -412,15 +420,24 @@ resultsBox.style.display = "block";
       console.error("🚨 Cyber Squirrel Search Error:", err);
       resultsBox.innerHTML = "<p>Error retrieving search results.</p>";
     }
+
+    // ✅ Hide Abort Button after failure or cancel
+    if (abortBtn) abortBtn.style.display = "none";
   }
 }
 
-// 🛑 Stop Search Handler (Abort Streaming Parser)
+// =========================================================
+// 🛑 Abort Button Handler
+// =========================================================
 function stopSearch() {
   if (abortController) abortController.abort();
+  const abortBtn = document.getElementById("stopSearchBtn");
+  if (abortBtn) abortBtn.style.display = "none";
 }
 
+// =========================================================
 // 📆 Load Version History Dropdown
+// =========================================================
 async function loadVersionHistory() {
   try {
     const res = await fetch(`${BACKEND_URL}/api/titles`);
@@ -431,9 +448,9 @@ async function loadVersionHistory() {
         .filter(Boolean)
     )];
 
-    uniqueDates.sort((a, b) => b.localeCompare(a)); // newest first
+    uniqueDates.sort((a, b) => b.localeCompare(a)); // Newest first
 
-    const dropdown = document.getElementById("versionDropdown");
+    const dropdown = document.getElementById("versionHistory");
     if (!dropdown) return;
 
     dropdown.innerHTML = `<option value="">-- Latest Version --</option>`;
