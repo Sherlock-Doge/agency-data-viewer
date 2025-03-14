@@ -285,3 +285,38 @@ footer {
     overflow-y: auto;
     padding-bottom: 20px;
 }
+
+/* 🔳 Wrap Cipher + Alert in unified center block */
+.cipher-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 20px auto;
+  position: relative;
+  z-index: 5;
+}
+
+/* ✅ Matrix Alert Box (hidden by default) */
+.matrix-alert {
+  display: none;
+  background-color: black;
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  font-family: 'Courier New', monospace;
+  font-size: 1.05em;
+  padding: 10px 16px;
+  text-align: center;
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  animation: flickerGlow 1.2s infinite alternate;
+}
+
+@keyframes flickerGlow {
+  0% { opacity: 0.6; text-shadow: 0 0 4px #00ff00; }
+  100% { opacity: 1; text-shadow: 0 0 10px #00ff00; }
+}
+
