@@ -244,9 +244,9 @@ footer {
 /* ✅ Results Box Overlayed on to Cipher/Search */
 #searchResults {
   position: absolute;
-  top: 120%;
+  top: 0%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translatex(-50%);
   width: 85%;
   max-height: 75vh;
   overflow-y: auto;
@@ -259,12 +259,12 @@ footer {
   display: none; /* default hidden */
 }
 
-/* ✅ Show Results Box When Active */
+/* Show Results Box When Active */
 .search-results-visible #searchResults {
     display: block;
 }
 
-/* ✅ Advanced Filters Section */
+/* Advanced Filters Section */
 .advanced-filters-wrapper {
     width: 70%;
     max-width: 800px;
@@ -274,6 +274,7 @@ footer {
     z-index: 5;
 }
 
+/*Spacing between drop downs
 #advancedFilters {
     padding: 15px;
     background: #f0f0f0;
