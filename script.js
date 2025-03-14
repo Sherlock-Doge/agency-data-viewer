@@ -1,3 +1,9 @@
+window.addEventListener('load', () => {
+  console.log('Main content height:', document.querySelector('.main-content').offsetHeight);
+  console.log('Cipher wrapper height:', document.getElementById('cipherWrapper').offsetHeight);
+});
+
+
 // =========================================================
 // ✅ eCFR Analyzer - Frontend Script (Full Final Version)
 // =========================================================
