@@ -281,17 +281,20 @@ async function performSearch() {
   const title = document.getElementById("titleFilter").value;
   const version = document.getElementById("versionHistory")?.value || null;
   const resultsBox = document.getElementById("searchResults");
-  const matrixAlert = document.getElementById("matrixAlert"); // ✅ Reference to Matrix alert block
+  const matrixAlert = document.getElementById("matrixAlert"); 
 
   // ⚠️ Require at least a query or filter
   const hasFilters = agency || title || version;
 
-  // ⚠ Matrix-style Empty Search Warning (handled via #matrixAlert in HTML now)
-  if (!query && !hasFilters) {
-    if (matrixAlert) matrixAlert.style.display = "block";
-    resultsBox.style.display = "none"; // hide standard results container
-    return;
-  }
+  // ⚠ Matrix-style Empty Search Warning
+  const matrixAlert = document.getElementById("matrixAlert");
+    if (!query && !hasFilters) {
+      if (matrixAlert) matrixAlert.style.display = "block";
+      resultsBox.style.display = "none";
+      return;
+    } else {
+      if (matrixAlert) matrixAlert.style.display = "none"; // Bonus tip: auto-hide alert on valid search
+    }
 
   // ✅ BONUS: Hide Matrix alert if previously shown
   if (matrixAlert) matrixAlert.style.display = "none";
@@ -597,7 +600,12 @@ function resetSearch() {
     populateDropdowns();
     const versionTipBox = document.getElementById("versionGuidanceTip");
     if (versionTipBox) versionTipBox.style.display = "none";
+    }
+
+    const matrixAlert = document.getElementById("matrixAlert");
+    if (matrixAlert) matrixAlert.style.display = "none";
 }
+
 
   
   // =========================================================
