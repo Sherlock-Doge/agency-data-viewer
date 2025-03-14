@@ -528,8 +528,17 @@ if (agencyFilter) agencyFilter.addEventListener("change", evaluateVersionTipVisi
   }
 
  if (isIndexPage) {
-    await fetchData();
-  }
+  console.log("📢 Index page detected – initializing metadata and table...");
+
+  // Ensure titles and agencies are fetched AND cached BEFORE using them
+  const [titles, agencies] = await Promise.all([fetchTitles(), fetchAgencies()]);
+  cachedTitles = titles;
+  cachedAgencies = agencies;
+
+  // Now render table and scoreboard using cached data
+  fetchData();
+}
+
 });
 
 
