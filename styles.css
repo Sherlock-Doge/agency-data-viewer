@@ -255,9 +255,9 @@ footer {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 95vw;                  
+  width: 75vw;                  
   max-width: 1400px;            
-  height: 100%;                 
+  height: auto%;                 
   background: rgba(0, 0, 0, 0.85); 
   color: white;
   padding: 24px;
