@@ -565,7 +565,7 @@ function resetSearch() {
     const endDate = document.getElementById("endDate");
     if (endDate) endDate.value = "";
 
-    const versionDropdown = document.getElementById("versionDropdown");
+    const versionDropdown = document.getElementById("versionHistory");
     if (versionDropdown) versionDropdown.selectedIndex = 0;
 
     const agencyFilter = document.getElementById("agencyFilter");
