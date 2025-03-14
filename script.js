@@ -513,7 +513,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const toggleFiltersBtn = document.getElementById("toggleFiltersButton");
     if (toggleFiltersBtn) toggleFiltersBtn.addEventListener("click", toggleAdvancedFilters);
-  }
+    
+        // ✅ Show guidance when version is selected but no title/agency is selected
+    const versionDropdown = document.getElementById("versionHistory");
+    if (versionDropdown) {
+      versionDropdown.addEventListener("change", () => {
+        const versionTipBox = document.getElementById("versionGuidanceTip");
+        if (!versionTipBox) return;
+    
+        const selectedVersion = versionDropdown.value;
+        const selectedTitle = document.getElementById("titleFilter")?.value;
+        const selectedAgency = document.getElementById("agencyFilter")?.value;
+    
+        if (selectedVersion && !selectedTitle && !selectedAgency) {
+          versionTipBox.textContent = "💡 Tip: Selecting a Title or Agency improves search accuracy when using Historical Versions.";
+          versionTipBox.style.display = "block";
+        } else {
+          versionTipBox.style.display = "none";
+        }
+      });
+    }
+
 
   if (isAgenciesPage) {
     fetchAgenciesTableAndRender();
@@ -560,6 +580,8 @@ function resetSearch() {
 
     document.body.classList.remove("search-results-visible");
     populateDropdowns();
+    const versionTipBox = document.getElementById("versionGuidanceTip");
+    if (versionTipBox) versionTipBox.style.display = "none";
 }
 
   
