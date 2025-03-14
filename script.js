@@ -596,15 +596,23 @@ function resetSearch() {
         suggestionBox.style.display = "none";
     }
 
-    document.body.classList.remove("search-results-visible");
-    populateDropdowns();
-    const versionTipBox = document.getElementById("versionGuidanceTip");
-    if (versionTipBox) versionTipBox.style.display = "none";
-    }
-
+  // Hide matrix alert
     const matrixAlert = document.getElementById("matrixAlert");
     if (matrixAlert) matrixAlert.style.display = "none";
-}
+
+  // Hide version guidance tip
+    const versionTipBox = document.getElementById("versionGuidanceTip");
+    if (versionTipBox) versionTipBox.style.display = "none";
+
+    document.body.classList.remove("search-results-visible");
+
+  // Re-populate dropdowns (if applicable)
+    populateDropdowns();
+  
+    }
+
+    
+
 
 
   
