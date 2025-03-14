@@ -80,45 +80,25 @@
 </div>
 
    
-    <!-- 🔍 Real-time Suggestions -->
-    <div id="searchSuggestions" style="display: none; width: 70%; margin: 0 auto; max-width: 600px; background: #fff; border: 1px solid #ccc; border-radius: 8px; z-index: 999; position: relative;"></div>
+    
+<div style="margin-bottom: 10px;">
+  <label for="titleFilter"><strong>Filter by Title:</strong></label>
+  <select id="titleFilter">
+    <option value="">-- All Titles --</option>
+  </select>
+</div>
 
-    <!-- ⚙️ Advanced Filters -->
-    <div style="width: 70%; max-width: 800px; margin: 10px auto; text-align: center;">
-      <button id="toggleFiltersButton" style="padding: 8px 16px; margin-bottom: 10px;">Advanced Filters ⬇️</button>
+<div style="margin-bottom: 10px;">
+  <label for="versionDropdown"><strong>Version History:</strong></label>
+  <select id="versionHistory">
+    <option value="">-- Latest Version --</option>
+  </select>
+  <div id="versionGuidanceTip" style="display: none; color: #444; font-style: italic; margin-top: 6px; font-size: 0.95em;"></div>
+</div>
+</div>
+</div>
 
-      <div id="advancedFilters" style="display: none; padding: 15px; background: #f0f0f0; border-radius: 8px;">
-      
-        <!-- Advanced Search Banner -->
-        <div id="searchBanner" style="text-align: center; font-style: italic; margin-bottom: 10px;"></div>
-        
-        <div style="margin-bottom: 10px;">
-          <label for="agencyFilter"><strong>Filter by Agency:</strong></label>
-          <select id="agencyFilter">
-            <option value="">-- All Agencies --</option>
-          </select>
-        </div>
-
-        <div style="margin-bottom: 10px;">
-          <label for="titleFilter"><strong>Filter by Title:</strong></label>
-          <select id="titleFilter">
-            <option value="">-- All Titles --</option>
-          </select>
-        </div>
-
-        <div style="margin-bottom: 10px;">
-          <label for="versionDropdown"><strong>Version History:</strong></label>
-          <select id="versionHistory">
-            <option value="">-- Latest Version --</option>
-          </select>
-          <div id="versionGuidanceTip" style="display: none; color: #444; font-style: italic; margin-top: 6px; font-size: 0.95em;"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Results Container -->
-    <div id="searchResults"></div>
-  </div>
+    
 
   <!-- Footer -->
   <footer>
