@@ -136,11 +136,6 @@ async function fetchData() {
   updateScoreboard(titles.length, agencies.length, mostRecentTitle, mostRecentDate, mostRecentTitleName);
 }
 
-// ✅ Auto-init for index.html only
-if (document.querySelector("#titlesTable")) {
-  fetchData();
-}
-
 
 // =========================================================
 // 🏢 Populate Agency Table (Agencies Page)
@@ -476,7 +471,7 @@ function alphabetizeAgenciesDropdown() {
   options.forEach(o => agencySelect.appendChild(o));
 }
 
-// 🧠 UX Banner Message
+// 🧠 Advanced Search Banner Message
 function showSearchBanner() {
   const banner = document.getElementById("searchBanner");
   if (banner) {
