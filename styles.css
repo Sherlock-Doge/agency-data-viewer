@@ -322,11 +322,12 @@ footer {
 
 
 
-/*  Main Content */
 .main-content {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding-bottom: 20px;
+  flex-grow: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 /*  Cipher Wrapper to Center Block + Message */
