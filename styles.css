@@ -251,21 +251,31 @@ footer {
 
 /* Results Box Overlayed on to Cipher */
 #searchResults {
-  position: relative;                
-  margin-top: 30px;                 
+  position: relative;
+  margin-top: 10px;
   width: 90%;
-  max-width: 900px;
+  max-width: 1000px;
   background: rgba(0, 0, 0, 0.88);
   color: white;
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 0 25px rgba(0, 255, 30, 1);
-  z-index: 2;
+  z-index: 10;
   display: none;
   overflow-y: auto;
-  max-height: 75vh;               
+  max-height: 75vh;
   pointer-events: auto;
 }
+
+#searchControlsWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
 
 /* Show Results Box When Active */
 .search-results-visible #searchResults {
