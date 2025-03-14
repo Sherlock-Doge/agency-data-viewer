@@ -472,7 +472,7 @@ function toggleAdvancedFilters() {
 document.addEventListener("DOMContentLoaded", async () => {
   const isSearchPage = window.location.pathname.includes("search.html");
   const isAgenciesPage = window.location.pathname.includes("agencies.html");
-  const isIndexPage = window.location.pathname.includes("index.html");
+  const isIndexPage = path.endsWith("/") || path.includes("index.html");
 
   if (isSearchPage) {
     await fetchTitles();
