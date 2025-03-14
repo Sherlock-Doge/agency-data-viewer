@@ -285,16 +285,19 @@ async function performSearch() {
   // ⚠️ Require at least a query or filter
   const hasFilters = agency || title || version;
   if (!query && !hasFilters) {
-    resultsBox.innerHTML = "<p>Please enter a search term or select filters.</p>";
+    resultsBox.innerHTML = "<p>Please enter a search term and/or select filters.</p>";
     resultsBox.style.display = "block";
     return;
   }
 
-  // ⚠️ Require Title or Agency if Version selected
-  if (version && !agency && !title) {
-    resultsBox.innerHTML = "<p>Please select a Title or Agency when using Version History.</p>";
-    return;
+  // 🔍 Informational Guidance for Version Search
+if (version && !agency && !title) {
+  const alertBox = document.getElementById("searchValidationAlert");
+  if (alertBox) {
+    alertBox.textContent = "💡 Tip: Selecting a Title or Agency improves search accuracy when using Historical Versions.";
+    alertBox.style.display = "block";
   }
+}
 
   // 🧠 Start Logging + Show Loading UI
   console.log(`🛫 Cyber Squirrel Internal Search → ${query || "[Filters only]"}`);
