@@ -435,15 +435,13 @@ function stopSearch() {
 // =========================================================
 async function loadVersionHistory() {
   try {
-    const res = await fetch(`${BACKEND_URL}/api/titles`);
-    const data = await res.json();
+    if (!cachedTitles || cachedTitles.length === 0) return;
+
     const uniqueDates = [...new Set(
-      (data.titles || [])
-        .map(t => t.latest_issue_date || t.up_to_date_as_of)
-        .filter(Boolean)
+      cachedTitles.map(t => t.latest_issue_date || t.up_to_date_as_of).filter(Boolean)
     )];
 
-    uniqueDates.sort((a, b) => b.localeCompare(a)); // Newest first
+    uniqueDates.sort((a, b) => b.localeCompare(a)); // newest first
 
     const dropdown = document.getElementById("versionHistory");
     if (!dropdown) return;
@@ -455,7 +453,6 @@ async function loadVersionHistory() {
       opt.textContent = `Version from ${date}`;
       dropdown.appendChild(opt);
     });
-
   } catch (err) {
     console.error("Failed to load version history:", err);
   }
