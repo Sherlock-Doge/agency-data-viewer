@@ -514,26 +514,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     const toggleFiltersBtn = document.getElementById("toggleFiltersButton");
     if (toggleFiltersBtn) toggleFiltersBtn.addEventListener("click", toggleAdvancedFilters);
     
-        // ✅ Show guidance when version is selected but no title/agency is selected
+// ✅ Show guidance when version is selected but no title/agency is selected
     const versionDropdown = document.getElementById("versionHistory");
-    if (versionDropdown) {
-      versionDropdown.addEventListener("change", () => {
-        const versionTipBox = document.getElementById("versionGuidanceTip");
-        if (!versionTipBox) return;
+    const versionTipBox = document.getElementById("versionGuidanceTip");
     
-        const selectedVersion = versionDropdown.value;
-        const selectedTitle = document.getElementById("titleFilter")?.value;
-        const selectedAgency = document.getElementById("agencyFilter")?.value;
+    // 🔍 Reusable logic to evaluate tip visibility
+    const evaluateVersionTipVisibility = () => {
+      if (!versionDropdown || !versionTipBox) return;
     
-        if (selectedVersion && !selectedTitle && !selectedAgency) {
-          versionTipBox.textContent = "💡 Tip: Selecting a Title or Agency improves search accuracy when using Historical Versions.";
-          versionTipBox.style.display = "block";
-        } else {
-          versionTipBox.style.display = "none";
-        }
-      });
+      const selectedVersion = versionDropdown.value;
+      const selectedTitle = document.getElementById("titleFilter")?.value;
+      const selectedAgency = document.getElementById("agencyFilter")?.value;
+    
+      if (selectedVersion && !selectedTitle && !selectedAgency) {
+        versionTipBox.textContent =
+          "💡 Tip: Selecting a Title or Agency improves search accuracy when using Historical Versions.";
+        versionTipBox.style.display = "block";
+      } else {
+        versionTipBox.style.display = "none";
     }
-  }
+  };
+
+// 📌 Bind listeners to all three filters
+if (versionDropdown) versionDropdown.addEventListener("change", evaluateVersionTipVisibility);
+const titleFilter = document.getElementById("titleFilter");
+if (titleFilter) titleFilter.addEventListener("change", evaluateVersionTipVisibility);
+const agencyFilter = document.getElementById("agencyFilter");
+if (agencyFilter) agencyFilter.addEventListener("change", evaluateVersionTipVisibility);
+
 
   if (isAgenciesPage) {
     fetchAgenciesTableAndRender();
