@@ -269,7 +269,7 @@ const subtitleUrlOverrides = {
   
    
 // =========================================================
-// 🛫 Cyber Squirrel Search Engine – Full Upgrade Final Version
+// 🐿️ Cyber Squirrel Search Engine – Down the Tree, Capture the Spoils
 // =========================================================
 
 let abortController = null;
@@ -281,44 +281,38 @@ async function performSearch() {
   const title = document.getElementById("titleFilter").value;
   const version = document.getElementById("versionHistory")?.value || null;
   const resultsBox = document.getElementById("searchResults");
-  const matrixAlert = document.getElementById("matrixAlert"); 
+  const matrixAlert = document.getElementById("matrixAlert");
 
   // ⚠️ Require at least a query or filter
   const hasFilters = agency || title || version;
 
   // ⚠ Matrix-style Empty Search Warning
-
-    if (!query && !hasFilters) {
-      if (matrixAlert) matrixAlert.style.display = "block";
-      resultsBox.style.display = "none";
-      return;
-    } else {
-      if (matrixAlert) matrixAlert.style.display = "none"; // Bonus tip: auto-hide alert on valid search
-    }
-
-  // ✅ BONUS: Hide Matrix alert if previously shown
-  if (matrixAlert) matrixAlert.style.display = "none";
+  if (!query && !hasFilters) {
+    if (matrixAlert) matrixAlert.style.display = "block";
+    if (resultsBox) resultsBox.style.display = "none";
+    return;
+  } else {
+    if (matrixAlert) matrixAlert.style.display = "none"; // Bonus: auto-hide alert on valid search
+  }
 
   // 🔍 Informational Guidance for Version Search
-  if (version && !agency && !title) {
-    const alertBox = document.getElementById("searchValidationAlert");
-    if (alertBox) {
-      alertBox.textContent = "💡 Tip: Selecting a Title or Agency improves search accuracy when using Historical Versions.";
-      alertBox.style.display = "block";
-    }
+  const alertBox = document.getElementById("searchValidationAlert");
+  if (version && !agency && !title && alertBox) {
+    alertBox.textContent = "💡 Tip: Selecting a Title or Agency improves search accuracy when using Historical Versions.";
+    alertBox.style.display = "block";
   }
 
   // 🧠 Start Logging + Show Loading UI
   console.log(`🛫 Cyber Squirrel Internal Search → ${query || "[Filters only]"}`);
   document.body.classList.add("search-results-visible");
 
+  // ✅ Show results box immediately and insert Matrix Loader
+  resultsBox.style.display = "block";
   resultsBox.innerHTML = `
     <p style="text-align:center; font-size: 1.1em; font-weight: bold; margin-bottom: 10px;">
       Looks like you took the red pill — this rabbit hole goes deep...
     </p>
-
-    <!-- Matrix Flicker Loader -->
-    <div style="display: flex; justify-content: center; margin-top: 20px;">
+    <div class="matrix-loader-container">
       <div class="matrix-loader">
         <div class="matrix-bar"></div>
         <div class="matrix-bar"></div>
@@ -327,33 +321,7 @@ async function performSearch() {
         <div class="matrix-bar"></div>
       </div>
     </div>
-
-    <style>
-      .matrix-loader {
-        display: flex;
-        gap: 4px;
-      }
-
-      .matrix-bar {
-        width: 6px;
-        height: 40px;
-        background-color: #00ff00;
-        animation: matrixPulse 1.2s infinite ease-in-out;
-      }
-
-      .matrix-bar:nth-child(1) { animation-delay: 0s; }
-      .matrix-bar:nth-child(2) { animation-delay: 0.2s; }
-      .matrix-bar:nth-child(3) { animation-delay: 0.4s; }
-      .matrix-bar:nth-child(4) { animation-delay: 0.6s; }
-      .matrix-bar:nth-child(5) { animation-delay: 0.8s; }
-
-      @keyframes matrixPulse {
-        0%, 100% { transform: scaleY(0.4); opacity: 0.3; }
-        50% { transform: scaleY(1.3); opacity: 1; }
-      }
-    </style>
   `;
-  resultsBox.style.display = "block";
 
   // ✅ Hide old suggestions immediately
   const suggestionBox = document.getElementById("searchSuggestions");
@@ -380,9 +348,11 @@ async function performSearch() {
   try {
     const res = await fetch(url.toString(), { signal: abortController.signal });
     const data = await res.json();
-    resultsBox.innerHTML = ""; // Clear loader
 
-    // ✅ Show results or empty message
+    // ✅ Clear loader, start fresh
+    resultsBox.innerHTML = "";
+
+    // ✅ Show results or fallback message
     if (!data.results || data.results.length === 0) {
       resultsBox.innerHTML = "<p>No results found.</p>";
     } else {
