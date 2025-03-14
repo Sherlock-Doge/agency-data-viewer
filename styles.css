@@ -199,34 +199,36 @@ footer {
     transition: opacity 0.5s ease-in-out;
 }
 
-/* ✅ Fade Cipher on Search */
+/* Fade Cipher on Search */
 .search-results-visible .cipher-image {
     opacity: 0.05;
 }
 
-/* ✅ Search Bar (Under Cipher, Centered) */
+/* Search Bar (Under Cipher, Centered) */
 .search-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 20px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    position: relative;
-    z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
-/* ✅ Search Input Styling */
+
+/* Search Input Styling */
 #searchQuery {
-    width: 80%;
-    padding: 12px;
-    font-size: 16px;
-    border: 2px solid black;
-    border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
-/* ✅ Search Button */
+
+/*  Search Button */
 .search-container button {
     padding: 12px 20px;
     font-size: 16px;
@@ -264,7 +266,7 @@ footer {
     display: block;
 }
 
-/* ✅ Advanced Filters Section (Wrapper + Filter Box + Toggle Button) */
+/*  Advanced Filters Section (Wrapper + Filter Box + Toggle Button) */
 
 .advanced-filters-wrapper {
   width: 100%;
@@ -311,14 +313,14 @@ footer {
 
 
 
-/* ✅ Main Content */
+/*  Main Content */
 .main-content {
     flex-grow: 1;
     overflow-y: auto;
     padding-bottom: 20px;
 }
 
-/* ✅ Cipher Wrapper to Center Block + Message */
+/*  Cipher Wrapper to Center Block + Message */
 #cipherWrapper {
   position: relative;
   display: flex;
@@ -327,7 +329,7 @@ footer {
     height: auto;
 }
 
-/* ✅ Matrix Alert Box Centered on Cipher */
+/*  Matrix Alert Box Centered on Cipher */
 .matrix-alert {
     position: absolute;
     top: 50%;
@@ -348,27 +350,37 @@ footer {
     display: none;
 }
 
-/* ✅ Matrix Flicker Animation */
+/*  Matrix Flicker Animation */
 @keyframes flickerGlow {
     0% { opacity: 0.6; text-shadow: 0 0 4px #00ff00; }
     100% { opacity: 1; text-shadow: 0 0 10px #00ff00; }
 }
 
-/* ✅ Search Suggestions Box - re-centered */
-#searchSuggestions {
-    display: none;
-    width: 70%;
-    max-width: 600px;
-    margin: 0 auto;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    z-index: 999;
-    position: relative;
-    text-align: left;
+/* Search Container must anchor the suggestions dropdown */
+.search-container {
+  position: relative;
 }
 
-/* ✅ Matrix Loader Container - center like Matrix Alert */
+/* 🔍 Search Suggestions Box */
+#searchSuggestions {
+  display: none;
+  position: absolute;
+  top: 100%; /* directly under the input box */
+  left: 0;
+  width: 100%;
+  max-width: 600px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  z-index: 999;
+  text-align: left;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 5px 10px;
+}
+
+
+/* Matrix Loader Container - center like Matrix Alert */
 .matrix-loader-container {
   position: absolute;
   top: 55%;
@@ -400,4 +412,15 @@ footer {
   50% { transform: scaleY(1.3); opacity: 1; }
 }
 
+/*Responsiveness for small screens*/
+@media (max-width: 600px) {
+  .search-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-container button {
+    width: 100%;
+  }
+}
 
