@@ -462,9 +462,9 @@ function showSearchBanner() {
 
 // On Page Load Initialization (Scoped per Page)
 
-// 🔧 Fancy Fade-In Toggle Function (REPLACES basic display toggle)
+// Final fancy toggle using CSS transition on wrapper
 function toggleAdvancedFilters() {
-  const wrapper = document.getElementById("advancedFilters");
+  const wrapper = document.querySelector(".advanced-filters-wrapper");
   if (wrapper) {
     wrapper.classList.toggle("visible");
   }
