@@ -290,8 +290,8 @@ footer {
   overflow: hidden;
   opacity: 0;
   transition: max-height 0.4s ease, opacity 0.3s ease;
-  margin-top: 20px;
-  padding: 20px;
+  margin-top: 2.5px;
+  padding: 10px;
   background-color: #f5f5f5;
   border-radius: 10px;
   max-width: 600px;
@@ -314,8 +314,8 @@ footer {
 /* Toggle Button Container */
 .advanced-toggle-wrapper {
   text-align: center;
-  margin-top: 15px;
-  margin-bottom: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 /* Toggle Button Style */
