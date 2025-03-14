@@ -528,11 +528,8 @@ if (agencyFilter) agencyFilter.addEventListener("change", evaluateVersionTipVisi
   }
 
  if (isIndexPage) {
-  fetchTitles();   // ← loads the table
-  fetchAgencies(); // ← loads agency count, recent amendment, etc.
-  renderScoreboard();
-    }
-
+    await fetchData();
+  }
 });
 
 
@@ -584,11 +581,7 @@ function resetSearch() {
   
     }
 
-    
-
-
-
-  
+      
   // =========================================================
   // 💬 Live Search Suggestions from Backend (Enhanced Display)
   // =========================================================
