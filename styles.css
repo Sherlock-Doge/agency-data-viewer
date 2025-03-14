@@ -311,6 +311,11 @@ footer {
   margin-bottom: 15px;
 }
 
+#versionGuidanceTip {
+  margin-top: 8px; /* adds breathing room */
+  display: none; /* already set correctly; just ensuring layout is prepped */
+}
+
 /* Toggle Button Container */
 .advanced-toggle-wrapper {
   text-align: center;
