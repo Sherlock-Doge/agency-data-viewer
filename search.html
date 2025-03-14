@@ -31,7 +31,7 @@
   <!-- Main Content -->
   <div class="main-content">
 
-    <!-- ✅ Cipher Wrapper holds Cipher Image + Controls + Search Results -->
+    <!-- Cipher Wrapper holds Cipher Image + Controls + Search Results -->
     <div id="cipherWrapper">
       <div class="matrix-alert" id="matrixAlert">
         ⚠ SYSTEM MESSAGE: Please enter a search term and/or select filters.
@@ -39,24 +39,22 @@
 
       <img src="images/cipher-doge.png" alt="Cipher Doge" id="cipherImage" class="cipher-image" />
 
-      <div class="search-controls">
-        <div class="search-container">
-          <input type="text" id="searchQuery" placeholder="Please enter a search term..." />
-          <button id="searchButton">Search</button>
-          <button id="resetButton">Reset</button>
-          <button id="stopSearchBtn" style="display:none;">Abort Search</button>
-        </div>
-
-        <!-- ✅ Advanced Search button now directly below search bar -->
-        <div class="advanced-toggle-wrapper">
-          <button id="toggleFiltersButton">Advanced Search ⬇️</button>
-        </div>
-
-        <!-- 🔍 Real-time Suggestions -->
-        <div id="searchSuggestions"></div>
+      <<div class="search-controls">
+      <div class="search-container">
+        <input type="text" id="searchQuery" placeholder="Please enter a search term..." />
+        <div id="searchSuggestions"></div> <!-- 👈 MOVE HERE -->
+        <button id="searchButton">Search</button>
+        <button id="resetButton">Reset</button>
+        <button id="stopSearchBtn" style="display:none;">Abort Search</button>
       </div>
+    
+      <div class="advanced-toggle-wrapper">
+        <button id="toggleFiltersButton">Advanced Search ⬇️</button>
+      </div>
+    </div>
 
-      <!-- ✅ Results box now lives INSIDE cipherWrapper -->
+
+      <!-- Results box now lives INSIDE cipherWrapper -->
       <div id="searchResults"></div>
     </div>
 
