@@ -459,11 +459,11 @@ function showSearchBanner() {
   }
 }
 
-//Advanced Filter activation
+// Advanced Filter activation - fixed version
 function toggleAdvancedFilters() {
-  const filters = document.getElementById("advancedFilters");
-  if (filters) {
-    filters.style.display = filters.style.display === "none" ? "block" : "none";
+  const wrapper = document.querySelector(".advanced-filters-wrapper");
+  if (wrapper) {
+    wrapper.style.display = (wrapper.style.display === "none" || wrapper.style.display === "") ? "block" : "none";
   }
 }
 
