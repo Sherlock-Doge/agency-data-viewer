@@ -374,16 +374,16 @@ footer {
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1001;
-    padding: 14px;
+    padding: 20px 24px;
     background-color: black;
     border: 2px solid #00ff00;
     color: #00ff00;
     font-family: 'Courier New', monospace;
-    font-size: 1.1em;
+    font-size: 1.3em;
     text-align: center;
     width: 90%;
-    max-width: 600px;
-    border-radius: 8px;
+    max-width: 720px;
+    border-radius: 12px;
     animation: flickerGlow 1.2s infinite alternate;
     display: none;
 }
