@@ -542,18 +542,6 @@ if (agencyFilter) agencyFilter.addEventListener("change", evaluateVersionTipVisi
 }
 });
 
-// 🔒 LOCK searchResults height to cipherImage after everything is fully loaded
-window.addEventListener("load", () => {
-  const cipherImage = document.getElementById("cipherImage");
-  const cipherWrapper = document.getElementById("cipherWrapper");
-  const searchResults = document.getElementById("searchResults");
-
-  if (cipherImage && cipherWrapper && searchResults) {
-    const imgHeight = cipherImage.offsetHeight + "px";
-    searchResults.style.height = imgHeight;
-    searchResults.style.maxHeight = imgHeight;
-  }
-});
 
 
 // =========================================================
