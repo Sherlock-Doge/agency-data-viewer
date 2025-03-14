@@ -459,16 +459,26 @@ function showSearchBanner() {
   }
 }
 
-// Advanced Filter activation - fixed version
+// Advanced Filter activation – correct target: #advancedFilters
 function toggleAdvancedFilters() {
-  const wrapper = document.querySelector(".advanced-filters-wrapper");
+  const wrapper = document.getElementById("advancedFilters");
   if (wrapper) {
-    wrapper.style.display = (wrapper.style.display === "none" || wrapper.style.display === "") ? "block" : "none";
+    const isVisible = wrapper.style.display === "block";
+    wrapper.style.display = isVisible ? "none" : "block";
   }
 }
 
 
-// ✅ On Page Load Initialization (Scoped per Page)
+// On Page Load Initialization (Scoped per Page)
+
+// 🔧 Fancy Fade-In Toggle Function (REPLACES basic display toggle)
+function toggleAdvancedFilters() {
+  const wrapper = document.getElementById("advancedFilters");
+  if (wrapper) {
+    wrapper.classList.toggle("visible");
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const isSearchPage = window.location.pathname.includes("search.html");
   const isAgenciesPage = window.location.pathname.includes("agencies.html");
@@ -495,7 +505,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const toggleFiltersBtn = document.getElementById("toggleFiltersButton");
     if (toggleFiltersBtn) toggleFiltersBtn.addEventListener("click", toggleAdvancedFilters);
     
-// ✅ Show guidance when version is selected but no title/agency is selected
+// Show guidance when version is selected but no title/agency is selected
     const versionDropdown = document.getElementById("versionHistory");
     const versionTipBox = document.getElementById("versionGuidanceTip");
     
