@@ -244,17 +244,17 @@ footer {
 /* ✅ Results Box Overlayed on to Cipher/Search */
 #searchResults {
   position: absolute;
-  top: 50%;
+  top: 120%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 75%;
-  max-height: 400px;
+  width: 85%;
+  max-height: 75vh;
   overflow-y: auto;
   background: rgba(0, 0, 0, 0.85);
   color: white;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 0 15px lime;
+  box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
   z-index: 9999;
   display: none; /* default hidden */
 }
@@ -279,6 +279,11 @@ footer {
     background: #f0f0f0;
     border-radius: 8px;
 }
+
+#advancedFilters > div {
+  margin-bottom: 12px;
+}
+
 
 /* ✅ Main Content */
 .main-content {
