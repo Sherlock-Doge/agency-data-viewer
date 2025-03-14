@@ -266,14 +266,14 @@ footer {
 
 /* Advanced Filters Section */
 .advanced-filters-wrapper {
-    width: 70%;
-    max-width: 800px;
-    margin: 10px auto;
-    text-align: center;
-    position: relative;
-    z-index: 5;
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto 0 auto;
+  text-align: center;
+  padding-top: 10px;
+  z-index: 5;
+  position: relative;
 }
-
 
 #advancedFilters {
     padding: 15px;
