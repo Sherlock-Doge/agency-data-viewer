@@ -306,22 +306,26 @@ async function performSearch() {
   console.log(`🛫 Cyber Squirrel Internal Search → ${query || "[Filters only]"}`);
   document.body.classList.add("search-results-visible");
 
-  // ✅ Show results box immediately and insert Matrix Loader
-  resultsBox.style.display = "block";
-  resultsBox.innerHTML = `
-    <p style="text-align:center; font-size: 1.1em; font-weight: bold; margin-bottom: 10px;">
-      Looks like you took the red pill — this rabbit hole goes deep...
-    </p>
-    <div class="matrix-loader-container">
-      <div class="matrix-loader">
-        <div class="matrix-bar"></div>
-        <div class="matrix-bar"></div>
-        <div class="matrix-bar"></div>
-        <div class="matrix-bar"></div>
-        <div class="matrix-bar"></div>
-      </div>
-    </div>
-  `;
+  // ✅ Show results box immediately
+resultsBox.style.display = "block";
+resultsBox.innerHTML = `
+  <p style="text-align:center; font-size: 1.1em; font-weight: bold; margin-bottom: 10px;">
+    Looks like you took the red pill — this rabbit hole goes deep...
+  </p>
+`;
+showMatrixLoader();
+
+  function showMatrixLoader() {
+  const loader = document.querySelector('.matrix-loader-container');
+  if (loader) loader.style.opacity = "1";
+}
+
+function hideMatrixLoader() {
+  const loader = document.querySelector('.matrix-loader-container');
+  if (loader) loader.style.opacity = "0";
+}
+
+
 
   // ✅ Hide old suggestions immediately
   const suggestionBox = document.getElementById("searchSuggestions");
