@@ -31,63 +31,65 @@
   <!-- Main Content -->
   <div class="main-content">
 
-   <!-- Cipher Wrapper holds Cipher Image + Controls + Search Results -->
-<div id="cipherWrapper">
-  <!-- Matrix Alert Message -->
-  <div class="matrix-alert" id="matrixAlert">
-    ⚠ SYSTEM MESSAGE: Please enter a search term and/or select filters.
-  </div>
-
-  <!-- Cipher Doge Image -->
-  <img src="images/cipher-doge.png" alt="Cipher Doge" id="cipherImage" class="cipher-image" />
-
-  <!-- Search Controls Block -->
-  <div class="search-controls">
-    <div class="search-container">
-      <input type="text" id="searchQuery" placeholder="Please enter a search term..." />
-      <div id="searchSuggestions"></div>
-      <button id="searchButton">Search</button>
-      <button id="resetButton">Reset</button>
-      <button id="stopSearchBtn" style="display: none;">Abort Search</button>
-    </div>
-
-    <div class="advanced-toggle-wrapper">
-      <button id="toggleFiltersButton">Advanced Search ⬇️</button>
-    </div>
-
-    <div class="advanced-filters-wrapper" style="display: none;">
-      <div id="advancedFilters">
-        <div id="searchBanner"></div>
-
-        <div>
-          <label for="agencyFilter"><strong>Filter by Agency:</strong></label>
-          <select id="agencyFilter">
-            <option value="">-- All Agencies --</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="titleFilter"><strong>Filter by Title:</strong></label>
-          <select id="titleFilter">
-            <option value="">-- All Titles --</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="versionHistory"><strong>Version History:</strong></label>
-          <select id="versionHistory">
-            <option value="">-- Latest Version --</option>
-          </select>
-          <div id="versionGuidanceTip" class="version-tip"></div>
-        </div>
+    <!-- Cipher Wrapper holds Cipher Image + Controls + Search Results -->
+    <div id="cipherWrapper">
+      <!-- Matrix Alert Message -->
+      <div class="matrix-alert" id="matrixAlert">
+        ⚠ SYSTEM MESSAGE: Please enter a search term and/or select filters.
       </div>
-    </div>
-  </div>
 
-  <div id="searchResults"></div>
-  
-</div>
+      <!-- Cipher Doge Image -->
+      <img src="images/cipher-doge.png" alt="Cipher Doge" id="cipherImage" class="cipher-image" />
 
+      <!-- Search Controls Block -->
+      <div class="search-controls">
+        <div class="search-container">
+          <input type="text" id="searchQuery" placeholder="Please enter a search term..." />
+          <div id="searchSuggestions"></div>
+          <button id="searchButton">Search</button>
+          <button id="resetButton">Reset</button>
+          <button id="stopSearchBtn" style="display: none;">Abort Search</button>
+        </div>
+
+        <div class="advanced-toggle-wrapper">
+          <button id="toggleFiltersButton">Advanced Search ⬇️</button>
+        </div>
+      </div> <!-- END .search-controls -->
+
+      <!-- Moved OUTSIDE search-controls, INSIDE cipherWrapper -->
+      <div class="advanced-filters-wrapper">
+        <div id="advancedFilters" style="display: none;">
+          <div id="searchBanner"></div>
+
+          <div>
+            <label for="agencyFilter"><strong>Filter by Agency:</strong></label>
+            <select id="agencyFilter">
+              <option value="">-- All Agencies --</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="titleFilter"><strong>Filter by Title:</strong></label>
+            <select id="titleFilter">
+              <option value="">-- All Titles --</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="versionHistory"><strong>Version History:</strong></label>
+            <select id="versionHistory">
+              <option value="">-- Latest Version --</option>
+            </select>
+            <div id="versionGuidanceTip" class="version-tip"></div>
+          </div>
+        </div>
+      </div> <!-- END .advanced-filters-wrapper -->
+
+      <!-- Results box -->
+      <div id="searchResults"></div>
+    </div> <!-- END #cipherWrapper -->
+
+  </div> <!-- END .main-content -->
 
   <!-- Footer -->
   <footer>
