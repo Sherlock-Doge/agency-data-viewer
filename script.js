@@ -729,4 +729,20 @@ function resetSearch() {
     }
   }
   
-  
+  // =========================================================
+// 📂 Lock Search Results Height to Cipher (Final Version)
+// =========================================================
+function lockSearchResultsHeightToCipher() {
+  const cipherImage = document.getElementById("cipherImage");
+  const searchResults = document.getElementById("searchResults");
+  if (cipherImage && searchResults) {
+    const cipherHeight = cipherImage.offsetHeight + "px";
+    searchResults.style.height = cipherHeight;
+    searchResults.style.maxHeight = cipherHeight;
+  }
+}
+
+// 🚨 Run once on load AND on resize
+window.addEventListener("load", lockSearchResultsHeightToCipher);
+window.addEventListener("resize", lockSearchResultsHeightToCipher);
+
