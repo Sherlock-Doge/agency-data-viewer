@@ -550,7 +550,6 @@ window.addEventListener("load", () => {
 
   if (cipherImage && cipherWrapper && searchResults) {
     const imgHeight = cipherImage.offsetHeight + "px";
-    cipherWrapper.style.height = imgHeight;
     searchResults.style.height = imgHeight;
     searchResults.style.maxHeight = imgHeight;
   }
