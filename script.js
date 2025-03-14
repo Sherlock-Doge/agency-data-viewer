@@ -541,7 +541,7 @@ const titleFilter = document.getElementById("titleFilter");
 if (titleFilter) titleFilter.addEventListener("change", evaluateVersionTipVisibility);
 const agencyFilter = document.getElementById("agencyFilter");
 if (agencyFilter) agencyFilter.addEventListener("change", evaluateVersionTipVisibility);
-
+  }
 
   if (isAgenciesPage) {
     fetchAgenciesTableAndRender();
