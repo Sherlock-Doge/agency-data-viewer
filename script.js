@@ -289,14 +289,19 @@ async function performSearch() {
   if (!query && !hasFilters) {
     resultsBox.innerHTML = `
       <div style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
         padding: 14px;
-        margin: 20px auto;
         background-color: black;
         border: 2px solid #00ff00;
         color: #00ff00;
         font-family: 'Courier New', monospace;
         font-size: 1.1em;
         text-align: center;
+        width: 90%;
         max-width: 600px;
         border-radius: 8px;
         animation: flickerGlow 1.2s infinite alternate;
