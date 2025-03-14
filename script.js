@@ -527,9 +527,12 @@ if (agencyFilter) agencyFilter.addEventListener("change", evaluateVersionTipVisi
     fetchAgenciesTableAndRender();
   }
 
-  if (isIndexPage) {
-    fetchData();
+ if (isIndexPage) {
+  fetchAllTitles();   // ← loads the table
+  fetchAllAgencies(); // ← loads agency count, recent amendment, etc.
+  renderScoreboard(); // ← optional: if you separate it from fetchAllAgencies
   }
+
 });
 
 
