@@ -274,7 +274,6 @@ footer {
 
 /*  Advanced Filters Section (Wrapper + Filter Box + Toggle Button) */
 .advanced-filters-wrapper {
-  display: none; /* Hidden by default */
   margin-top: 20px;
   padding: 20px;
   background-color: #f5f5f5;
