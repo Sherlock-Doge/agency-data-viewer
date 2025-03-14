@@ -33,8 +33,45 @@
   <!-- Main Content -->
   <div class="main-content">
     <!-- Cipher Image -->
-    <img src="images/cipher-doge.png" alt="Cipher Doge" class="cipher-image" id="cipherImage" />
+    <!-- Cipher Section with Matrix Alert Centered -->
+  <div class="cipher-container" style="position: relative; display: inline-block; text-align: center;">
 
+  <!-- 🟩 SYSTEM MESSAGE Overlay -->
+  <div id="matrixAlert" style="
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    padding: 14px;
+    background-color: black;
+    border: 2px solid #00ff00;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1em;
+    text-align: center;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 8px;
+    animation: flickerGlow 1.2s infinite alternate;
+    display: none;
+  ">
+    ⚠ SYSTEM MESSAGE: Please enter a search term and/or select filters.
+  </div>
+
+  <!-- Cipher Image -->
+  <img src="images/cipher-doge.png" alt="Cipher Doge" class="cipher-image" id="cipherImage" />
+
+  </div>
+
+  <!-- Animation CSS -->
+  <style>
+    @keyframes flickerGlow {
+      0% { opacity: 0.6; text-shadow: 0 0 4px #00ff00; }
+      100% { opacity: 1; text-shadow: 0 0 10px #00ff00; }
+    }
+  </style>
+    
     <!-- Search Bar + Reset -->
     <div class="search-container">
       <input type="text" id="searchQuery" placeholder="Please enter a search term..." />
