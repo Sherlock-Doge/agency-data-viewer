@@ -201,7 +201,7 @@ footer {
     width: auto;
     max-width: 100%;
     height: auto;
-    border-radius: 0.5rem;
+    border-radius: 1.0rem;
     transition: opacity 0.5s ease-in-out;
 }
 
