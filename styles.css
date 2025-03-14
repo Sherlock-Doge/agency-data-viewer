@@ -243,20 +243,20 @@ footer {
 
 /* ✅ Results Box Overlayed on to Cipher/Search */
 #searchResults {
-  position: absolute;
-  top: 100%;
+ position: absolute;
+  top: 20%; /* Adjust this value to raise/lower it */
   left: 50%;
-  transform: translatex(-50%);
-  width: 85%;
-  max-height: 75vh;
+  transform: translateX(-50%);
+  width: 90%;
+  height: 60vh; /* Taller fixed height */
   overflow-y: auto;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.88);
   color: white;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 0 15px rgba(176, 255, 192, 1.00);
+  box-shadow: 0 0 20px #00ff00;
   z-index: 9999;
-  display: none; /* default hidden */
+  display: none;
 }
 
 /* Show Results Box When Active */
@@ -274,15 +274,16 @@ footer {
     z-index: 5;
 }
 
-/*Spacing between drop downs
+
 #advancedFilters {
     padding: 15px;
     background: #f0f0f0;
     border-radius: 8px;
 }
 
+/*Spacing between drop downs
 #advancedFilters > div {
-  margin-bottom: 12px;
+  margin-bottom: 15px;
 }
 
 
