@@ -321,21 +321,23 @@ footer {
 }
 
 
-
 .main-content {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding-bottom: 20px;
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 100%;
 }
+
 
 /*  Cipher Wrapper to Center Block + Message */
 #cipherWrapper {
-  position: relative;
+  flex-grow: 1;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: auto;
-  padding-bottom: 80px; 
+  padding-bottom: 40px;
 }
 
 
