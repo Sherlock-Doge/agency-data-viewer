@@ -287,7 +287,7 @@ async function performSearch() {
   const hasFilters = agency || title || version;
 
   // ⚠ Matrix-style Empty Search Warning
-  const matrixAlert = document.getElementById("matrixAlert");
+
     if (!query && !hasFilters) {
       if (matrixAlert) matrixAlert.style.display = "block";
       resultsBox.style.display = "none";
