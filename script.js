@@ -321,6 +321,9 @@ async function performSearch() {
   document.body.classList.add("search-results-visible");
   showMatrixLoader();
 
+  // ✅ Show results box
+  if (resultsBox) resultsBox.style.display = "block";
+
   // 🧹 Clear old suggestions
   const suggestionBox = document.getElementById("searchSuggestions");
   if (suggestionBox) {
