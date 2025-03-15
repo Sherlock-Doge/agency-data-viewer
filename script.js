@@ -240,24 +240,9 @@ const subtitleUrlOverrides = {
           wordCountCell.appendChild(button);
         }
   
-        // Column 4: Fast Word Count Button (new SAX-based endpoint)
-        const fastCountCell = document.createElement("td");
-        if (agency.slug === "federal-procurement-regulations-system") {
-          fastCountCell.innerHTML = `<span>Content blank (0)</span>`;
-        } else {
-          const fastButton = document.createElement("button");
-          fastButton.textContent = "Generate (Fast)";
-          fastButton.style.opacity = "1";
-          fastButton.addEventListener("click", () =>
-            fetchAgencyWordCountFast(agency, fastCountCell, fastButton)
-          );
-          fastCountCell.appendChild(fastButton);
-        }
-  
         row.appendChild(agencyCell);
         row.appendChild(titlesCell);
         row.appendChild(wordCountCell);
-        row.appendChild(fastCountCell);
         tableBody.appendChild(row);
       });
     } catch (err) {
