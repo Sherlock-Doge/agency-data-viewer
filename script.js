@@ -351,6 +351,7 @@ async function performSearch() {
     const data = await res.json();
 
     // 🧼 Clear previous results
+    resultsBox.style.display = "block";
     resultsBox.innerHTML = "";
 
     // 📭 Show "no results" fallback
