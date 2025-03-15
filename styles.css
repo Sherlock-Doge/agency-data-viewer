@@ -437,7 +437,9 @@ footer {
   z-index: 1001;
   opacity: 0;
   transition: opacity 0.4s ease;
+  pointer-events: none;  
 }
+
 
 /* 🔺 Red Pill Message - Positioned Above Loader */
 .matrix-loader-text {
