@@ -258,7 +258,7 @@ footer {
   width: 95vw;                  
   max-width: 2000px;            
   height: auto;
-    max-height: 25%;
+    max-height: calc(100% - 60px);
   background: rgba(0, 0, 0, .1); 
   color: #000;
   padding: 24px;
