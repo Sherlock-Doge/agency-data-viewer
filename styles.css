@@ -428,17 +428,30 @@ footer {
 }
 
 
-/* Matrix Loader Container - center like Matrix Alert */
+/* 🔄 Matrix Loader (Red Pill "Processing" Animation) */
 .matrix-loader-container {
   position: absolute;
-  top: 50%;
+  top: 50%;  /* Keeps loader centered */
   left: 50%;
   transform: translate(-50%, -50%);
-    font-size: 1.4em;
   z-index: 1001;
   opacity: 0;
-  transition: opacity 0.4s ease;  
+  transition: opacity 0.4s ease;
 }
+
+/* 🔺 Red Pill Message - Positioned Above Loader */
+.matrix-loader-text {
+  position: absolute;
+  top: -60px; 
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.8em; 
+  font-weight: bold;
+  text-align: center;
+  white-space: nowrap;
+  color: #000;
+}
+
 
 .matrix-loader {
     display: flex;
