@@ -274,42 +274,10 @@ const subtitleUrlOverrides = {
 
 let abortController = null;
 
-// 🚀 Perform Internal Search (keyword, filters, version)
-async function performSearch() {
-  const query = document.getElementById("searchQuery").value.trim();
-  const agency = document.getElementById("agencyFilter").value;
-  const title = document.getElementById("titleFilter").value;
-  const version = document.getElementById("versionHistory")?.value || null;
-  const resultsBox = document.getElementById("searchResults");
-  const matrixAlert = document.getElementById("matrixAlert");
-
-  // ⚠️ Require at least a query or filter
-  const hasFilters = agency || title || version;
-
-  // ⚠ Matrix-style Empty Search Warning
-  if (!query && !hasFilters) {
-    if (matrixAlert) matrixAlert.style.display = "block";
-    if (resultsBox) resultsBox.style.display = "none";
-    return;
-  } else {
-    if (matrixAlert) matrixAlert.style.display = "none"; // Bonus: auto-hide alert on valid search
-  }
-
-  // 🔍 Informational Guidance for Version Search
-  const alertBox = document.getElementById("searchValidationAlert");
-  if (version && !agency && !title && alertBox) {
-    alertBox.textContent = "💡 Tip: Selecting a Title or Agency improves search accuracy when using Historical Versions.";
-    alertBox.style.display = "block";
-  }
-
-  // 🧠 Start Logging + Show Loading UI
-  console.log(`🛫 Cyber Squirrel Internal Search → ${query || "[Filters only]"}`);
-  document.body.classList.add("search-results-visible");
-
- 
-showMatrixLoader();
-
-  function showMatrixLoader() {
+// ===========================
+// 🔄 Loader Show/Hide Handlers
+// ===========================
+function showMatrixLoader() {
   const loader = document.querySelector('.matrix-loader-container');
   if (loader) loader.style.opacity = "1";
 }
@@ -319,24 +287,56 @@ function hideMatrixLoader() {
   if (loader) loader.style.opacity = "0";
 }
 
+// =========================================================
+// 🚀 Perform Internal Search (keyword, filters, version)
+// =========================================================
+async function performSearch() {
+  const query = document.getElementById("searchQuery").value.trim();
+  const agency = document.getElementById("agencyFilter").value;
+  const title = document.getElementById("titleFilter").value;
+  const version = document.getElementById("versionHistory")?.value || null;
+  const resultsBox = document.getElementById("searchResults");
+  const matrixAlert = document.getElementById("matrixAlert");
 
+  const hasFilters = agency || title || version;
 
-  // ✅ Hide old suggestions immediately
+  // ⚠ Empty query + filters = show matrix warning box
+  if (!query && !hasFilters) {
+    if (matrixAlert) matrixAlert.style.display = "block";
+    if (resultsBox) resultsBox.style.display = "none";
+    return;
+  } else {
+    if (matrixAlert) matrixAlert.style.display = "none"; // Auto-hide matrix alert on valid search
+  }
+
+  // 💡 Tip: Inform about better historical version search scope
+  const alertBox = document.getElementById("searchValidationAlert");
+  if (version && !agency && !title && alertBox) {
+    alertBox.textContent = "💡 Tip: Selecting a Title or Agency improves search accuracy when using Historical Versions.";
+    alertBox.style.display = "block";
+  }
+
+  // 🔍 Search Initiation Log + UI setup
+  console.log(`🛫 Cyber Squirrel Internal Search → ${query || "[Filters only]"}`);
+  document.body.classList.add("search-results-visible");
+  showMatrixLoader();
+
+  // 🧹 Clear old suggestions
   const suggestionBox = document.getElementById("searchSuggestions");
   if (suggestionBox) {
     suggestionBox.innerHTML = "";
     suggestionBox.style.display = "none";
   }
 
-  // 🔴 Show Abort Search Button when search starts
+  // 🟥 Show Abort Button
   const abortBtn = document.getElementById("stopSearchBtn");
   if (abortBtn) abortBtn.style.display = "inline-block";
 
-  // 🛑 Setup Abort Controller
+  // ⛔ Abort previous search if active
   if (abortController) abortController.abort();
   abortController = new AbortController();
 
-  // 🔗 Construct backend request URL
+  // 🔗 Build Backend Search URL
   const url = new URL(`${BACKEND_URL}/api/search/cyber-squirrel`);
   if (query) url.searchParams.append("q", query);
   if (agency) url.searchParams.append("agency_slugs[]", agency);
@@ -347,49 +347,41 @@ function hideMatrixLoader() {
     const res = await fetch(url.toString(), { signal: abortController.signal });
     const data = await res.json();
 
-  // ✅ Clear loader, start fresh
-resultsBox.innerHTML = "";
+    // 🧼 Clear previous results
+    resultsBox.innerHTML = "";
 
-// ✅ Show results or fallback message
-if (!data.results || data.results.length === 0) {
-  resultsBox.innerHTML = "<p>No results found.</p>";
-} else {
-  resultsBox.innerHTML = `<p><em>${data.results.length} matches found.</em></p>`;
+    // 📭 Show "no results" fallback
+    if (!data.results || data.results.length === 0) {
+      resultsBox.innerHTML = "<p>No results found.</p>";
+    } else {
+      // 📦 Render matched results
+      resultsBox.innerHTML = `<p><em>${data.results.length} matches found.</em></p>`;
+      data.results.forEach((r, i) => {
+        const div = document.createElement("div");
+        div.classList.add("search-result");
 
-  data.results.forEach((r, i) => {
-    const div = document.createElement("div");
-    div.classList.add("search-result");
+        const section = r.section || r.title || "Section";
+        const heading = r.heading || "";
+        const matchType = r.matchType || "";
+        const issueDate = r.issueDate || "";
 
-    const section = r.section || r.title || "Section";
-    const heading = r.heading || "";
-    const matchType = r.matchType || "";
-    const issueDate = r.issueDate || "";
+        let excerpt = r.excerpt || "No description available.";
+        if (query) {
+          const regex = new RegExp(`(${query})`, "gi");
+          excerpt = excerpt.replace(regex, "<mark>$1</mark>");
+        }
 
-    let excerpt = r.excerpt || "No description available.";
-    if (query) {
-      const regex = new RegExp(`(${query})`, "gi");
-      excerpt = excerpt.replace(regex, "<mark>$1</mark>");
+        const link = r.link || "#";
+        div.innerHTML = `
+          <p><strong>${i + 1}. <a href="${link}" target="_blank">${section}</a></strong></p>
+          ${heading ? `<p><strong>${heading}</strong></p>` : ""}
+          ${matchType ? `<p><em>Match Type: ${matchType}</em></p>` : ""}
+          ${issueDate ? `<p><em>Version: ${issueDate}</em></p>` : ""}
+          <p>${excerpt}</p>
+        `;
+        resultsBox.appendChild(div);
+      });
     }
-
-    const link = r.link || "#";
-
-    div.innerHTML = `
-      <p><strong>${i + 1}. <a href="${link}" target="_blank">${section}</a></strong></p>
-      ${heading ? `<p><strong>${heading}</strong></p>` : ""}
-      ${matchType ? `<p><em>Match Type: ${matchType}</em></p>` : ""}
-      ${issueDate ? `<p><em>Version: ${issueDate}</em></p>` : ""}
-      <p>${excerpt}</p>
-    `;
-    resultsBox.appendChild(div);
-  });
-}
-
-// ALWAYS hide loader after rendering completes
-hideMatrixLoader();
-
-// Hide Abort Button after success
-if (abortBtn) abortBtn.style.display = "none";
-
 
   } catch (err) {
     if (err.name === "AbortError") {
@@ -399,12 +391,12 @@ if (abortBtn) abortBtn.style.display = "none";
       console.error("🚨 Cyber Squirrel Search Error:", err);
       resultsBox.innerHTML = "<p>Error retrieving search results.</p>";
     }
-
-    //  Hide Abort Button after failure or cancel
+  } finally {
+    // ✅ Always cleanup UI
+    hideMatrixLoader();
     if (abortBtn) abortBtn.style.display = "none";
   }
 }
-
 
 // =========================================================
 // 🛑 Abort Button Handler
@@ -421,13 +413,10 @@ function stopSearch() {
 async function loadVersionHistory() {
   try {
     if (!cachedTitles || cachedTitles.length === 0) return;
-
     const uniqueDates = [...new Set(
       cachedTitles.map(t => t.latest_issue_date || t.up_to_date_as_of).filter(Boolean)
     )];
-
-    uniqueDates.sort((a, b) => b.localeCompare(a)); // newest first
-
+    uniqueDates.sort((a, b) => b.localeCompare(a)); // Newest first
     const dropdown = document.getElementById("versionHistory");
     if (!dropdown) return;
 
@@ -443,8 +432,9 @@ async function loadVersionHistory() {
   }
 }
 
-
+// =========================================================
 // 🔡 Alphabetize Agency Dropdown
+// =========================================================
 function alphabetizeAgenciesDropdown() {
   const agencySelect = document.getElementById("agencyFilter");
   const options = Array.from(agencySelect.options).filter(o => o.value);
@@ -453,7 +443,9 @@ function alphabetizeAgenciesDropdown() {
   options.forEach(o => agencySelect.appendChild(o));
 }
 
+// =========================================================
 // 🧠 Advanced Search Banner Message
+// =========================================================
 function showSearchBanner() {
   const banner = document.getElementById("searchBanner");
   if (banner) {
@@ -461,10 +453,9 @@ function showSearchBanner() {
   }
 }
 
-
-// On Page Load Initialization (Scoped per Page)
-
-// Final fancy toggle using CSS transition on wrapper
+// =========================================================
+// 🎛 Toggle Advanced Filters
+// =========================================================
 function toggleAdvancedFilters() {
   const wrapper = document.querySelector(".advanced-filters-wrapper");
   if (wrapper) {
@@ -472,10 +463,13 @@ function toggleAdvancedFilters() {
   }
 }
 
+// =========================================================
+// 📦 Search Page Initialization
+// =========================================================
 document.addEventListener("DOMContentLoaded", async () => {
-  const isSearchPage = window.location.pathname.includes("search.html");
-  const isAgenciesPage = window.location.pathname.includes("agencies.html");
   const path = window.location.pathname;
+  const isSearchPage = path.includes("search.html");
+  const isAgenciesPage = path.includes("agencies.html");
   const isIndexPage = path.endsWith("/") || path.includes("index.html");
 
   if (isSearchPage) {
@@ -486,64 +480,42 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadVersionHistory();
     showSearchBanner();
 
-    const stopBtn = document.getElementById("stopSearchBtn");
-    if (stopBtn) stopBtn.addEventListener("click", stopSearch);
+    // Bind control buttons
+    document.getElementById("searchButton")?.addEventListener("click", performSearch);
+    document.getElementById("resetButton")?.addEventListener("click", resetSearch);
+    document.getElementById("stopSearchBtn")?.addEventListener("click", stopSearch);
+    document.getElementById("toggleFiltersButton")?.addEventListener("click", toggleAdvancedFilters);
 
-    const searchBtn = document.getElementById("searchButton");
-    if (searchBtn) searchBtn.addEventListener("click", performSearch);
-
-    const resetBtn = document.getElementById("resetButton");
-    if (resetBtn) resetBtn.addEventListener("click", resetSearch);
-
-    const toggleFiltersBtn = document.getElementById("toggleFiltersButton");
-    if (toggleFiltersBtn) toggleFiltersBtn.addEventListener("click", toggleAdvancedFilters);
-    
-// Show guidance when version is selected but no title/agency is selected
+    // Version Tip Message Behavior
     const versionDropdown = document.getElementById("versionHistory");
     const versionTipBox = document.getElementById("versionGuidanceTip");
-    
-    // 🔍 Reusable logic to evaluate tip visibility
+
     const evaluateVersionTipVisibility = () => {
       if (!versionDropdown || !versionTipBox) return;
-    
       const selectedVersion = versionDropdown.value;
       const selectedTitle = document.getElementById("titleFilter")?.value;
       const selectedAgency = document.getElementById("agencyFilter")?.value;
-    
-      if (selectedVersion && !selectedTitle && !selectedAgency) {
-        versionTipBox.textContent =
-          "💡 Tip: Selecting a Title or Agency improves search accuracy when using Historical Versions.";
-        versionTipBox.style.display = "block";
-      } else {
-        versionTipBox.style.display = "none";
-    }
-  };
+      versionTipBox.style.display = (selectedVersion && !selectedTitle && !selectedAgency) ? "block" : "none";
+    };
 
-// 📌 Bind listeners to all three filters
-if (versionDropdown) versionDropdown.addEventListener("change", evaluateVersionTipVisibility);
-const titleFilter = document.getElementById("titleFilter");
-if (titleFilter) titleFilter.addEventListener("change", evaluateVersionTipVisibility);
-const agencyFilter = document.getElementById("agencyFilter");
-if (agencyFilter) agencyFilter.addEventListener("change", evaluateVersionTipVisibility);
+    // Bind version tip listeners
+    versionDropdown?.addEventListener("change", evaluateVersionTipVisibility);
+    document.getElementById("titleFilter")?.addEventListener("change", evaluateVersionTipVisibility);
+    document.getElementById("agencyFilter")?.addEventListener("change", evaluateVersionTipVisibility);
   }
 
   if (isAgenciesPage) {
     fetchAgenciesTableAndRender();
   }
 
- if (isIndexPage) {
-  console.log("📢 Index page detected – initializing metadata and table...");
-
-  // Ensure titles and agencies are fetched AND cached BEFORE using them
-  const [titles, agencies] = await Promise.all([fetchTitles(), fetchAgencies()]);
-  cachedTitles = titles;
-  cachedAgencies = agencies;
-
-  // Now render table and scoreboard using cached data
-  fetchData();
-}
+  if (isIndexPage) {
+    console.log("📢 Index page detected – initializing metadata and table...");
+    const [titles, agencies] = await Promise.all([fetchTitles(), fetchAgencies()]);
+    cachedTitles = titles;
+    cachedAgencies = agencies;
+    fetchData();
+  }
 });
-
 
 
 // =========================================================
