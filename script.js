@@ -306,13 +306,7 @@ async function performSearch() {
   console.log(`🛫 Cyber Squirrel Internal Search → ${query || "[Filters only]"}`);
   document.body.classList.add("search-results-visible");
 
-  // ✅ Show results box immediately
-resultsBox.style.display = "block";
-resultsBox.innerHTML = `
-  <p style="text-align:center; font-size: 1.1em; font-weight: bold; margin-bottom: 10px;">
-    Looks like you took the red pill — this rabbit hole goes deep...
-  </p>
-`;
+ 
 showMatrixLoader();
 
   function showMatrixLoader() {
