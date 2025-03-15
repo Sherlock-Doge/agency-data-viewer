@@ -59,6 +59,9 @@ async function fetchAgencyTitleMap() {
 // 🔗 Bind Agency → Title relational filter logic
 // =========================================================
 function bindRelationalFilter() {
+  const agencySelect = document.getElementById("agencyFilter");
+  const titleSelect = document.getElementById("titleFilter");
+
   agencySelect.addEventListener("change", () => {
     const selectedAgency = agencySelect.value;
 
@@ -92,7 +95,6 @@ function bindRelationalFilter() {
     });
   });
 }
-
 
 //recent edit above
 
