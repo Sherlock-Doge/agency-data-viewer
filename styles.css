@@ -256,7 +256,7 @@ footer {
   left: 50%;
   transform: translateX(-50%);
   width: 95vw;                  
-  max-width: 2000px;            
+  max-width: 1650px;            
   height: auto;
     max-height: calc(100% - 95px);
   background: rgba(0, 0, 0, .1); 
