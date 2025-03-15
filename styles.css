@@ -442,18 +442,15 @@ footer {
 
 
 /* 🔺 Red Pill Message - Positioned Above Loader */
+/* 🔺 Red Pill Message - Correctly Positioned Above Loader */
 .matrix-loader-text {
-  position: absolute;
-    bottom: 100%
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 2em; 
+  font-size: 2em; /* Bigger */
   font-weight: bold;
-  text-align: center;
-  white-space: nowrap;
   color: #000;
-    margin-bottom: 10px;
+  text-align: center;
+  margin-bottom: 15px; /* Adds space between text & loader */
 }
+
 
 
 .matrix-loader {
