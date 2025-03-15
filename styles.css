@@ -434,6 +434,7 @@ footer {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+    font-size: 1.4em;
   z-index: 1001;
   opacity: 0;
   transition: opacity 0.4s ease;  
@@ -447,7 +448,8 @@ footer {
 .matrix-bar {
     width: 6px;
     height: 40px;
-    background-color: #00ff00;
+    background-color: #cc0000;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
     animation: matrixPulse 1.2s infinite ease-in-out;
 }
 
