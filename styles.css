@@ -444,14 +444,15 @@ footer {
 /* 🔺 Red Pill Message - Positioned Above Loader */
 .matrix-loader-text {
   position: absolute;
-  top: -60px; 
+    bottom: 100%
   left: 50%;
   transform: translateX(-50%);
-  font-size: 1.8em; 
+  font-size: 2em; 
   font-weight: bold;
   text-align: center;
   white-space: nowrap;
   color: #000;
+    margin-bottom: 10px;
 }
 
 
