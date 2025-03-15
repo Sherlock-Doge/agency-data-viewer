@@ -420,15 +420,8 @@ footer {
   padding: 5px 10px;
 }
 
-#searchResults > p:first-child {
-  color: #000;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 10px; /* ✔ controls spacing ABOVE the loader */
-}
 
-
-/* 🔄 Matrix Loader (Red Pill "Processing" Animation) */
+/* 🔄 Matrix Loader (Loaer Bars "Processing" Animation) */
 .matrix-loader-container {
   position: absolute;
   top: 50%;  /* Keeps loader centered */
@@ -442,20 +435,18 @@ footer {
 
 
 /* 🔺 Red Pill Message - Positioned Above Loader */
-/* 🔺 Red Pill Message - Correctly Positioned Above Loader */
 .matrix-loader-text {
-  font-size: 1em; /* Bigger */
+  font-size: 1.5em; 
   font-weight: bold;
   color: #000;
   text-align: center;
-  margin-bottom: 15px; /* Adds space between text & loader */
+  margin-bottom: 40px; /* Adds space between text & loader */
 }
-
-
 
 .matrix-loader {
     display: flex;
     gap: 4px;
+    justify-content: center;
 }
 
 .matrix-bar {
