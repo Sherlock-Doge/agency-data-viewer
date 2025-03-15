@@ -444,7 +444,7 @@ footer {
 /* 🔺 Red Pill Message - Positioned Above Loader */
 /* 🔺 Red Pill Message - Correctly Positioned Above Loader */
 .matrix-loader-text {
-  font-size: 2em; /* Bigger */
+  font-size: 1em; /* Bigger */
   font-weight: bold;
   color: #000;
   text-align: center;
