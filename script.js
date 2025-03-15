@@ -1,5 +1,5 @@
 // =========================================================
-// ✅ eCFR Analyzer - Frontend Script (Full Final Version)
+//  eCFR Analyzer - Frontend Script
 // =========================================================
 
 // 🔗 Backend Base URL
@@ -11,7 +11,7 @@ let cachedAgencies = [];
 let agencyTitleMap = {};
 
 // =========================================================
-// 📦 Fetch Title Metadata
+// Fetch Title Metadata
 // =========================================================
 async function fetchTitles() {
   try {
@@ -26,7 +26,7 @@ async function fetchTitles() {
 }
 
 // =========================================================
-// 🏢 Fetch Agency Metadata
+//  Fetch Agency Metadata
 // =========================================================
 async function fetchAgencies() {
   try {
@@ -41,7 +41,7 @@ async function fetchAgencies() {
 }
 
 // =========================================================
-// 🗺️ Fetch Agency ↔ Title Mapping (if used in future filters)
+//  Fetch Agency ↔ Title Mapping (if used in future filters)
 // =========================================================
 async function fetchAgencyTitleMap() {
   try {
@@ -54,8 +54,52 @@ async function fetchAgencyTitleMap() {
   }
 }
 
+//recent edit below:
 // =========================================================
-// 🔢 Fetch Word Count for Individual Title (Index Page)
+// 🔗 Bind Agency → Title relational filter logic
+// =========================================================
+function bindRelationalFilter() {
+  agencySelect.addEventListener("change", () => {
+    const selectedAgency = agencySelect.value;
+
+    // 🧹 Reset Title dropdown (clear all but first option)
+    while (titleSelect.options.length > 1) {
+      titleSelect.remove(1);
+    }
+
+    // Show all titles if no agency selected or no mapping
+    if (!selectedAgency || !agencyTitleMap[selectedAgency]) {
+      cachedTitles.forEach(title => {
+        const option = document.createElement("option");
+        option.value = title.number;
+        option.textContent = `Title ${title.number} — ${title.name}`;
+        titleSelect.appendChild(option);
+      });
+      return;
+    }
+
+    // Filter titles based on agency mapping
+    const filteredTitles = agencyTitleMap[selectedAgency];
+    const matchingTitles = cachedTitles.filter(t =>
+      filteredTitles.includes(parseInt(t.number))
+    );
+
+    matchingTitles.forEach(title => {
+      const option = document.createElement("option");
+      option.value = title.number;
+      option.textContent = `Title ${title.number} — ${title.name}`;
+      titleSelect.appendChild(option);
+    });
+  });
+}
+
+
+//recent edit above
+
+
+
+// =========================================================
+//  Fetch Word Count for Individual Title (Index Page)
 // =========================================================
 async function fetchSingleTitleWordCount(titleNumber, buttonElement) {
   try {
@@ -78,7 +122,7 @@ async function fetchSingleTitleWordCount(titleNumber, buttonElement) {
 }
 
 // =========================================================
-// 📊 Update Scoreboard Section (Top of Index Page)
+//  Update Scoreboard Section (Top of Index Page)
 // =========================================================
 function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecentDate, mostRecentTitleName) {
   const tTitles = document.getElementById("totalTitles");
@@ -102,7 +146,7 @@ function updateScoreboard(totalTitles, totalAgencies, mostRecentTitle, mostRecen
 }
 
 // =========================================================
-// 📋 Populate Titles Table (Index Page Table Body)
+//  Populate Titles Table (Index Page Table Body)
 // =========================================================
 async function fetchData() {
   const tbody = document.querySelector("#titlesTable tbody");
@@ -138,7 +182,7 @@ async function fetchData() {
 
 
 // =========================================================
-// 🏢 Populate Agency Table (Agencies Page)
+//  Populate Agency Table (Agencies Page)
 // =========================================================
 
 // 📌 Subtitle Patch Overrides (for special-case agencies with broken/blank chapters)
@@ -260,7 +304,7 @@ const subtitleUrlOverrides = {
 let abortController = null;
 
 // ===========================
-// 🔄 Loader Show/Hide Handlers
+//  Loader Show/Hide Handlers
 // ===========================
 function showMatrixLoader() {
   const loader = document.querySelector('.matrix-loader-container');
@@ -273,7 +317,7 @@ function hideMatrixLoader() {
 }
 
 // =========================================================
-// 🚀 Perform Internal Search (keyword, filters, version)
+//  Perform Internal Search (keyword, filters, version)
 // =========================================================
 async function performSearch() {
   const query = document.getElementById("searchQuery").value.trim();
@@ -388,7 +432,7 @@ async function performSearch() {
 }
 
 // =========================================================
-// 🛑 Abort Button Handler
+//  Abort Button Handler
 // =========================================================
 function stopSearch() {
   if (abortController) abortController.abort();
@@ -397,7 +441,7 @@ function stopSearch() {
 }
 
 // =========================================================
-// 📆 Load Version History Dropdown
+//  Load Version History Dropdown
 // =========================================================
 async function loadVersionHistory() {
   try {
@@ -422,7 +466,7 @@ async function loadVersionHistory() {
 }
 
 // =========================================================
-// 🔡 Alphabetize Agency Dropdown
+//  Alphabetize Agency Dropdown
 // =========================================================
 function alphabetizeAgenciesDropdown() {
   const agencySelect = document.getElementById("agencyFilter");
@@ -433,7 +477,7 @@ function alphabetizeAgenciesDropdown() {
 }
 
 // =========================================================
-// 🧠 Advanced Search Banner Message
+//  Advanced Search Banner Message
 // =========================================================
 function showSearchBanner() {
   const banner = document.getElementById("searchBanner");
@@ -443,7 +487,7 @@ function showSearchBanner() {
 }
 
 // =========================================================
-// 🎛 Toggle Advanced Filters
+//  Toggle Advanced Filters
 // =========================================================
 function toggleAdvancedFilters() {
   const wrapper = document.querySelector(".advanced-filters-wrapper");
@@ -453,7 +497,7 @@ function toggleAdvancedFilters() {
 }
 
 // =========================================================
-// 📦 Search Page Initialization
+//  Search Page Initialization
 // =========================================================
 document.addEventListener("DOMContentLoaded", async () => {
   const path = window.location.pathname;
@@ -464,8 +508,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (isSearchPage) {
     await fetchTitles();
     await fetchAgencies();
+    await fetchAgencyTitleMap(); //recent add
+    
     populateDropdowns();
     alphabetizeAgenciesDropdown();
+    bindRelationalFilter(); //recent add
     loadVersionHistory();
     showSearchBanner();
 
@@ -508,7 +555,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 // =========================================================
-// 🔁 Reset Search UI (Reset Button Action)
+//  Reset Button Action
 // =========================================================
 function resetSearch() {
     document.getElementById("searchQuery").value = "";
@@ -557,7 +604,7 @@ function resetSearch() {
 
       
   // =========================================================
-  // 💬 Live Search Suggestions from Backend (Enhanced Display)
+  //  Live Search Suggestions from Backend
   // =========================================================
   const searchQueryInput = document.getElementById("searchQuery");
   if (searchQueryInput) {
@@ -619,7 +666,7 @@ function resetSearch() {
   }
   
   // =========================================================
-  // 📂 Populate Filter Dropdowns (Titles + Agencies)
+  //  Populate Filter Dropdowns (Titles + Agencies)
   // =========================================================
   function populateDropdowns() {
     const agencyFilter = document.getElementById("agencyFilter");
@@ -650,7 +697,7 @@ function resetSearch() {
 
 
   // =========================================================
-  // ✍️ Fetch Word Count by Agency
+  //  Fetch Word Count by Agency
   // =========================================================
   async function fetchAgencyWordCount(agency, cellElement, buttonElement) {
     try {
@@ -689,7 +736,7 @@ function resetSearch() {
   }
   
   // =========================================================
-// 📂 Lock Search Results Height to Cipher (Final Version)
+//  Lock Search Results Height to Cipher
 // =========================================================
 function lockSearchResultsHeightToCipher() {
   const cipherImage = document.getElementById("cipherImage");
